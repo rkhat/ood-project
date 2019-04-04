@@ -29,13 +29,22 @@ public class Application extends JFrame {
     repaint();
   }
   
-  public void setCurrentSessionId(int sessionId) {
+  public void setSessionId(int sessionId) {
     this.sessionId = sessionId;
+  }
+
+  public boolean isMember() {
+    return member;
+  }
+
+  public int getSessionId() {
+    return sessionId;
   }
   
   private int sessionId = 0;
+  private boolean member;
+  
   private Page currentPage;
   private final Manager manager;
-  
   private static final Dimension MIN_DIMENSION = new Dimension(300, 300);
 }

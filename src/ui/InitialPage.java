@@ -17,12 +17,11 @@ public class InitialPage extends AbstractPage {
     
     guest.addActionListener((ActionEvent e) -> {
       manager.createGuestSession();
-      Page page = new VehicleFormPage(app, manager);
+      Page page = new VehicleFormPage(app, manager, false);
       app.swapPage(page);
     });
     
     member.addActionListener((ActionEvent e) -> {
-      manager.createMemberSession();
       Page page = new LoginFormPage(app, manager);
       app.swapPage(page);
     });
