@@ -1,5 +1,7 @@
 package model;
 
+import util.RandomGenerator;
+
 /**
  * Member class.
  * Represents a member of a parking system.
@@ -14,7 +16,6 @@ public class Member {
 	private String password;
 	private int credits;
 	
-	// TODO: generate code
 	/**
 	 * Constructs a Member object with a unique user name and
 	 * password and no credits. 
@@ -26,6 +27,7 @@ public class Member {
 		this.userName = un;
 		this.password = psw;
 		this.credits = 0;
+		this.code = RandomGenerator.generateRandomString(10);
 	}
 	
 	/**

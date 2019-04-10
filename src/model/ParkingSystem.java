@@ -1,6 +1,8 @@
 package model;
 
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Parking System class.
@@ -80,7 +82,6 @@ public class ParkingSystem {
     	if (mem.getPassword() == psw) return mem;
     	// password incorrect, return null.
     	return null;
-    	
     }
     
     /**
@@ -89,18 +90,38 @@ public class ParkingSystem {
      * @param un	The user name.
      * @param psw	The Password.
      * @return		The new member object if credentials are accepted, null otherwise.
+     * @throws 		IllegalArgumentException if username or password is incorrect format.
      */
-//    public Member createAccount(String un, String psw) {
-//    	// if the username is already in use, return null to indicate failure
-//    	if (this.reservations.containsKey(un)) return null;
-//    	
-//    	
-//    	
-//    }
-    
-//    public static boolean checkPassword(String psw) {
-//    	if (psw.length() < 6) return false;
-////    	if (psw.con)
-//    }
+    public Member createAccount(String un, String psw) throws IllegalArgumentException {
+    	// user name must be alphanumeric with at least one character.
+    	if (!checkAlphaNumeric(un, 1)) throw new IllegalArgumentException("Username must be alphanumeric with at least one character");
+    	// if the username is already in use, return null to indicate failure.
+    	if (this.reservations.containsKey(un)) return null;
+    	// password must be alphanumeric with at least six characters.
+    	if (!checkAlphaNumeric(psw, 6)) throw new IllegalArgumentException("Password must be alphanumeric with at least six characters");
+    	// credentials accepted, create member
+    	Member newMem = new Member(un, psw);
+    	this.members.put(un, newMem);
+    	
+    	return newMem;
+    }
+  
+    /**
+     * Checks if string is alphanumeric with minimum of minLength characters.
+     * 
+     * @param str		The string.
+     * @param minLength	The minimum length of the string.
+     * @return			true if valid, false otherwise.
+     */
+    public static boolean checkAlphaNumeric(String str, int minLength) {
+    	if (str.length() < minLength) return false;
+    	// check if alphanumeric
+    	String regex = "^[a-zA-Z0-9]+$";
+    	Pattern pattern = Pattern.compile(regex);
+    	Matcher strMatcher = pattern.matcher(str);
+    	if (!strMatcher.matches()) return false;
+    	
+    	return true;
+    }
 
 }
