@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 import util.RandomGenerator;
 
 /**
@@ -10,11 +12,11 @@ import util.RandomGenerator;
  */
 public class Member {
 	private Reservation reservation;
-	private Vehicle[] vehicles;
+	private ArrayList<Vehicle> vehicles;
 	private String code;
 	private String userName;
 	private String password;
-	private int credits;
+	private double credits;
 	
 	/**
 	 * Constructs a Member object with a unique user name and
@@ -28,6 +30,7 @@ public class Member {
 		this.password = psw;
 		this.credits = 0;
 		this.code = RandomGenerator.generateRandomString(10);
+		this.vehicles = new ArrayList<Vehicle>(5);
 	}
 	
 	/**
@@ -80,7 +83,7 @@ public class Member {
 	 * 
 	 * @return	The list of vehicles.
 	 */
-	public Vehicle[] getVehicles() {
+	public ArrayList<Vehicle> getVehicles() {
 		return this.vehicles;
 	}
 	
@@ -116,7 +119,7 @@ public class Member {
 	 * 
 	 * @return	The number of credits.
 	 */
-	public int getCredits() {
+	public double getCredits() {
 		return this.credits;
 	}
 	
@@ -125,7 +128,7 @@ public class Member {
 	 * 
 	 * @param n	Number of credits to add.
 	 */
-	public void addCredits(int n) {
+	public void addCredits(double n) {
 		this.credits += n;
 	}
 	
@@ -134,7 +137,7 @@ public class Member {
 	 * 
 	 * @param n	Number of credits to remove.
 	 */
-	public void removeCredits(int n) {
+	public void removeCredits(double n) {
 		// Make sure credits is not negative.
 		if (n > this.credits) {
 			this.credits = 0;
@@ -149,11 +152,39 @@ public class Member {
 	 * @param amt	The amount of credits to check for.
 	 * @return	true if member has enough credits, false otherwise.
 	 */
-	public boolean hasSufficientCredits(int amt) {
+	public boolean hasSufficientCredits(double amt) {
 		return (this.credits >= amt);
 	}
 	
+	/**
+	 * Remove the current reservation.
+	 */
 	public void removeReservation() {
 		reservation = null;
+	}
+	
+	/**
+	 * Add a new vehicle to the account.
+	 * 
+	 * @param vehicle	The vehicle to add.
+	 * @return			true if successful, false otherwise.
+	 */
+	public boolean addVehicle(Vehicle vehicle) {
+		try {
+			vehicles.add(vehicle);
+		} catch(Exception e) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Remove the specified vehicle from the account.
+	 * 
+	 * @param vehicle	The vehicle to remove.
+	 * @return			true if successful, false otherwise.
+	 */
+	public boolean removeVehicle(Vehicle vehicle) {
+		return vehicles.remove(vehicle);
 	}
 }
