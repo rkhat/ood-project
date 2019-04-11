@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 /**
  * The Parking Map class.
  * Represents a parking map with a list of spots.
@@ -7,17 +9,22 @@ package model;
  * @author Alec Agnese, Rami El Khatib
  */
 public class ParkingMap {
-    private Spot[] spots;
-    private boolean isFull;
+    private ArrayList<Spot> spots;
+    
+    /**
+     * Creates a ParkingMap object with no spots.
+     */
+    public ParkingMap() {
+    	spots = new ArrayList<Spot>(10);
+    }
     
     /**
      * Creates a ParkingMap object with the given spots.
      * 
      * @param spots	The list of spots in the parking map.
      */
-    public ParkingMap(Spot[] spots) {
+    public ParkingMap(ArrayList<Spot> spots) {
     	this.spots = spots;
-    	this.isFull = false;
     }
     
     /**
@@ -25,7 +32,7 @@ public class ParkingMap {
      * 
      * @param spots	The list of spots.
      */
-    public void setSpots(Spot[] spots) {
+    public void setSpots(ArrayList<Spot> spots) {
     	this.spots = spots;
     }
     
@@ -34,8 +41,22 @@ public class ParkingMap {
      * 
      * @return	The list of spots.
      */
-    public Spot[] getSpots() {
+    public ArrayList<Spot> getSpots() {
     	return this.spots;
+    }
+    
+    /**
+     * Accessor for number of available spots.
+     * 
+     * @return	The number of available spots.
+     */
+    public int getNumAvailable() {
+    	int numAvailable = 0;
+    	// count the number of available spots
+    	for (Spot s : spots) {
+    		if (!(s.isReserved() || s.isLocked()) ) numAvailable++;
+    	}
+    	return numAvailable;
     }
     
     /**
@@ -44,22 +65,18 @@ public class ParkingMap {
      * @return	true if there are spots available, false otherwise.
      */
     public boolean spotsAvailable() {
-    	return (!this.isFull);
+    	return (getNumAvailable() > 0);
     }
     
     /**
      * Attempt to lock the given spot.
      * 
      * @param spot	The spot to be locked.
-     * @return	true if successful, false otherwise.
+     * @return		true if successful, false otherwise.
      */
     public boolean lockSpot(Spot spot) {
-    	// TODO: if we get a reference to the spot from parking map, we may not need to iterate.
-    	// May be able to simply lock the spot.
-    	for (Spot s : this.spots) {
-    		if (s.equals(spot)) {
-    			return s.lock();
-    		}
+    	if (spots.contains(spot)) {
+    		return spot.lock();
     	}
     	return false;
     }
@@ -68,15 +85,11 @@ public class ParkingMap {
      * Attempt to reserve the given spot.
      * 
      * @param spot	The spot to be reserved.
-     * @return	true if successful, false otherwise.
+     * @return		true if successful, false otherwise.
      */
     public boolean reserveSpot(Spot spot) {
-    	// TODO: if we get a reference to the spot from parking map, we may not need to iterate.
-    	// May be able to simply reserve the spot.
-    	for (Spot s : this.spots) {
-    		if (s.equals(spot)) {
-    			return s.reserve();
-    		}
+    	if (spots.contains(spot)) {
+    		return spot.reserve();
     	}
     	return false;
     }
@@ -87,13 +100,8 @@ public class ParkingMap {
      * @param spot	The spot to be freed.
      */
     public void freeSpot(Spot spot) {
-    	// TODO: if we get a reference to the spot from parking map, we may not need to iterate.
-    	// May be able to simply free the spot.
-    	for (Spot s : this.spots) {
-    		if (s.equals(spot)) {
-    			s.free();
-    			return;
-    		}
+    	if (spots.contains(spot)) {
+    		spot.free();
     	}
     }
 }
