@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="900.0" styleClass="initial" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vc.InitialViewController">
+   <children>
+      <Label styleClass="initial-title" text="Welcome" />
+      <Region styleClass="initial-spacing" />
+      <HBox styleClass="initial-hbox">
+         <children>
+            <JFXButton styleClass="initial-button" text="Guest" />
+            <JFXButton onAction="#login" styleClass="initial-button" text="Member" />
+            <JFXButton styleClass="initial-button" text="Sign up" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

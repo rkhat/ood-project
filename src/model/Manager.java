@@ -1,5 +1,7 @@
-package api;
+package model;
 
+import api.GuestSession;
+import api.MemberSession;
 import api.datatype.*;
 import api.adapter.*;
 import java.util.*;
@@ -13,22 +15,19 @@ public class Manager {
   private Manager() {
   }
   
-  
-  public void createGuestSession() {
-    guestSession = new GuestSession();
-  }
-  
-  public void createMemberSession() {
-    memberSession = new MemberSession();
+  public static void createInstance() {
+    instance = new Manager();
   }
   
   public static Manager getInstance() {
     return instance;
   }
   
-  private static final Manager instance = new Manager();
   
-//  private static final ParkingSystem parkingSystem = ParkingSyst;
+  
+  private static Manager instance;
+  
+  private int currentSession;
   private MemberSession memberSession;
   private GuestSession guestSession;
 }

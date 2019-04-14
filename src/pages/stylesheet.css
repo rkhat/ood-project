@@ -1,0 +1,48 @@
+/* 
+    Created on : Apr 10, 2019, 6:51:16 PM
+    Author     : Alec Agnese, Rami El Khatib
+*/
+@font-face
+{
+    font-family: Roboto;
+    src: url("../resources/fonts/Roboto-Regular.ttf");
+}
+
+JFXButton {
+  -fx-background-color: #F50057;
+  -fx-text-fill: #FFFFFF;
+}
+
+.root {
+    -fx-background-color: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-family: "Roboto";
+    -fx-font-size: 12px;
+  /*-fx-font: 12px Roboto;*/
+}
+
+.initial {
+  
+}
+
+.initial-spacing {
+  -fx-pref-height: 150px;
+}
+
+.initial-title {
+  -fx-font-size: 10em;
+}
+
+.initial-hbox {
+  -fx-spacing: 1em;
+  -fx-alignment: center;
+}
+
+.initial-button {
+  -fx-font-size: 2em;
+  -fx-pref-width: 200px;
+  -fx-pref-height: 80px;
+}
+
+
+
