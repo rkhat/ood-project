@@ -7,22 +7,42 @@ import java.util.regex.Pattern;
 /**
  * The Parking System class.
  * Manages reservations, members, and the parking map.
+ * ParkingSystem is a singleton class. 
  * 
  * @author Alec Agnese, Rami El Khatib
  */
 public class ParkingSystem {
+	
     private HashMap<String, Reservation> reservations;
     private HashMap<String, Member> members;
     private ParkingMap map;
     
     /**
-     * Creates a ParkingSystem object with a given parking map.
+     * Creates a ParkingSystem object.
      * 
      * @param map	The parking map.
      */
-    public ParkingSystem(ParkingMap map) {
-    	this.map = map;
+    private ParkingSystem() {
     	reservations = new HashMap<>();
+    	members = new HashMap<>();
+    }
+    
+    /**
+     * Set the parking map.
+     * 
+     * @param map	The parking map.
+     */
+    public void setMap(ParkingMap map) {
+    	this.map = map;
+    }
+    
+    /**
+     * Access the singleton ParkingSystem instance.
+     * 
+     * @return	The ParkingSystem instance.
+     */
+    public static ParkingSystem getInstance() {
+    	return instance;
     }
     
     /**
@@ -123,5 +143,7 @@ public class ParkingSystem {
     	
     	return true;
     }
+    
+	private static ParkingSystem instance = new ParkingSystem();
 
 }

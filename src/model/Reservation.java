@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * The Reservation class.
@@ -25,7 +26,7 @@ public class Reservation {
     	this.hourlyRate = 2.50;
     	this.dailyRate = 20;
     }
-    
+ 
     /**
      * Get the spot on the reservation.
      * 
@@ -120,5 +121,14 @@ public class Reservation {
      */
     public void setTimeType(String timeType) {
     	this.timeType = timeType;
+    }
+    
+    /**
+     * Set the start time for the reservation.
+     * 
+     * @param startTime	The start time (a Date object)
+     */
+    public void setStartTime(Date startTime) {
+    	this.startTime = startTime;
     }
 }

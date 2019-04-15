@@ -16,7 +16,7 @@ public class ParkingMap {
      */
     public ParkingMap() {
     	spots = new ArrayList<Spot>(10);
-    }
+    } 
     
     /**
      * Creates a ParkingMap object with the given spots.
@@ -74,6 +74,7 @@ public class ParkingMap {
      * @param spot	The spot to be locked.
      * @return		true if successful, false otherwise.
      */
+
     public boolean lockSpot(Spot spot) {
     	if (spots.contains(spot)) {
     		return spot.lock();

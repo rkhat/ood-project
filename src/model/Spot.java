@@ -7,6 +7,7 @@ package model;
  * @author Alec Agnese, Rami El Khatib
  */
 public class Spot {
+	
 	private boolean locked;
 	private boolean reserved;
 	private int x;
@@ -77,7 +78,7 @@ public class Spot {
 	/**
 	 * Unlock the spot.
 	 */
-	public void unLock() {
+	public void unlock() {
 		this.locked = false;
 	}
 	
@@ -87,6 +88,8 @@ public class Spot {
 	 * @return	true if successful, false otherwise.
 	 */
 	public boolean reserve() {
+		// spot must first be locked in order to reserve
+		if (!locked) return false;
 		// if already reserved, return false to indicate failure.
 		if (this.reserved) return false; 
 		// otherwise, reserve and return true;
