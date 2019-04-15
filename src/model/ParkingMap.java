@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Parking Map class.
@@ -9,21 +10,21 @@ import java.util.ArrayList;
  * @author Alec Agnese, Rami El Khatib
  */
 public class ParkingMap {
-    private ArrayList<Spot> spots;
+    private List<Spot> spots;
     
     /**
      * Creates a ParkingMap object with no spots.
      */
     public ParkingMap() {
-    	spots = new ArrayList<Spot>(10);
-    } 
+    	spots = new ArrayList<Spot>();
+    }
     
     /**
      * Creates a ParkingMap object with the given spots.
      * 
      * @param spots	The list of spots in the parking map.
      */
-    public ParkingMap(ArrayList<Spot> spots) {
+    public ParkingMap(List<Spot> spots) {
     	this.spots = spots;
     }
     
@@ -32,7 +33,7 @@ public class ParkingMap {
      * 
      * @param spots	The list of spots.
      */
-    public void setSpots(ArrayList<Spot> spots) {
+    public void setSpots(List<Spot> spots) {
     	this.spots = spots;
     }
     
@@ -41,7 +42,7 @@ public class ParkingMap {
      * 
      * @return	The list of spots.
      */
-    public ArrayList<Spot> getSpots() {
+    public List<Spot> getSpots() {
     	return this.spots;
     }
     

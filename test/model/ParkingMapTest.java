@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -13,13 +14,17 @@ class ParkingMapTest {
 	@Test
 	void testParkingMap() {
 		System.out.println("Testing ParkingMap");
-		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0));
+		List<Spot> spots = new ArrayList<Spot>();
+		spots.add(new Spot(0,0,0));
+		spots.get(0).lock();
 		spots.get(0).reserve(); // reserve a spot to make sure numAvailable is set correctly
-		spots.add(new Spot(1,1));
-		spots.add(new Spot(2,2));
-		ParkingMap map = new ParkingMap(spots);
-		Assert.assertTrue(map.getSpots().equals(spots) && map.getNumAvailable() == spots.size()-1);
+		spots.add(new Spot(1,1,1));
+		spots.add(new Spot(2,2,2));
+		ParkingMap map = new ParkingMap((ArrayList<Spot>)spots);
+		Assert.assertTrue( map.getSpots().equals(spots) );
+		int avail = map.getNumAvailable();
+		int z = spots.size()-1;
+		Assert.assertTrue( map.getNumAvailable() == spots.size()-1 );
 	}
 	
 	// Testing setSpots
@@ -27,10 +32,11 @@ class ParkingMapTest {
 	void testSetSpots() {
 		System.out.println("Testing setSpots");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0));
+		spots.add(new Spot(0,0,0));
+		spots.get(0).lock();
 		spots.get(0).reserve(); // reserve a spot to make sure numAvailable is set correctly
-		spots.add(new Spot(1,1));
-		spots.add(new Spot(2,2));
+		spots.add(new Spot(1,1,1));
+		spots.add(new Spot(2,2,2));
 		ParkingMap map = new ParkingMap(spots);
 		Assert.assertTrue(map.getSpots().equals(spots) && map.getNumAvailable() == spots.size()-1);
 	}
@@ -40,17 +46,20 @@ class ParkingMapTest {
 	void testSpotsAvailable() {
 		System.out.println("Testing spotsAvailable");
 		ArrayList<Spot> spots1 = new ArrayList<Spot>(10);
-		spots1.add(new Spot(0,0));
-		spots1.add(new Spot(1,1));
-		spots1.add(new Spot(2,2));
+		spots1.add(new Spot(0,0,0));
+		spots1.add(new Spot(1,1,1));
+		spots1.add(new Spot(2,2,2));
 		ParkingMap map1 = new ParkingMap(spots1);
 		
 		// set all spots reserved for second parking map
 		ArrayList<Spot> spots2 = new ArrayList<Spot>(10);
-		spots2.add(new Spot(0,0));
-		spots2.add(new Spot(1,1));
-		spots2.add(new Spot(2,2));
-		for (Spot s : spots2) s.reserve();
+		spots2.add(new Spot(0,0,0));
+		spots2.add(new Spot(1,1,1));
+		spots2.add(new Spot(2,2,2));
+		for (Spot s : spots2) {
+			s.lock();
+			s.reserve();
+		}
 		ParkingMap map2 = new ParkingMap(spots2);
 		Assert.assertTrue(map1.spotsAvailable() && !map2.spotsAvailable());
 	}
@@ -60,9 +69,9 @@ class ParkingMapTest {
 	void testLockSpot() {
 		System.out.println("Testing lockSpot");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0));
-		spots.add(new Spot(1,1));
-		spots.add(new Spot(2,2));
+		spots.add(new Spot(0,0,0));
+		spots.add(new Spot(1,1,1));
+		spots.add(new Spot(2,2,2));
 		ParkingMap map = new ParkingMap(spots);
 		map.lockSpot(spots.get(0));
 		Assert.assertTrue(map.getSpots().equals(spots));
@@ -73,9 +82,9 @@ class ParkingMapTest {
 	void testReserveSpot() {
 		System.out.println("Testing reserveSpot");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0));
-		spots.add(new Spot(1,1));
-		spots.add(new Spot(2,2));
+		spots.add(new Spot(0,0,0));
+		spots.add(new Spot(1,1,1));
+		spots.add(new Spot(2,2,2));
 		ParkingMap map = new ParkingMap(spots);
 		map.reserveSpot(spots.get(0));
 		Assert.assertTrue(map.getSpots().equals(spots));
@@ -86,9 +95,9 @@ class ParkingMapTest {
 	void testFreeSpot() {
 		System.out.println("Testing freeSpot");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0));
-		spots.add(new Spot(1,1));
-		spots.add(new Spot(2,2));
+		spots.add(new Spot(0,0,0));
+		spots.add(new Spot(1,1,1));
+		spots.add(new Spot(2,2,2));
 		ParkingMap map = new ParkingMap(spots);
 		map.lockSpot(spots.get(0));
 		map.reserveSpot(spots.get(0));

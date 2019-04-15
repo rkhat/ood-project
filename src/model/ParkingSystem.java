@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,8 +14,8 @@ import java.util.regex.Pattern;
  */
 public class ParkingSystem {
 	
-    private HashMap<String, Reservation> reservations;
-    private HashMap<String, Member> members;
+    private Map<String, Reservation> reservations;
+    private Map<String, Member> members;
     private ParkingMap map;
     
     /**
@@ -23,8 +24,8 @@ public class ParkingSystem {
      * @param map	The parking map.
      */
     private ParkingSystem() {
-    	reservations = new HashMap<>();
-    	members = new HashMap<>();
+    	reservations = new HashMap<String, Reservation>();
+    	members = new HashMap<String, Member>();
     }
     
     /**

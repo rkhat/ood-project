@@ -1,6 +1,7 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import util.RandomGenerator;
 
@@ -12,7 +13,7 @@ import util.RandomGenerator;
  */
 public class Member {
 	private Reservation reservation;
-	private ArrayList<Vehicle> vehicles;
+	private Map<String, Vehicle> vehicles;
 	private String code;
 	private String userName;
 	private String password;
@@ -30,7 +31,7 @@ public class Member {
 		this.password = psw;
 		this.credits = 0;
 		this.code = RandomGenerator.generateRandomString(10);
-		this.vehicles = new ArrayList<Vehicle>(5);
+		this.vehicles = new HashMap<String,Vehicle>();
 	}
 	
 	/**
@@ -83,7 +84,7 @@ public class Member {
 	 * 
 	 * @return	The list of vehicles.
 	 */
-	public ArrayList<Vehicle> getVehicles() {
+	public Map<String,Vehicle> getVehicles() {
 		return this.vehicles;
 	}
 	
@@ -171,7 +172,7 @@ public class Member {
 	 */
 	public boolean addVehicle(Vehicle vehicle) {
 		try {
-			vehicles.add(vehicle);
+			vehicles.put(vehicle.getPlate(),vehicle);
 		} catch(Exception e) {
 			return false;
 		}
@@ -184,7 +185,10 @@ public class Member {
 	 * @param vehicle	The vehicle to remove.
 	 * @return			true if successful, false otherwise.
 	 */
-	public boolean removeVehicle(Vehicle vehicle) {
-		return vehicles.remove(vehicle);
+	public boolean removeVehicle(String plate) {
+		if (vehicles.remove(plate) == null) {
+			return false;
+		}
+		return true;
 	}
 }

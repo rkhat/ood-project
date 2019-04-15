@@ -117,7 +117,7 @@ class MemberTest {
 		Member member = new Member(userName, password);
 		Vehicle vehicle = new Vehicle("ABC123");
 		member.addVehicle(vehicle);
-		Assert.assertTrue(member.getVehicles().contains(vehicle));
+		Assert.assertTrue(member.getVehicles().containsKey(vehicle.getPlate()));
 	}
 	
 	// Testing removeVehicle
@@ -129,8 +129,8 @@ class MemberTest {
 		Member member = new Member(userName, password);
 		Vehicle vehicle = new Vehicle("ABC123");
 		member.addVehicle(vehicle);
-		member.removeVehicle(vehicle);
-		Assert.assertTrue(!member.getVehicles().contains(vehicle));
+		member.removeVehicle(vehicle.getPlate());
+		Assert.assertTrue(!member.getVehicles().containsKey(vehicle.getPlate()));
 	}
 }
 

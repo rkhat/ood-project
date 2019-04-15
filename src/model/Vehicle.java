@@ -16,4 +16,14 @@ public class Vehicle {
     public String getPlate() {
     	return this.plate;
     }
+    
+    /**
+     * Check whether two vehicles are equal (same plate)
+     * 
+     * @param other	The vehicle to compare this to.
+     * @return		true if equal, false otherwise.
+     */
+    public boolean equals(Vehicle other) {
+    	return (this.plate.equals(other.plate));
+    }
 }

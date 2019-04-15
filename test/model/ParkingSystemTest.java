@@ -12,9 +12,9 @@ class ParkingSystemTest {
 	void testSpotsAvailable() {
 		System.out.println("Testing spotsAvailable");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0));
-		spots.add(new Spot(1,1));
-		spots.add(new Spot(2,2));
+		spots.add(new Spot(0,0,0));
+		spots.add(new Spot(1,1,1));
+		spots.add(new Spot(2,2,2));
 		ParkingMap map = new ParkingMap(spots);
 		ParkingSystem ps = ParkingSystem.getInstance();
 		
@@ -23,7 +23,10 @@ class ParkingSystemTest {
 		Assert.assertTrue(ps.spotsAvailable());
 		
 		// Test with no spots available
-		for (Spot s : spots) s.reserve();
+		for (Spot s : spots) {
+			s.lock();
+			s.reserve();
+		}
 		Assert.assertTrue(!ps.spotsAvailable());
 	}
 	
@@ -33,9 +36,9 @@ class ParkingSystemTest {
 	void testLookUp() {
 		System.out.println("Testing lookUp");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0));
-		spots.add(new Spot(1,1));
-		spots.add(new Spot(2,2));
+		spots.add(new Spot(0,0,0));
+		spots.add(new Spot(1,1,1));
+		spots.add(new Spot(2,2,2));
 		ParkingMap map = new ParkingMap(spots);
 		ParkingSystem ps = ParkingSystem.getInstance();
 		ps.setMap(map);

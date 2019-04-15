@@ -12,6 +12,7 @@ public class Spot {
 	private boolean reserved;
 	private int x;
 	private int y;
+	private int id;
 	
 	/**
 	 * Create a spot object with given coordinates.
@@ -19,11 +20,12 @@ public class Spot {
 	 * @param x	X coordinate.
 	 * @param y	Y coordinate.
 	 */
-	public Spot(int x, int y) {
+	public Spot(int x, int y, int id) {
 		this.x = x;
 		this.y = y;
 		locked = false;
 		reserved = false;
+		this.id = id;
 	}
 	
 	/**
@@ -60,6 +62,15 @@ public class Spot {
 	 */
 	public int getY() {
 		return this.y;
+	}
+	
+	/**
+	 * Get the spot's ID.
+	 * 
+	 * @return	The ID.
+	 */
+	public int getID() {
+		return this.id;
 	}
 	
 	/**
