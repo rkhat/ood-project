@@ -3,7 +3,6 @@ package model;
 import api.GuestSession;
 import api.MemberSession;
 import api.datatype.*;
-import api.adapter.*;
 import java.util.*;
 import model.*;
 

@@ -9,7 +9,7 @@
    <children>
       <JFXTextField promptText="Username" />
       <JFXTextField promptText="Password" />
-      <JFXButton text="Login">
+      <JFXButton onAction="#login" text="Login">
          <VBox.margin>
             <Insets />
          </VBox.margin>

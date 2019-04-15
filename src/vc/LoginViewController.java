@@ -1,6 +1,8 @@
 package vc;
 
+import java.util.List;
 import javafx.fxml.FXML;
+import model.*;
 
 /**
  * FXML Controller class
@@ -10,7 +12,7 @@ import javafx.fxml.FXML;
 public class LoginViewController extends AbstractViewController{
   
   @FXML
-  public void initialize() {
+  public void initialize() {    
   }
 
   @Override
@@ -19,7 +21,7 @@ public class LoginViewController extends AbstractViewController{
   }
   
   public void login() {
-    
+    setPage(Pages.MainMenuPage);
   }
   
 }
