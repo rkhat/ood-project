@@ -1,10 +1,5 @@
 package model;
 
-import api.GuestSession;
-import api.MemberSession;
-import api.datatype.*;
-import java.util.*;
-import model.*;
 
 /**
  *
@@ -27,6 +22,4 @@ public class Manager {
   private static Manager instance;
   
   private int currentSession;
-  private MemberSession memberSession;
-  private GuestSession guestSession;
 }
