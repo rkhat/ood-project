@@ -11,12 +11,16 @@ import java.util.List;
  */
 public class ParkingMap {
     private List<Spot> spots;
+    private int height;
+    private int width;
     
     /**
      * Creates a ParkingMap object with no spots.
      */
     public ParkingMap() {
     	spots = new ArrayList<Spot>();
+    	height = 0;
+    	width = 0;
     }
     
     /**
@@ -25,7 +29,17 @@ public class ParkingMap {
      * @param spots	The list of spots in the parking map.
      */
     public ParkingMap(List<Spot> spots) {
-    	this.spots = spots;
+    	this.spots = new ArrayList<Spot>(spots);
+    	int x_min = spots.get(0).getX(), x_max = spots.get(0).getX();
+    	int y_min = spots.get(0).getY(), y_max = spots.get(0).getY();
+    	for (Spot s : spots) {
+    		x_min = s.getX() < x_min ? s.getX() : x_min;
+    		x_max = s.getX() > x_max ? s.getX() : x_max;
+    		y_min = s.getY() < y_min ? s.getY() : y_min;
+    		y_max = s.getY() > y_max ? s.getY() : y_max;
+    	}
+    	width = x_max - x_min;
+    	height = y_max - y_min;
     }
     
     /**
@@ -34,7 +48,17 @@ public class ParkingMap {
      * @param spots	The list of spots.
      */
     public void setSpots(List<Spot> spots) {
-    	this.spots = spots;
+    	this.spots = new ArrayList<Spot>(spots);
+    	int x_min = spots.get(0).getX(), x_max = spots.get(0).getX();
+    	int y_min = spots.get(0).getY(), y_max = spots.get(0).getY();
+    	for (Spot s : spots) {
+    		x_min = s.getX() < x_min ? s.getX() : x_min;
+    		x_max = s.getX() > x_max ? s.getX() : x_max;
+    		y_min = s.getY() < y_min ? s.getY() : y_min;
+    		y_max = s.getY() > y_max ? s.getY() : y_max;
+    	}
+    	width = x_max - x_min;
+    	height = y_max - y_min;    
     }
     
     /**
@@ -44,6 +68,24 @@ public class ParkingMap {
      */
     public List<Spot> getSpots() {
     	return this.spots;
+    }
+    
+    /**
+     * Get the width.
+     * 
+     * @return	The width.
+     */
+    public int getWidth() {
+    	return width;
+    }
+    
+    /**
+     * Get the Height.
+     * 
+     * @return	The height.
+     */
+    public int getHeight() {
+    	return height;
     }
     
     /**

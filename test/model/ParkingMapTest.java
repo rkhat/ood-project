@@ -20,39 +20,46 @@ class ParkingMapTest {
 		spots.get(0).reserve(); // reserve a spot to make sure numAvailable is set correctly
 		spots.add(new Spot(1,1,1));
 		spots.add(new Spot(2,2,2));
-		ParkingMap map = new ParkingMap((ArrayList<Spot>)spots);
+		ParkingMap map = new ParkingMap(spots);
+		// check that number of spots available is correct
 		Assert.assertTrue( map.getSpots().equals(spots) );
-		int avail = map.getNumAvailable();
-		int z = spots.size()-1;
 		Assert.assertTrue( map.getNumAvailable() == spots.size()-1 );
+		// check that width and height are correct
+		Assert.assertTrue(map.getWidth() == 2);
+		Assert.assertTrue(map.getHeight() == 2);
 	}
 	
 	// Testing setSpots
 	@Test
 	void testSetSpots() {
 		System.out.println("Testing setSpots");
-		ArrayList<Spot> spots = new ArrayList<Spot>(10);
+		List<Spot> spots = new ArrayList<Spot>(10);
 		spots.add(new Spot(0,0,0));
 		spots.get(0).lock();
 		spots.get(0).reserve(); // reserve a spot to make sure numAvailable is set correctly
 		spots.add(new Spot(1,1,1));
 		spots.add(new Spot(2,2,2));
+		// check that number of spots available is correct
 		ParkingMap map = new ParkingMap(spots);
-		Assert.assertTrue(map.getSpots().equals(spots) && map.getNumAvailable() == spots.size()-1);
+		Assert.assertTrue(map.getSpots().equals(spots));
+		Assert.assertTrue(map.getNumAvailable() == spots.size()-1);
+		// check that width and height are correct
+		Assert.assertTrue(map.getWidth() == 2);
+		Assert.assertTrue(map.getHeight() == 2);
 	}
 	
 	// Testing spotsAvailable
 	@Test
 	void testSpotsAvailable() {
 		System.out.println("Testing spotsAvailable");
-		ArrayList<Spot> spots1 = new ArrayList<Spot>(10);
+		List<Spot> spots1 = new ArrayList<Spot>(10);
 		spots1.add(new Spot(0,0,0));
 		spots1.add(new Spot(1,1,1));
 		spots1.add(new Spot(2,2,2));
 		ParkingMap map1 = new ParkingMap(spots1);
 		
 		// set all spots reserved for second parking map
-		ArrayList<Spot> spots2 = new ArrayList<Spot>(10);
+		List<Spot> spots2 = new ArrayList<Spot>(10);
 		spots2.add(new Spot(0,0,0));
 		spots2.add(new Spot(1,1,1));
 		spots2.add(new Spot(2,2,2));
