@@ -35,11 +35,13 @@ public class MainMenuViewController extends AbstractViewController{
     Vehicle vehicle2 = new Vehicle("X223456");
     Vehicle vehicle3 = new Vehicle("X323456");
     Vehicle vehicle4 = new Vehicle("X423456");
+    Vehicle vehicle5 = new Vehicle("X523456");
     
-    VehicleView vehicleView1 = new VehicleViewAdapter(vehicle1, vehicle2);
-    VehicleView vehicleView2 = new VehicleViewAdapter(vehicle2, vehicle2);
-    VehicleView vehicleView3 = new VehicleViewAdapter(vehicle3, vehicle2);
-    VehicleView vehicleView4 = new VehicleViewAdapter(vehicle4, vehicle2);
+    VehicleView vehicleView1 = new VehicleViewAdapter(vehicle1, vehicle1);
+    VehicleView vehicleView2 = new VehicleViewAdapter(vehicle5, vehicle1);
+    VehicleView vehicleView3 = new VehicleViewAdapter(vehicle3, vehicle1);
+    VehicleView vehicleView4 = new VehicleViewAdapter(vehicle4, vehicle1);
+    
     
     list.add(vehicleView1);
     list.add(vehicleView2);
@@ -47,14 +49,10 @@ public class MainMenuViewController extends AbstractViewController{
     list.add(vehicleView4);
     
     System.out.println(vehicleView2.getPlate());
-    
-    System.out.println("test2");
     System.out.println(listView);
     
     listView.setItems(list);
-    System.out.println("test3");
     listView.setCellFactory((ListView<VehicleView> param) -> new XCell());
-    System.out.println("test4");
   }
 
   @Override
@@ -71,18 +69,15 @@ public class MainMenuViewController extends AbstractViewController{
     
     public XCell() {
       super();
-      System.out.println("test5");
       hbox.getChildren().addAll(label, button1, button2);
       
       hbox.setPrefHeight(50.0);
       
       HBox.setHgrow(label, Priority.ALWAYS);
-      System.out.println("test6");
     }
     
     @Override
     protected void updateItem(VehicleView item, boolean empty) {
-      System.out.println("test7");
       super.updateItem(item, empty);
       setText(null);  // No text in label of super class
       if (empty) {
@@ -94,7 +89,7 @@ public class MainMenuViewController extends AbstractViewController{
         
         button2.setText("Remove");
                  button2.setOnAction(remove(item));
-        
+          
         if(vehicleView.isVehicleParked()){
           button1.setText("Checkout");
           button1.setOnAction(checkout(item));
@@ -110,28 +105,26 @@ public class MainMenuViewController extends AbstractViewController{
         
         setGraphic(hbox);
       }
-      
-      System.out.println("test8");
     }
-    
     
   }
   
-  protected EventHandler<ActionEvent> park(final VehicleView vehicleView) {
+  private EventHandler<ActionEvent> park(final VehicleView vehicleView) {
     return (ActionEvent event) -> {
       System.out.println("parked");
+      setPage(Pages.ParkingMapPage);
     };
     
   }
   
-  protected EventHandler<ActionEvent> remove(final VehicleView vehicleView) {
+  private EventHandler<ActionEvent> remove(final VehicleView vehicleView) {
     return (ActionEvent event) -> {
       System.out.println("remove");
     };
     
   }
   
-  protected EventHandler<ActionEvent> checkout(final VehicleView vehicleView) {
+  private EventHandler<ActionEvent> checkout(final VehicleView vehicleView) {
     return (ActionEvent event) -> {
       System.out.println("checkout");
     };
