@@ -8,13 +8,34 @@ package model;
  */
 public class Vehicle {
     private String plate;
+    private int id;
     
+    /**
+     * Create a Vehicle object with given plate.
+     * 
+     * @param plate The plate.
+     */
     public Vehicle(String plate) {
     	this.plate = plate;
+    	this.id = -1;
     }
     
+    /**
+     * Get the plate number.
+     * 
+     * @return  The plate number (String)
+     */
     public String getPlate() {
     	return this.plate;
+    }
+    
+    /**
+     * Get the ID.
+     * 
+     * @return  The ID.
+     */
+    public int getID() {
+      return id;
     }
     
     /**
@@ -24,6 +45,17 @@ public class Vehicle {
      * @return		true if equal, false otherwise.
      */
     public boolean equals(Vehicle other) {
+    	if (this == other) return true;
+    	if (other == null) return false;
     	return (this.plate.equals(other.plate));
+    }
+    
+    /**
+     * Set the Vehicle ID.
+     * 
+     * @param id  The ID.
+     */
+    public void setID(int id) {
+      this.id = id;
     }
 }

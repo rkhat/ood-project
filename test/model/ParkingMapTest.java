@@ -15,11 +15,11 @@ class ParkingMapTest {
 	void testParkingMap() {
 		System.out.println("Testing ParkingMap");
 		List<Spot> spots = new ArrayList<Spot>();
-		spots.add(new Spot(0,0,0));
+		spots.add(new Spot(0,0));
 		spots.get(0).lock();
 		spots.get(0).reserve(); // reserve a spot to make sure numAvailable is set correctly
-		spots.add(new Spot(1,1,1));
-		spots.add(new Spot(2,2,2));
+		spots.add(new Spot(1,1));
+		spots.add(new Spot(2,2));
 		ParkingMap map = new ParkingMap(spots);
 		// check that number of spots available is correct
 		Assert.assertTrue( map.getSpots().equals(spots) );
@@ -27,6 +27,11 @@ class ParkingMapTest {
 		// check that width and height are correct
 		Assert.assertTrue(map.getWidth() == 2);
 		Assert.assertTrue(map.getHeight() == 2);
+		// check that spot ID's were set correctly
+		int numSpots = map.getSpots().size();
+		for (int i = 0; i < numSpots; i++) {
+		  Assert.assertTrue(map.getSpots().get(i).getID() == i);
+		}
 	}
 	
 	// Testing setSpots
@@ -34,11 +39,11 @@ class ParkingMapTest {
 	void testSetSpots() {
 		System.out.println("Testing setSpots");
 		List<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0,0));
+		spots.add(new Spot(0,0));
 		spots.get(0).lock();
 		spots.get(0).reserve(); // reserve a spot to make sure numAvailable is set correctly
-		spots.add(new Spot(1,1,1));
-		spots.add(new Spot(2,2,2));
+		spots.add(new Spot(1,1));
+		spots.add(new Spot(2,2));
 		// check that number of spots available is correct
 		ParkingMap map = new ParkingMap(spots);
 		Assert.assertTrue(map.getSpots().equals(spots));
@@ -46,6 +51,11 @@ class ParkingMapTest {
 		// check that width and height are correct
 		Assert.assertTrue(map.getWidth() == 2);
 		Assert.assertTrue(map.getHeight() == 2);
+    // check that spot ID's were set correctly
+    int numSpots = map.getSpots().size();
+    for (int i = 0; i < numSpots; i++) {
+      Assert.assertTrue(map.getSpots().get(i).getID() == i);
+    }
 	}
 	
 	// Testing spotsAvailable
@@ -53,16 +63,16 @@ class ParkingMapTest {
 	void testSpotsAvailable() {
 		System.out.println("Testing spotsAvailable");
 		List<Spot> spots1 = new ArrayList<Spot>(10);
-		spots1.add(new Spot(0,0,0));
-		spots1.add(new Spot(1,1,1));
-		spots1.add(new Spot(2,2,2));
+		spots1.add(new Spot(0,0));
+		spots1.add(new Spot(1,1));
+		spots1.add(new Spot(2,2));
 		ParkingMap map1 = new ParkingMap(spots1);
 		
 		// set all spots reserved for second parking map
 		List<Spot> spots2 = new ArrayList<Spot>(10);
-		spots2.add(new Spot(0,0,0));
-		spots2.add(new Spot(1,1,1));
-		spots2.add(new Spot(2,2,2));
+		spots2.add(new Spot(0,0));
+		spots2.add(new Spot(1,1));
+		spots2.add(new Spot(2,2));
 		for (Spot s : spots2) {
 			s.lock();
 			s.reserve();
@@ -76,9 +86,9 @@ class ParkingMapTest {
 	void testLockSpot() {
 		System.out.println("Testing lockSpot");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0,0));
-		spots.add(new Spot(1,1,1));
-		spots.add(new Spot(2,2,2));
+		spots.add(new Spot(0,0));
+		spots.add(new Spot(1,1));
+		spots.add(new Spot(2,2));
 		ParkingMap map = new ParkingMap(spots);
 		map.lockSpot(spots.get(0));
 		Assert.assertTrue(map.getSpots().equals(spots));
@@ -89,9 +99,9 @@ class ParkingMapTest {
 	void testReserveSpot() {
 		System.out.println("Testing reserveSpot");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0,0));
-		spots.add(new Spot(1,1,1));
-		spots.add(new Spot(2,2,2));
+		spots.add(new Spot(0,0));
+		spots.add(new Spot(1,1));
+		spots.add(new Spot(2,2));
 		ParkingMap map = new ParkingMap(spots);
 		map.reserveSpot(spots.get(0));
 		Assert.assertTrue(map.getSpots().equals(spots));
@@ -102,9 +112,9 @@ class ParkingMapTest {
 	void testFreeSpot() {
 		System.out.println("Testing freeSpot");
 		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0,0));
-		spots.add(new Spot(1,1,1));
-		spots.add(new Spot(2,2,2));
+		spots.add(new Spot(0,0));
+		spots.add(new Spot(1,1));
+		spots.add(new Spot(2,2));
 		ParkingMap map = new ParkingMap(spots);
 		map.lockSpot(spots.get(0));
 		map.reserveSpot(spots.get(0));

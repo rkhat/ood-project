@@ -20,12 +20,12 @@ public class Spot {
 	 * @param x	X coordinate.
 	 * @param y	Y coordinate.
 	 */
-	public Spot(int x, int y, int id) {
+	public Spot(int x, int y) {
 		this.x = x;
 		this.y = y;
 		locked = false;
 		reserved = false;
-		this.id = id;
+		this.id = -1;
 	}
 	
 	/**
@@ -132,5 +132,26 @@ public class Spot {
 	 */
 	public void setY(int y) {
 		this.y = y;
+	}
+	
+	/**
+	 * Set the spot's ID.
+	 * 
+	 * @param id The ID.
+	 */
+	public void setID(int id) {
+		this.id = id;
+	}
+	
+	/**
+	 * Check if the two Spots are equal (same ID)
+	 * 
+	 * @param other	The spot to compare this to.
+	 * @return		true if equal, false otherwise.
+	 */
+	public boolean equals(Spot other) {
+    	if (this == other) return true;
+    	if (other == null) return false;
+    	return (this.id == other.id);
 	}
 }

@@ -13,11 +13,12 @@ import util.RandomGenerator;
  */
 public class Member {
 	private Reservation reservation;
-	private Map<String, Vehicle> vehicles;
+	private Map<Integer, Vehicle> vehicles;
 	private String code;
 	private String userName;
 	private String password;
 	private double credits;
+	private static int nextVehicleID = 0;
 	
 	/**
 	 * Constructs a Member object with a unique user name and
@@ -31,7 +32,7 @@ public class Member {
 		this.password = psw;
 		this.credits = 0;
 		this.code = RandomGenerator.generateRandomString(10);
-		this.vehicles = new HashMap<String,Vehicle>();
+		this.vehicles = new HashMap<Integer,Vehicle>();
 	}
 	
 	/**
@@ -84,7 +85,7 @@ public class Member {
 	 * 
 	 * @return	The list of vehicles.
 	 */
-	public Map<String,Vehicle> getVehicles() {
+	public Map<Integer,Vehicle> getVehicles() {
 		return this.vehicles;
 	}
 	
@@ -168,12 +169,15 @@ public class Member {
 	 * Add a new vehicle to the account.
 	 * 
 	 * @param vehicle	The vehicle to add.
-	 * @return			true if successful, false otherwise.
+	 * @return			  true if successful, false otherwise.
 	 */
 	public boolean addVehicle(Vehicle vehicle) {
 		try {
-			vehicles.put(vehicle.getPlate(),vehicle);
+			vehicle.setID(nextVehicleID);
+	    vehicles.put(vehicle.getID(),vehicle);
+			nextVehicleID++;
 		} catch(Exception e) {
+		  System.err.println(e.toString());
 			return false;
 		}
 		return true;
@@ -182,13 +186,25 @@ public class Member {
 	/**
 	 * Remove the specified vehicle from the account.
 	 * 
-	 * @param vehicle	The vehicle to remove.
-	 * @return			true if successful, false otherwise.
+	 * @param id     	The ID of the vehicle to remove.
+	 * @return			  true if successful, false otherwise.
 	 */
-	public boolean removeVehicle(String plate) {
-		if (vehicles.remove(plate) == null) {
+	public boolean removeVehicle(int id) {
+		if (vehicles.remove(id) == null) {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Check whether the members are equal (same user name)
+	 * 
+	 * @param other	The Member to compare this to.
+	 * @return		true if equal, false otherwise.
+	 */
+	public boolean equals(Member other) {
+    	if (this == other) return true;
+    	if (other == null) return false;
+    	return (this.userName.equals(other.userName));
 	}
 }

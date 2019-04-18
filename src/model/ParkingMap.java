@@ -32,11 +32,13 @@ public class ParkingMap {
     	this.spots = new ArrayList<Spot>(spots);
     	int x_min = spots.get(0).getX(), x_max = spots.get(0).getX();
     	int y_min = spots.get(0).getY(), y_max = spots.get(0).getY();
+    	int spotID = 0;
     	for (Spot s : spots) {
     		x_min = s.getX() < x_min ? s.getX() : x_min;
     		x_max = s.getX() > x_max ? s.getX() : x_max;
     		y_min = s.getY() < y_min ? s.getY() : y_min;
     		y_max = s.getY() > y_max ? s.getY() : y_max;
+    		s.setID(spotID++);
     	}
     	width = x_max - x_min;
     	height = y_max - y_min;
@@ -51,11 +53,13 @@ public class ParkingMap {
     	this.spots = new ArrayList<Spot>(spots);
     	int x_min = spots.get(0).getX(), x_max = spots.get(0).getX();
     	int y_min = spots.get(0).getY(), y_max = spots.get(0).getY();
+    	int spotID = 0;
     	for (Spot s : spots) {
     		x_min = s.getX() < x_min ? s.getX() : x_min;
     		x_max = s.getX() > x_max ? s.getX() : x_max;
     		y_min = s.getY() < y_min ? s.getY() : y_min;
     		y_max = s.getY() > y_max ? s.getY() : y_max;
+        s.setID(spotID++);
     	}
     	width = x_max - x_min;
     	height = y_max - y_min;    

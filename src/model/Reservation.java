@@ -22,7 +22,6 @@ public class Reservation {
      * Create a Reservation object.
      */
     public Reservation() {
-    	this.startTime = new Date();
     	this.hourlyRate = 2.50;
     	this.dailyRate = 20;
     }

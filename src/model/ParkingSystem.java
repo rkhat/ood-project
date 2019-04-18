@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -71,17 +72,17 @@ public class ParkingSystem {
      * @param res	The reservation to add.
      */
     public void addReservation(Reservation res) {
+      res.setStartTime(new Date());
     	this.reservations.put(res.getCode(), res);
     }
     
     /**
      * Removes a reservation from the system.
      * 
-     * @param res	The reservation to remove.
+     * @param code	The code of the reservation to remove.
      * @return		true if successful, false otherwise.
      */
-    public boolean removeReservation(Reservation res) {
-    	String code = res.getCode();
+    public boolean removeReservation(String code) {
     	// if the reservation was found, return true to indicate success.
     	if (this.reservations.remove(code) != null) return true;
     	// return false to indicate the reservation was not found.
@@ -110,21 +111,30 @@ public class ParkingSystem {
      * 
      * @param un	The user name.
      * @param psw	The Password.
-     * @return		The new member object if credentials are accepted, null otherwise.
-     * @throws 		IllegalArgumentException if username or password is incorrect format.
+     * @return		true if successful, false otherwise.
+     * @throws 		IllegalArgumentException if username or password is incorrect format, or username exists.
      */
     public Member createAccount(String un, String psw) throws IllegalArgumentException {
     	// user name must be alphanumeric with at least one character.
-    	if (!checkAlphaNumeric(un, 1)) throw new IllegalArgumentException("Username must be alphanumeric with at least one character");
+    	if (!checkAlphaNumeric(un, 1)) return null; //throw new IllegalArgumentException("Username must be alphanumeric with at least one character");
     	// if the username is already in use, return null to indicate failure.
-    	if (this.reservations.containsKey(un)) return null;
+    	if (this.members.containsKey(un)) return null;
     	// password must be alphanumeric with at least six characters.
-    	if (!checkAlphaNumeric(psw, 6)) throw new IllegalArgumentException("Password must be alphanumeric with at least six characters");
+    	if (!checkAlphaNumeric(psw, 6)) return null; //throw new IllegalArgumentException("Password must be alphanumeric with at least six characters");
     	// credentials accepted, create member
     	Member newMem = new Member(un, psw);
     	this.members.put(un, newMem);
     	
     	return newMem;
+    }
+    
+    /**
+     * Get the parking map.
+     * 
+     * @return  The parking map.
+     */
+    public ParkingMap getMap() {
+      return map;
     }
   
     /**
@@ -145,6 +155,6 @@ public class ParkingSystem {
     	return true;
     }
     
-	private static ParkingSystem instance = new ParkingSystem();
+    private static ParkingSystem instance = new ParkingSystem();
 
 }
