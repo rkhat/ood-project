@@ -15,15 +15,14 @@ public class Reservation {
     private String timeType; 
     private Date startTime;
     private String code;
-    private double hourlyRate;
-    private double dailyRate;
+    private static final double hourlyRate = 2.50;
+    private static final double dailyRate = 20;
     
     /**
      * Create a Reservation object.
      */
     public Reservation() {
-    	this.hourlyRate = 2.50;
-    	this.dailyRate = 20;
+      timeType = "HOURLY";
     }
  
     /**
@@ -69,6 +68,7 @@ public class Reservation {
      */
     public void setSpot(Spot spot) {
     	this.spot = spot;
+    	
     }
     
     /**
@@ -129,5 +129,12 @@ public class Reservation {
      */
     public void setStartTime(Date startTime) {
     	this.startTime = startTime;
+    }
+    
+    public String toString() {
+      String s = "Vehicle:\n" + vehicle.toString() + "\n\n" + 
+                 "Spot:\n" + spot.toString() + "\n\n" + 
+                 "Start time:\n" + startTime;
+      return s;
     }
 }

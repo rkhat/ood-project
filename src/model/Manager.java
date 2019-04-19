@@ -15,7 +15,7 @@ public class Manager {
 	private Reservation reservation;
 	private List<Spot> spots;
 	private Spot spot;
-	private Map<String,Vehicle> vehicles;
+	private Map<Integer,Vehicle> vehicles;
 	private Vehicle vehicle;
 	
 	/**
@@ -83,6 +83,25 @@ public class Manager {
 	}
 	
 	/**
+	 * Take care of logging in.
+	 * 
+	 * @param un   The username entered
+	 * @param psw  The password entered
+	 * @return     True if log in succeeded, false otherwise.
+	 */
+	public boolean doLogIn(String un, String psw) {
+	  member = parkingSystem.verifyLoginInfo(un, psw);
+	  // if login fails, return false
+	  if (member == null) {
+	    return false;
+	  }
+	  // if login succeeds, get the members vehicles, reservation, etc.
+	  reservation = member.getReservation();
+	  vehicles = member.getVehicles();
+	  return true;
+	}
+	
+	/**
 	 * Attempt to create a reservation with the vehicle corresponding to the given ID.
 	 * 
 	 * @param vehicleID  The ID of the vehicle.
@@ -97,8 +116,11 @@ public class Manager {
 	  if (!parkingSystem.spotsAvailable()) return false;
 	  // attempt to set the vehicle.
 	  vehicle = member.getVehicles().get(vehicleID);
-	  // if the vehicle ID is valid, create the reservation and return true.
+	  // if the vehicle ID is valid, attempt to create the reservation.
 	  if (vehicle != null) {
+	    // if a vehicle with the same plate is already parked, return false.
+	    if (parkingSystem.plateIsParked(vehicle.getPlate())) return false;
+	    // create the reservation and return true.
 	    reservation = new Reservation();
 	    reservation.setVehicle(vehicle);
 	    reservation.setCode(member.getCode());
@@ -113,14 +135,18 @@ public class Manager {
 	 * 
 	 * @param spotID   The ID of the spot to select.
 	 * @return         true if successful, false otherwise.
+	 * @precondition   spotID must be a valid spot ID.
 	 */
 	public boolean doSelectSpot(int spotID) {
 	  try {
-	    // try to select the spot and lock it.
+	    // try to select the spot and add it to the reservation.
 	    spot = spots.get(spotID);
-	    if (spot.lock()) return true;
-	    // if spot cannot be locked, deselect it and return false.
-	    spot = null;
+	    // make sure the spot is not reserved, and add it to the reservation.
+	    if (!spot.isReserved()) {
+	      reservation.setSpot(spot);
+	      member.setReservation(reservation);
+	      return parkingSystem.addReservation(reservation);
+	    }
 	    return false;
 	  } catch(IndexOutOfBoundsException e) {
 	    // if there was an error selecting the spot, set spot null and return false.
@@ -130,30 +156,116 @@ public class Manager {
 	}
 	
 	/**
-	 * Take care of confirming a spot selection. 
+	 * Take care of adding credits to account.
 	 * 
-	 * @param confirm  The state of confirmation (true means confirm, false means cancel)
-	 * @return         true if successful, false otherwise. If confirm == true,
-	 *                 success means the spot was reserved and added to the reservation.
-	 *                 If confirm == false, success means the spot was freed and deselected.
+	 * @param amt  The amount of credits to add.
+	 * @return     true if successful, false otherwise.
 	 */
-	public boolean doConfirmSpot(boolean confirm) {
-	  // if there is no spot selected, return false.
-	  if (spot == null) return false;
-	  // if spot was confirmed, reserve it and return true.
-	  if (confirm) {
-	    if (spot.reserve()) {
-	      reservation.setSpot(spot);
-	      return true;
-	    }
+	public boolean doAddCredits(double amt) {
+	  if (amt < 0) {
+	    System.err.println("Amount must be positive");
+	    System.out.println();
 	    return false;
 	  }
-	  // spot was not confirmed, deselect it and return true.
-	  spot.free();
-	  spot = null;
+	  member.addCredits(amt);
 	  return true;
 	}
 	
+	/**
+	 * Take care of logging out.
+	 * 
+	 * @return true if a member was logged in, false otherwise.
+	 */
+	public boolean doLogOut() {
+	  // if a member is logged in, log out and return true.
+	  if (member != null) {
+	    resetReservation();
+	    member = null;
+	    return true;
+	  }
+	  // no member logged in, return false.
+	  return false;
+	}
+	
+	/**
+	 * Take care of adding a vehicle.
+	 * 
+	 * @param plate  String representing the plate number.
+	 * @return       true if successful, false otherwise.
+	 */
+	public boolean doAddVehicle(String plate) {
+	  if (ParkingSystem.checkAlphaNumeric(plate, 6)) {
+	    Vehicle veh = new Vehicle(plate);
+	    return member.addVehicle(veh);
+	  }
+	  // not alphanumeric
+	  return false;
+	}
+	
+	/**
+	 * Get the logged in member.
+	 * 
+	 * @return The member.
+	 */
+	public Member getMember() {
+	  return member;
+	}
+	
+	 /**
+   * Get the selected vehicle.
+   * 
+   * @return The selected vehicle.
+   */
+  public Vehicle getVehicle() {
+    return vehicle;
+  }
+	
+  /**
+   * Get the list of spots in the map.
+   * 
+   * @return  The list of spots.
+   */
+  public List<Spot> getSpots() {
+    return spots;
+  }
+  
+  /**
+   * Get the reservation.
+   * 
+   * @return  The reservation.
+   */
+  public Reservation getReservation() {
+    return reservation;
+  }
+  
+  /**
+   * Handle check out
+   * 
+   * @return  true if checkout succeeded, false otherwise.
+   */
+  public boolean doCheckout() {
+    double total = reservation.getTotal();
+    if (member.hasSufficientCredits(total)) {
+      member.removeCredits(total);
+      member.removeReservation();
+      parkingSystem.removeReservation(reservation.getCode());
+      reservation = null;
+      vehicle = null;
+      spot = null;
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * Reset the reservation details.
+   */
+  public void resetReservation() {
+    reservation = null;
+    vehicle = null;
+    spot = null;
+  }
+  
 	private static Manager instance;
 	
 }

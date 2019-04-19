@@ -1,7 +1,9 @@
-package model;
+  package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Parking Map class.
@@ -10,17 +12,23 @@ import java.util.List;
  * @author Alec Agnese, Rami El Khatib
  */
 public class ParkingMap {
-    private List<Spot> spots;
-    private int height;
-    private int width;
+    private Map<Integer,Spot> spots;
+    private int nextID;
+    private int minX, minY, maxX, maxY;
+    private int freeSpots, reservedSpots;
     
     /**
      * Creates a ParkingMap object with no spots.
      */
     public ParkingMap() {
-    	spots = new ArrayList<Spot>();
-    	height = 0;
-    	width = 0;
+    	spots = new HashMap<Integer,Spot>();
+    	minY = Integer.MAX_VALUE;
+    	minX = Integer.MAX_VALUE;
+    	maxY = 0;
+    	maxX = 0;
+    	nextID = 0;
+    	freeSpots = 0;
+    	reservedSpots = 0;
     }
     
     /**
@@ -29,40 +37,44 @@ public class ParkingMap {
      * @param spots	The list of spots in the parking map.
      */
     public ParkingMap(List<Spot> spots) {
-    	this.spots = new ArrayList<Spot>(spots);
-    	int x_min = spots.get(0).getX(), x_max = spots.get(0).getX();
-    	int y_min = spots.get(0).getY(), y_max = spots.get(0).getY();
-    	int spotID = 0;
+    	this.spots = new HashMap<Integer,Spot>(spots.size());
+    	minY = Integer.MAX_VALUE;
+      minX = Integer.MAX_VALUE;
+      maxY = 0;
+      maxX = 0;
+    	nextID = 0;
+    	freeSpots = 0;
+    	reservedSpots = 0;
     	for (Spot s : spots) {
-    		x_min = s.getX() < x_min ? s.getX() : x_min;
-    		x_max = s.getX() > x_max ? s.getX() : x_max;
-    		y_min = s.getY() < y_min ? s.getY() : y_min;
-    		y_max = s.getY() > y_max ? s.getY() : y_max;
-    		s.setID(spotID++);
+    		minX = s.getX() < minX ? s.getX() : minX;
+    		maxX = s.getX() > maxX ? s.getX() : maxX;
+    		minY = s.getY() < minY ? s.getY() : minY;
+    		maxY = s.getY() > maxY ? s.getY() : maxY;
+    		s.setID(nextID++);
+    		this.spots.put(s.getID(),s);
+    		if (s.isReserved()) reservedSpots++;
+    		else freeSpots++;
     	}
-    	width = x_max - x_min;
-    	height = y_max - y_min;
     }
     
     /**
-     * Sets the list of spots for the parking map
+     * Adds a list of spots to the parking map
      * 
      * @param spots	The list of spots.
+     * @precondition X and Y coordinates of new spots must not overlap with any existing spots.
+     * @precondition spots cannot be an empty list.
      */
-    public void setSpots(List<Spot> spots) {
-    	this.spots = new ArrayList<Spot>(spots);
-    	int x_min = spots.get(0).getX(), x_max = spots.get(0).getX();
-    	int y_min = spots.get(0).getY(), y_max = spots.get(0).getY();
-    	int spotID = 0;
-    	for (Spot s : spots) {
-    		x_min = s.getX() < x_min ? s.getX() : x_min;
-    		x_max = s.getX() > x_max ? s.getX() : x_max;
-    		y_min = s.getY() < y_min ? s.getY() : y_min;
-    		y_max = s.getY() > y_max ? s.getY() : y_max;
-        s.setID(spotID++);
-    	}
-    	width = x_max - x_min;
-    	height = y_max - y_min;    
+    public void addSpots(List<Spot> spots) {
+      for (Spot s : spots) {
+        minX = s.getX() < minX ? s.getX() : minX;
+        maxX = s.getX() > maxX ? s.getX() : maxX;
+        minY = s.getY() < minY ? s.getY() : minY;
+        maxY = s.getY() > maxY ? s.getY() : maxY;
+        s.setID(nextID++);
+        this.spots.put(s.getID(),s);
+        if (s.isReserved()) reservedSpots++;
+        else freeSpots++;
+      }
     }
     
     /**
@@ -71,7 +83,8 @@ public class ParkingMap {
      * @return	The list of spots.
      */
     public List<Spot> getSpots() {
-    	return this.spots;
+    	List<Spot> spotList = new ArrayList<Spot>(spots.values());
+    	return spotList;
     }
     
     /**
@@ -80,7 +93,7 @@ public class ParkingMap {
      * @return	The width.
      */
     public int getWidth() {
-    	return width;
+    	return (maxX - minX + 1);
     }
     
     /**
@@ -89,7 +102,25 @@ public class ParkingMap {
      * @return	The height.
      */
     public int getHeight() {
-    	return height;
+    	return (maxY - minY + 1);
+    }
+    
+    /**
+     * Get the maximum X value.
+     * 
+     * @return  the maximum X value.
+     */
+    public int getMaxX() {
+      return maxX;
+    }
+    
+    /**
+     * Get the maximum Y value.
+     * 
+     * @return  the maximum Y value.
+     */
+    public int getMaxY() {
+      return maxY;
     }
     
     /**
@@ -98,12 +129,7 @@ public class ParkingMap {
      * @return	The number of available spots.
      */
     public int getNumAvailable() {
-    	int numAvailable = 0;
-    	// count the number of available spots
-    	for (Spot s : spots) {
-    		if (!(s.isReserved() || s.isLocked()) ) numAvailable++;
-    	}
-    	return numAvailable;
+    	return freeSpots;
     }
     
     /**
@@ -112,34 +138,18 @@ public class ParkingMap {
      * @return	true if there are spots available, false otherwise.
      */
     public boolean spotsAvailable() {
-    	return (getNumAvailable() > 0);
-    }
-    
-    /**
-     * Attempt to lock the given spot.
-     * 
-     * @param spot	The spot to be locked.
-     * @return		true if successful, false otherwise.
-     */
-
-    public boolean lockSpot(Spot spot) {
-    	if (spots.contains(spot)) {
-    		return spot.lock();
-    	}
-    	return false;
+    	return (freeSpots > 0);
     }
     
     /**
      * Attempt to reserve the given spot.
      * 
-     * @param spot	The spot to be reserved.
-     * @return		true if successful, false otherwise.
+     * @param spotID  The ID of the spot to reserve
+     * @return		    true if successful, false otherwise.
+     * @precondition  spotID must correspond to an existing spot.
      */
-    public boolean reserveSpot(Spot spot) {
-    	if (spots.contains(spot)) {
-    		return spot.reserve();
-    	}
-    	return false;
+    public boolean reserveSpot(int spotID) {
+   		return spots.get(spotID).reserve();
     }
     
     /**
@@ -147,9 +157,7 @@ public class ParkingMap {
      * 
      * @param spot	The spot to be freed.
      */
-    public void freeSpot(Spot spot) {
-    	if (spots.contains(spot)) {
-    		spot.free();
-    	}
+    public void freeSpot(int spotID) {
+      spots.get(spotID).free();
     }
 }

@@ -1,7 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +18,7 @@ import java.util.regex.Pattern;
 public class ParkingSystem {
 	
     private Map<String, Reservation> reservations;
+    private List<String> parkedPlates;
     private Map<String, Member> members;
     private ParkingMap map;
     
@@ -26,6 +29,7 @@ public class ParkingSystem {
      */
     private ParkingSystem() {
     	reservations = new HashMap<String, Reservation>();
+    	parkedPlates = new ArrayList<String>();
     	members = new HashMap<String, Member>();
     }
     
@@ -60,7 +64,7 @@ public class ParkingSystem {
      * Look up a reservation with the given code.
      * 
      * @param code	The code.
-     * @return		The Reservation object if found, null otherwise.
+     * @return		  The Reservation object if found, null otherwise.
      */
     public Reservation lookUp(String code) {
     	return this.reservations.get(code);
@@ -70,21 +74,36 @@ public class ParkingSystem {
      * Adds a reservation to the system.
      * 
      * @param res	The reservation to add.
+     * @return    true if successful, false otherwise.
      */
-    public void addReservation(Reservation res) {
+    public boolean addReservation(Reservation res) {
+      String plate = res.getVehicle().getPlate();
+      // if the plate is already parked, return false.
+      if (plateIsParked(plate)) return false;
+      // otherwise, create the reservation and return true.
       res.setStartTime(new Date());
-    	this.reservations.put(res.getCode(), res);
+      if (map.reserveSpot(res.getSpot().getID())) {
+        parkedPlates.add(res.getVehicle().getPlate());
+        reservations.put(res.getCode(), res);
+        return true;
+      }
+      return false;
     }
     
     /**
      * Removes a reservation from the system.
      * 
      * @param code	The code of the reservation to remove.
-     * @return		true if successful, false otherwise.
+     * @return		  true if successful, false otherwise.
      */
     public boolean removeReservation(String code) {
-    	// if the reservation was found, return true to indicate success.
-    	if (this.reservations.remove(code) != null) return true;
+      // remove the reservation and free the spot
+      Reservation res = reservations.remove(code);
+      if (res != null) {
+        parkedPlates.remove(res.getVehicle().getPlate());
+        map.freeSpot(res.getSpot().getID());
+        return true;
+      }
     	// return false to indicate the reservation was not found.
     	return false;
     }
@@ -101,7 +120,7 @@ public class ParkingSystem {
     	// if the username is not found, return null
     	if (mem == null) return null;
     	// if the password is correct, return the member object.
-    	if (mem.getPassword() == psw) return mem;
+    	if (mem.getPassword().contentEquals(psw)) return mem;
     	// password incorrect, return null.
     	return null;
     }
@@ -135,6 +154,22 @@ public class ParkingSystem {
      */
     public ParkingMap getMap() {
       return map;
+    }
+    
+    /**
+     * Check whether a vehicle with the given plate number is parked.
+     * 
+     * @param plate The plate number.
+     * @return      true if the plate number is in the list of parked plates,
+     *              false otherwise.
+     */
+    public boolean plateIsParked(String plate) {
+      for (String s : parkedPlates) {
+        if (s.contentEquals(plate)) {
+          return true;
+        }
+      }
+      return false;
     }
   
     /**

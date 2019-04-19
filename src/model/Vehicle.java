@@ -58,4 +58,12 @@ public class Vehicle {
     public void setID(int id) {
       this.id = id;
     }
+    
+    /**
+     * Return a string representation of the vehicle.
+     */
+    public String toString() {
+      String s = "ID: " + id + "\tPlate: " + plate;
+      return s;
+    }
 }

@@ -1,6 +1,8 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import util.RandomGenerator;
@@ -172,6 +174,9 @@ public class Member {
 	 * @return			  true if successful, false otherwise.
 	 */
 	public boolean addVehicle(Vehicle vehicle) {
+	  for (Vehicle v : vehicles.values()) {
+	    if (v.equals(vehicle)) return false;
+	  }
 		try {
 			vehicle.setID(nextVehicleID);
 	    vehicles.put(vehicle.getID(),vehicle);

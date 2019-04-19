@@ -8,7 +8,6 @@ package model;
  */
 public class Spot {
 	
-	private boolean locked;
 	private boolean reserved;
 	private int x;
 	private int y;
@@ -23,18 +22,8 @@ public class Spot {
 	public Spot(int x, int y) {
 		this.x = x;
 		this.y = y;
-		locked = false;
 		reserved = false;
 		this.id = -1;
-	}
-	
-	/**
-	 * Check whether or not the spot is locked.
-	 * 
-	 * @return true if locked, false otherwise.
-	 */
-	public boolean isLocked() {
-		return this.locked;
 	}
 	
 	/**
@@ -72,35 +61,13 @@ public class Spot {
 	public int getID() {
 		return this.id;
 	}
-	
-	/**
-	 * Attempt to lock the spot.
-	 * 
-	 * @return	true if successful, false otherwise.
-	 */
-	public boolean lock() {
-		// if already locked, return false to indicate failure.
-		if (this.locked) return false;
-		// otherwise, lock and return true.
-		this.locked = true;
-		return true;
-	}
-	
-	/**
-	 * Unlock the spot.
-	 */
-	public void unlock() {
-		this.locked = false;
-	}
-	
+
 	/**
 	 * Attempt to reserve the spot.
 	 * 
 	 * @return	true if successful, false otherwise.
 	 */
 	public boolean reserve() {
-		// spot must first be locked in order to reserve
-		if (!locked) return false;
 		// if already reserved, return false to indicate failure.
 		if (this.reserved) return false; 
 		// otherwise, reserve and return true;
@@ -112,7 +79,6 @@ public class Spot {
 	 * Free the spot.
 	 */
 	public void free() {
-		this.locked = false;
 		this.reserved = false;
 	}
 	
@@ -153,5 +119,13 @@ public class Spot {
     	if (this == other) return true;
     	if (other == null) return false;
     	return (this.id == other.id);
+	}
+	
+	/**
+	 * Return a string representation of the spot.
+	 */
+	public String toString() {
+	  String s = "ID: " + id + "\tX: " + x + "\tY: " + y;
+	  return s;
 	}
 }

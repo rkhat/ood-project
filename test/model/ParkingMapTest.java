@@ -16,17 +16,15 @@ class ParkingMapTest {
 		System.out.println("Testing ParkingMap");
 		List<Spot> spots = new ArrayList<Spot>();
 		spots.add(new Spot(0,0));
-		spots.get(0).lock();
 		spots.get(0).reserve(); // reserve a spot to make sure numAvailable is set correctly
 		spots.add(new Spot(1,1));
 		spots.add(new Spot(2,2));
 		ParkingMap map = new ParkingMap(spots);
 		// check that number of spots available is correct
-		Assert.assertTrue( map.getSpots().equals(spots) );
 		Assert.assertTrue( map.getNumAvailable() == spots.size()-1 );
 		// check that width and height are correct
-		Assert.assertTrue(map.getWidth() == 2);
-		Assert.assertTrue(map.getHeight() == 2);
+		Assert.assertTrue(map.getWidth() == 3);
+		Assert.assertTrue(map.getHeight() == 3);
 		// check that spot ID's were set correctly
 		int numSpots = map.getSpots().size();
 		for (int i = 0; i < numSpots; i++) {
@@ -34,23 +32,21 @@ class ParkingMapTest {
 		}
 	}
 	
-	// Testing setSpots
+	// Testing addSpots
 	@Test
 	void testSetSpots() {
-		System.out.println("Testing setSpots");
+		System.out.println("Testing addSpots");
 		List<Spot> spots = new ArrayList<Spot>(10);
 		spots.add(new Spot(0,0));
-		spots.get(0).lock();
 		spots.get(0).reserve(); // reserve a spot to make sure numAvailable is set correctly
 		spots.add(new Spot(1,1));
 		spots.add(new Spot(2,2));
 		// check that number of spots available is correct
 		ParkingMap map = new ParkingMap(spots);
-		Assert.assertTrue(map.getSpots().equals(spots));
 		Assert.assertTrue(map.getNumAvailable() == spots.size()-1);
 		// check that width and height are correct
-		Assert.assertTrue(map.getWidth() == 2);
-		Assert.assertTrue(map.getHeight() == 2);
+		Assert.assertTrue(map.getWidth() == 3);
+		Assert.assertTrue(map.getHeight() == 3);
     // check that spot ID's were set correctly
     int numSpots = map.getSpots().size();
     for (int i = 0; i < numSpots; i++) {
@@ -74,51 +70,48 @@ class ParkingMapTest {
 		spots2.add(new Spot(1,1));
 		spots2.add(new Spot(2,2));
 		for (Spot s : spots2) {
-			s.lock();
 			s.reserve();
 		}
 		ParkingMap map2 = new ParkingMap(spots2);
 		Assert.assertTrue(map1.spotsAvailable() && !map2.spotsAvailable());
-	}
-	
-	// Testing lockSpot
-	@Test
-	void testLockSpot() {
-		System.out.println("Testing lockSpot");
-		ArrayList<Spot> spots = new ArrayList<Spot>(10);
-		spots.add(new Spot(0,0));
-		spots.add(new Spot(1,1));
-		spots.add(new Spot(2,2));
-		ParkingMap map = new ParkingMap(spots);
-		map.lockSpot(spots.get(0));
-		Assert.assertTrue(map.getSpots().equals(spots));
 	}
 
 	// Testing reserveSpot
 	@Test
 	void testReserveSpot() {
 		System.out.println("Testing reserveSpot");
-		ArrayList<Spot> spots = new ArrayList<Spot>(10);
+		List<Spot> spots = new ArrayList<Spot>(10);
 		spots.add(new Spot(0,0));
 		spots.add(new Spot(1,1));
 		spots.add(new Spot(2,2));
 		ParkingMap map = new ParkingMap(spots);
-		map.reserveSpot(spots.get(0));
-		Assert.assertTrue(map.getSpots().equals(spots));
+		map.reserveSpot(spots.get(0).getID());
+		Assert.assertTrue(map.getSpots().get(0).isReserved());
 	}
 	
 	// Testing freeSpot
 	@Test
 	void testFreeSpot() {
 		System.out.println("Testing freeSpot");
-		ArrayList<Spot> spots = new ArrayList<Spot>(10);
+		List<Spot> spots = new ArrayList<Spot>(10);
 		spots.add(new Spot(0,0));
 		spots.add(new Spot(1,1));
 		spots.add(new Spot(2,2));
 		ParkingMap map = new ParkingMap(spots);
-		map.lockSpot(spots.get(0));
-		map.reserveSpot(spots.get(0));
-		map.freeSpot(spots.get(0));
-		Assert.assertTrue(!map.getSpots().get(0).isLocked() && !map.getSpots().get(0).isReserved());
+		map.reserveSpot(spots.get(0).getID());
+		map.freeSpot(spots.get(0).getID());
+		Assert.assertTrue(!map.getSpots().get(0).isReserved());
 	}
+	
+	 // Testing getSpots
+  @Test
+  void testGetSpots() {
+    System.out.println("Testing getSpots");
+    List<Spot> spots = new ArrayList<Spot>(10);
+    spots.add(new Spot(0,0));
+    spots.add(new Spot(1,1));
+    spots.add(new Spot(2,2));
+    ParkingMap map = new ParkingMap(spots);
+    Assert.assertTrue(map.getSpots().equals(spots));
+  }
 }

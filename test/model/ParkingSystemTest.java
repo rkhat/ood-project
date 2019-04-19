@@ -27,9 +27,10 @@ class ParkingSystemTest {
 		
 		// Test with no spots available
 		for (Spot s : spots) {
-			s.lock();
 			s.reserve();
 		}
+		map = new ParkingMap(spots);
+		ps.setMap(map);
 		Assert.assertTrue(!ps.spotsAvailable());
 	}
 	
@@ -51,9 +52,10 @@ class ParkingSystemTest {
 		Reservation res = new Reservation();
 		String code = "asldkfjahs192348as2ldfj";
 		res.setCode(code);
+		res.setSpot(spots.get(0));
 		ps.addReservation(res);
 		
-		Assert.assertTrue(ps.lookUp(code).equals(res));
+		Assert.assertTrue(ps.lookUp(code).getCode() == code);
 		Assert.assertTrue(ps.lookUp("blah") == null);
 		
 		// remove the reservation
@@ -107,6 +109,50 @@ class ParkingSystemTest {
 		Assert.assertTrue(ps.verifyLoginInfo("wrongUsername", "wrongPassword") == null);
 	}
 	
-	
+	 // Testing addReservation
+  @Test
+  void testAddReservation() {
+    System.out.println("Testing addReservation");
+    
+    ArrayList<Spot> spots = new ArrayList<Spot>(10);
+    spots.add(new Spot(0,0));
+    spots.add(new Spot(1,1));
+    spots.add(new Spot(2,2));
+    ParkingMap map = new ParkingMap(spots);
+    ParkingSystem ps = ParkingSystem.getInstance();
+    ps.setMap(map);
+      
+    Reservation res = new Reservation();
+    res.setSpot(spots.get(0));
+    Assert.assertTrue(ps.addReservation(res));
+    Assert.assertTrue( ps.lookUp(res.getCode()).getSpot().isReserved() );
+    
+    Reservation res2 = new Reservation();
+    res2.setSpot(spots.get(0));
+    Assert.assertTrue(!ps.addReservation(res2));
+  }
+  
+  // Testing removeReservation
+ @Test
+ void testRemoveReservation() {
+   System.out.println("Testing removeReservation");
+   
+   ArrayList<Spot> spots = new ArrayList<Spot>(10);
+   spots.add(new Spot(0,0));
+   spots.add(new Spot(1,1));
+   spots.add(new Spot(2,2));
+   ParkingMap map = new ParkingMap(spots);
+   ParkingSystem ps = ParkingSystem.getInstance();
+   ps.setMap(map);
+     
+   Reservation res = new Reservation();
+   res.setSpot(spots.get(0));
+   res.setCode("123asd");
+   ps.addReservation(res);
+   ps.removeReservation(res.getCode());
+   
+   Assert.assertTrue( ps.lookUp(res.getCode()) == null );
+   Assert.assertTrue(!spots.get(0).isReserved());
+ }
 	
 }
