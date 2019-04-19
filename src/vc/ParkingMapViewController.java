@@ -20,13 +20,13 @@ public class ParkingMapViewController extends AbstractViewController{
   @FXML
   public void initialize() {
     List<Spot> spots = new ArrayList<>();
-    spots.add(new Spot(0,0,0));
-    spots.add(new Spot(0,5,1));
-    spots.add(new Spot(2,2,2));
-    spots.add(new Spot(5,0,3));
-    spots.add(new Spot(3,4,4));
-    spots.add(new Spot(2,6,5));
-    spots.add(new Spot(7,8,6));
+    spots.add(new Spot(0,0));
+    spots.add(new Spot(0,5));
+    spots.add(new Spot(2,2));
+    spots.add(new Spot(5,0));
+    spots.add(new Spot(3,4));
+    spots.add(new Spot(2,6));
+    spots.add(new Spot(7,8));
     ParkingMap parkingMap = new ParkingMap(spots);
     spots = parkingMap.getSpots();
     
