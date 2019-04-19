@@ -32,10 +32,9 @@ public class Manager {
 	/**
 	 * Create a new instance of Manager.
 	 * 
-	 * @param ps	The parking system instance.
 	 */
-	public static void createInstance(ParkingSystem ps) {
-		instance = new Manager(ps);
+	public static void createInstance() {
+		instance = new Manager(ParkingSystem.getInstance());
 	}
 	
 	/**
