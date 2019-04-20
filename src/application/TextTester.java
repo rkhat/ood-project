@@ -12,6 +12,7 @@ import model.ParkingMap;
 import model.ParkingSystem;
 import model.Spot;
 import model.Vehicle;
+import util.StringHelper;
 import vc.Pages;
 import javafx.fxml.FXMLLoader;
 
@@ -99,7 +100,7 @@ public class TextTester {//extends Application {
      System.out.println("Enter Username: ");
      stringInput = scan.nextLine();
      System.out.println();
-     if (ParkingSystem.checkAlphaNumeric(stringInput, 1)) {
+     if (StringHelper.checkAlphaNumeric(stringInput, 1)) {
        un = stringInput;
        return un;
      }
@@ -113,7 +114,7 @@ public class TextTester {//extends Application {
      System.out.println("Enter Password: ");
      stringInput = scan.nextLine();
      System.out.println();
-     if (ParkingSystem.checkAlphaNumeric(stringInput,6)) {
+     if (StringHelper.checkAlphaNumeric(stringInput,6)) {
        psw = stringInput;
        System.out.println("Re-enter Password: ");
        stringInput = scan.nextLine();

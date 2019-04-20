@@ -3,6 +3,8 @@ package model;
 import java.util.List;
 import java.util.Map;
 
+import util.StringHelper;
+
 /**
  *
  * @author Alec Agnese, Rami El Khatib
@@ -193,7 +195,7 @@ public class Manager {
 	 * @return       true if successful, false otherwise.
 	 */
 	public boolean doAddVehicle(String plate) {
-	  if (ParkingSystem.checkAlphaNumeric(plate, 6)) {
+	  if (StringHelper.checkAlphaNumeric(plate, 6)) {
 	    Vehicle veh = new Vehicle(plate);
 	    return member.addVehicle(veh);
 	  }
