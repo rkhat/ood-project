@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import model.enums.STATUS;
+
 class ParkingSystemTest {
   
 	// Testing spotsAvailable
@@ -74,19 +76,19 @@ class ParkingSystemTest {
 		// add a new account to the system with valid un/psw
 		String un = "Alec";
 		String psw = "123ABC";
-		Member mem1 = ps.createAccount(un, psw);
+		Member mem1 = ps.createAccount(un, psw).getValue();
 		Assert.assertTrue(mem1.getUserName() == un && mem1.getPassword() == psw);
 		
 		// add a new account to the system with the same un/psw (should fail)
-		Member mem2 = ps.createAccount(un, psw);
+		Member mem2 = ps.createAccount(un, psw).getValue();
 		Assert.assertTrue(mem2 == null);
 		
 		// add a new account to the system with an invalid username
-		Member mem3 = ps.createAccount("f17&&%", psw);
+		Member mem3 = ps.createAccount("f17&&%", psw).getValue();
 		Assert.assertTrue(mem3 == null);
 		
 		// add a new account to the system with an invalid password
-		Member mem4 = ps.createAccount("alec", "123");
+		Member mem4 = ps.createAccount("alec", "123").getValue();
 		Assert.assertTrue(mem4 == null);
 	}
 	
@@ -100,13 +102,13 @@ class ParkingSystemTest {
 		// add a new account to the system
 		String un = "Alec1";
 		String psw = "123ABC";
-		Member mem = ps.createAccount(un, psw);
+		Member mem = ps.createAccount(un, psw).getValue();
 		// should return true when username and password match an account
-		Assert.assertTrue(ps.verifyLoginInfo(un, psw).equals(mem));
+		Assert.assertTrue(ps.verifyLoginInfo(un, psw).getValue().equals(mem));
 		// false if either the username, password, or both are incorrect
-		Assert.assertTrue(ps.verifyLoginInfo(un, "wrongPassword") == null);
-		Assert.assertTrue(ps.verifyLoginInfo("wrongUsername", psw) == null);
-		Assert.assertTrue(ps.verifyLoginInfo("wrongUsername", "wrongPassword") == null);
+		Assert.assertTrue(ps.verifyLoginInfo(un, "wrongPassword").getValue() == null);
+		Assert.assertTrue(ps.verifyLoginInfo("wrongUsername", psw).getValue() == null);
+		Assert.assertTrue(ps.verifyLoginInfo("wrongUsername", "wrongPassword").getValue() == null);
 	}
 	
 	 // Testing addReservation
@@ -122,14 +124,14 @@ class ParkingSystemTest {
     ParkingSystem ps = ParkingSystem.getInstance();
     ps.setMap(map);
       
-    Reservation res = new Reservation();
-    res.setSpot(spots.get(0));
-    Assert.assertTrue(ps.addReservation(res));
-    Assert.assertTrue( ps.lookUp(res.getCode()).getSpot().isReserved() );
+    Reservation res1 = new Reservation();
+    res1.setSpot(spots.get(0));
+    Assert.assertTrue(ps.addReservation(res1) == STATUS.SUCCESS);
+    Assert.assertTrue( ps.lookUp(res1.getCode()).getSpot().isReserved() );
     
     Reservation res2 = new Reservation();
     res2.setSpot(spots.get(0));
-    Assert.assertTrue(!ps.addReservation(res2));
+    Assert.assertTrue(ps.addReservation(res2) == STATUS.FAILED);
   }
   
   // Testing removeReservation

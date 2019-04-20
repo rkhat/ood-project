@@ -77,9 +77,14 @@ public class Spot {
 	
 	/**
 	 * Free the spot.
+	 * @return true if spot was reserved, false otherwise.
 	 */
-	public void free() {
-		this.reserved = false;
+	public boolean free() {
+	  if (reserved) {
+	    reserved = false;
+	    return true;
+	  }
+		return false;
 	}
 	
 	/**
