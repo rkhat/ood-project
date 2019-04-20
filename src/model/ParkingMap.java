@@ -142,6 +142,15 @@ public class ParkingMap {
     }
     
     /**
+     * Accessor for number of available spots.
+     * 
+     * @return  The number of reserved spots.
+     */
+    public int getNumReserved() {
+      return reservedSpots;
+    }
+    
+    /**
      * Check if there are spots available.
      * 
      * @return	true if there are spots available, false otherwise.
