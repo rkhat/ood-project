@@ -31,9 +31,9 @@ public class Manager {
    * 
    * @param ps The parking system instance.
    */
-  private Manager(ParkingSystem ps) {
-    parkingSystem = ps;
-    parkingMap = ps.getMap();
+  private Manager() {
+    parkingSystem = ParkingSystem.getInstance();
+    parkingMap = parkingSystem.getMap();
     spots = parkingMap.getSpotsAsMap();
   }
 
@@ -42,7 +42,7 @@ public class Manager {
    * 
    */
   public static void createInstance() {
-    instance = new Manager(ParkingSystem.getInstance());
+    instance = new Manager();
   }
 
   /**
@@ -360,6 +360,26 @@ public class Manager {
     return null;
   }
 
-  private static Manager instance = new Manager(ParkingSystem.getInstance());
+  /**
+   * Get the parking map.
+   * 
+   * @return  the parking map.
+   */
+  public ParkingMap getParkingMap() {
+    return parkingMap;
+  }
+  
+  /**
+   * Reset the Manager instance.
+   */
+  public void reset() {
+    parkingSystem = ParkingSystem.getInstance();
+    parkingMap = parkingSystem.getMap();
+    spots = parkingMap.getSpotsAsMap();
+    resetReservation();
+    member = null;
+  }
+  
+  private static Manager instance = new Manager();
 
 }
