@@ -158,15 +158,31 @@ public class ParkingMap {
      * @precondition  spotID must correspond to an existing spot.
      */
     public boolean reserveSpot(int spotID) {
-   		return spots.get(spotID).reserve();
+   		if (spots.get(spotID).reserve()) {
+   		  reservedSpots++;
+   		  freeSpots--;
+   		  return true;
+   		};
+   		return false;
     }
     
     /**
      * Free the given spot.
      * 
      * @param spot	The spot to be freed.
+     * @return      true if spot was reserved, 
+     *              false if spotID was invalid or spot was not reserved.
      */
-    public void freeSpot(int spotID) {
-      spots.get(spotID).free();
+    public boolean freeSpot(int spotID) {
+      Spot s = spots.get(spotID);
+      if (s == null) {
+        return false;
+      }
+      if (s.free()) {
+        freeSpots++;
+        reservedSpots--;
+        return true;
+      }
+      return false;
     }
 }
