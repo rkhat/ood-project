@@ -6,6 +6,7 @@ import javafx.beans.binding.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.*;
+import model.enums.STATUS;
 import util.StringHelper;
 
 /**
@@ -55,10 +56,10 @@ public class LoginController extends AbstractController {
     String password = passwordField.getText();
 
     // Perform login
-    boolean success = manager.doEnterLoginInfo(username, password);
+    STATUS success = manager.doLogIn(username, password);
 
     // Failed login
-    if (!success) {
+    if (!(success == STATUS.SUCCESS)) {
       // TODO: Popup dialog invalid username or password
       System.out.println("Invalid Username and password");
     }

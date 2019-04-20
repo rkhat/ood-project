@@ -229,7 +229,7 @@ public class TextTester {//extends Application {
        
      // remove vehicle
      case 4:
-       if (app.getVehicles().size() == 0) {
+       if (app.getVehiclesAsList().size() == 0) {
          System.out.println("Error: You don't have any registered vehicles");
          System.out.println();
          break;
@@ -243,7 +243,7 @@ public class TextTester {//extends Application {
        if (status == STATUS.SUCCESS) {
          System.out.println("Vehicle removed");
          System.out.println();
-         if (app.getVehicles().size() > 0) {
+         if (app.getVehiclesAsList().size() > 0) {
            printVehicles(app);
            System.out.println();
          }

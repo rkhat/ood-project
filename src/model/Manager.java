@@ -56,7 +56,7 @@ public class Manager {
 	 * 
 	 * @param un	The username entered.
 	 * @param psw	The password entered.
-	 * @return		true if info was correct, false otherwise.
+	 * @return		SUCCESS, FAILED
 	 */
 	public STATUS doLogIn(String un, String psw) {
 	  Pair<STATUS,Member> p = parkingSystem.verifyLoginInfo(un, psw);
@@ -65,6 +65,7 @@ public class Manager {
       // success, log the member in
 	    member = p.getValue();
 		  reservation = member.getReservation();
+		  if (reservation != null) vehicle = reservation.getVehicle();
 		  vehicles = member.getVehicles();
 		  return STATUS.SUCCESS;
 		}
@@ -271,10 +272,19 @@ public class Manager {
   /**
    * Get the list of vehicles.
    * 
-   * @return  A Map<Integer,Vehicle> represening the list of vehicles.
+   * @return  A Map<Integer,Vehicle> representing the list of vehicles.
    */
-  public Map<Integer,Vehicle> getVehicles() {
+  public Map<Integer,Vehicle> getVehiclesAsMap() {
     return vehicles;
+  }
+  
+  /**
+   * Get the list of vehicles.
+   * 
+   * @return  A List<Vehicle> representing the list of vehicles.
+   */
+  public List<Vehicle> getVehiclesAsList() {
+    return new ArrayList<>(vehicles.values());
   }
   
   /**
@@ -321,6 +331,13 @@ public class Manager {
       s.append(v.toString() + "\n");
     }
     return s.toString();
+  }
+  
+  public Integer getVehicleID() {
+    if (vehicle != null) {
+      return vehicle.getID();
+    }
+    return null;
   }
   
 	private static Manager instance;

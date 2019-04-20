@@ -30,7 +30,7 @@ public class ParkingMapController extends AbstractController{
     spots.add(new Spot(2,6));
     spots.add(new Spot(7,8));
     ParkingMap parkingMap = new ParkingMap(spots);
-    spots = parkingMap.getSpots();
+    spots = parkingMap.getSpotsAsList();
     
     List<Button> cars = new ArrayList<>(); 
     

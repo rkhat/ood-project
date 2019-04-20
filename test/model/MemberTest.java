@@ -2,22 +2,21 @@ package model;
 
 import java.lang.reflect.Field;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import model.Member;
-import model.Reservation;
-import model.Vehicle;
-
 class MemberTest {
 
   @AfterEach
-  public void resetStatics() throws Exception {
-    Field field = Member.class.getDeclaredField("nextVehicleID");
-    field.setAccessible(true);
-    field.set(null, 0);
+  public void resetStatics() {
+    try {
+      Field field = ParkingSystem.class.getDeclaredField("nextVehicleID");
+      field.setAccessible(true);
+      field.set(null, 0);
+    } catch (Exception e) {
+      System.err.println(e.toString());
+    }
   }
   
 	// Testing Member Constructor
@@ -76,7 +75,7 @@ class MemberTest {
 		double credits1 = 15.50, credits2 = 12;
 		member.addCredits(credits1);
 		member.addCredits(credits2);
-		Assert.assertTrue(member.getCredits() == credits1+credits2);
+		Assert.assertTrue(member.getCredits() == (credits1+credits2));
 	}
 	
 	// Testing removeCredits
@@ -126,14 +125,12 @@ class MemberTest {
 		String userName = "Alec";
 		String password = "abc123";
 		Member member = new Member(userName, password);
-		Vehicle v1 = new Vehicle("ABC123");
-		Vehicle v2 = new Vehicle("123ABC");
+		Vehicle v1 = new Vehicle("ABC123", 0);
+		Vehicle v2 = new Vehicle("123ABC", 1);
 		member.addVehicle(v1);
 		member.addVehicle(v2);
-		Assert.assertTrue(member.getVehicles().containsKey(v1.getID()));
-    Assert.assertTrue(member.getVehicles().containsKey(v2.getID()));
-		Assert.assertTrue(v1.getID() == 0);
-		Assert.assertTrue(v2.getID() == 1);
+		Assert.assertTrue(member.getVehicles().containsKey(0));
+    Assert.assertTrue(member.getVehicles().containsKey(1));
 	}
 	
 	// Testing removeVehicle
@@ -146,13 +143,13 @@ class MemberTest {
 		Vehicle vehicle = new Vehicle("ABC123");
 		member.addVehicle(vehicle);
 		member.removeVehicle(vehicle.getID());
-		Assert.assertTrue(!member.getVehicles().containsKey(vehicle.getPlate()));
+		Assert.assertTrue(!member.getVehicles().containsKey(vehicle.getID()));
 	}
 	
 	// Testing equals
 	@Test
 	void testEquals() {
-		System.out.println("Testing equals");
+		System.out.println("Run test equals");
 		Member mem1 = new Member("Alec", "ABC123");
 		Member mem2 = new Member("Alec", "q983u234");
 		Member mem3 = new Member("Rami", "a2lkj23894");

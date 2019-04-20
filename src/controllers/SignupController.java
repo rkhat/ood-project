@@ -4,6 +4,7 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.*;
+import model.enums.STATUS;
 
 /**
  * FXML Controller class
@@ -42,8 +43,8 @@ public class SignupController extends AbstractController {
     }
     
     
-    boolean success = manager.doCreateAccount(username, password1);
-    if (!success) {
+    STATUS success = manager.doCreateAccount(username, password1);
+    if (!(success == STATUS.SUCCESS)) {
       // TODO: Popup dialog invalid username or password
       System.out.println("Invalid Username or password");
       return;
