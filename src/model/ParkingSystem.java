@@ -31,6 +31,8 @@ public class ParkingSystem {
     reservations = new HashMap<String, Reservation>();
     vehicles = new HashMap<String, Vehicle>();
     members = new HashMap<String, Member>();
+    map = null;
+    nextVehicleID = 0;
   }
 
   /**

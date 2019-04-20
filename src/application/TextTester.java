@@ -390,7 +390,6 @@ public class TextTester {// extends Application {
     ps.setMap(map);
 
     // Set up app manager
-    Manager.createInstance();
     Manager app = Manager.getInstance();
 
     // Set up scanner and input buffers

@@ -182,17 +182,17 @@ public class Manager {
   /**
    * Take care of logging out.
    * 
-   * @return true if a member was logged in, false otherwise.
+   * @return SUCCESS or FAILED
    */
-  public boolean doLogOut() {
-    // if a member is logged in, log out and return true.
+  public STATUS doLogOut() {
+    // if a member is logged in, log out and return SUCCESS.
     if (member != null) {
       resetReservation();
       member = null;
-      return true;
+      return STATUS.SUCCESS;
     }
     // no member logged in, return false.
-    return false;
+    return STATUS.FAILED;
   }
 
   /**
@@ -204,7 +204,7 @@ public class Manager {
    */
   public STATUS doAddVehicle(String plate) {
     // must be alphanumeric with 6 characters
-    if (!(StringHelper.checkAlphaNumeric(plate, 6) && (plate.length() == 6))) {
+    if (!(StringHelper.checkAlphaNumeric(plate, 6, true))) {
       return STATUS.PLATE_INVALID;
     }
     // alphanumeric with 6 characters, try to add to system
@@ -304,18 +304,18 @@ public class Manager {
   /**
    * Handle check out
    * 
-   * @return true if member had enough credits, false otherwise.
+   * @return SUCCESS or FAILED
    */
-  public boolean doCheckout() {
+  public STATUS doCheckout() {
     double total = reservation.getTotal();
     if (member.hasSufficientCredits(total)) {
       member.removeCredits(total);
       member.removeReservation();
       parkingSystem.removeReservation(reservation.getCode());
       resetReservation();
-      return true;
+      return STATUS.SUCCESS;
     }
-    return false;
+    return STATUS.FAILED;
   }
 
   /**
@@ -360,6 +360,6 @@ public class Manager {
     return null;
   }
 
-  private static Manager instance;
+  private static Manager instance = new Manager(ParkingSystem.getInstance());
 
 }
