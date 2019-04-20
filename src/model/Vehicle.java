@@ -21,6 +21,17 @@ public class Vehicle {
     }
     
     /**
+     * Create a Vehicle object with given plat and ID.
+     * 
+     * @param plate The plate.
+     * @param id    
+     */
+    public Vehicle(String plate, int id) {
+      this.plate = plate;
+      this.id = id;
+    }
+    
+    /**
      * Get the plate number.
      * 
      * @return  The plate number (String)

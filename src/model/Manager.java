@@ -56,7 +56,7 @@ public class Manager {
 	 * 
 	 * @param un	The username entered.
 	 * @param psw	The password entered.
-	 * @return		true if info was correct, false otherwise.
+	 * @return		SUCCESS, FAILED
 	 */
 	public STATUS doLogIn(String un, String psw) {
 	  Pair<STATUS,Member> p = parkingSystem.verifyLoginInfo(un, psw);
@@ -65,6 +65,7 @@ public class Manager {
       // success, log the member in
 	    member = p.getValue();
 		  reservation = member.getReservation();
+		  if (reservation != null) vehicle = reservation.getVehicle();
 		  vehicles = member.getVehicles();
 		  return STATUS.SUCCESS;
 		}
@@ -142,7 +143,7 @@ public class Manager {
 	 * Take care of adding credits to account.
 	 * 
 	 * @param amt  The amount of credits to add.
-	 * @return     true if successful, false otherwise.
+	 * @return     SUCCESS or FAILED
 	 */
 	public STATUS doAddCredits(double amt) {
 	  if (amt < 0) {
@@ -150,6 +151,19 @@ public class Manager {
 	  }
 	  member.addCredits(amt);
 	  return STATUS.SUCCESS;
+	}
+	
+	/**
+	 * Take care of removing credits from account.
+	 * 
+	 * @param amt  The amount of credits to remove.
+	 * @return     SUCCESS, INSUFFICIENT_CREDITS, or INVALID_AMT
+	 */
+	public STATUS doRemoveCredits(double amt) {
+	  if (amt < 0) return STATUS.INVALID_AMT;
+	  if (amt > member.getCredits()) return STATUS.INSUFFICIENT_CREDITS;
+    member.removeCredits(amt);
+    return STATUS.SUCCESS;
 	}
 	
 	/**
@@ -173,7 +187,7 @@ public class Manager {
 	 * 
 	 * @param plate  String representing the plate number.
 	 * @return       SUCCESS if vehicle added, PLATE_INVALID if plate is invalid format,
-	 *               FAILED otherwise.
+	 *               PLATE_DUPLICATE if vehicle with same plate is in sytem.
 	 */
 	public STATUS doAddVehicle(String plate) {
 	  // must be alphanumeric with 6 characters
@@ -190,6 +204,24 @@ public class Manager {
     }
     // failed, return status.
     return status;
+	}
+	
+	/**
+	 * Remove a vehicle from the member's account.
+	 * 
+	 * @param id The ID of the vehicle to remove.
+	 * @return   INVALID_ID, PLATE_NOT_FOUND, or SUCCESS
+	 */
+	public STATUS doRemoveVehicle(int id) {
+	  Vehicle v = vehicles.get(id);
+	  // ID is invalid
+	  if (v == null) return STATUS.INVALID_ID;
+	  // vehicle removed, remove from system
+	  if (member.removeVehicle(id)) {
+	    return parkingSystem.removeVehicle(v.getPlate());
+	  }
+	  // vehicle was not in member account
+	  return STATUS.INVALID_ID;
 	}
 	
 	/**
@@ -238,6 +270,24 @@ public class Manager {
   }
   
   /**
+   * Get the list of vehicles.
+   * 
+   * @return  A Map<Integer,Vehicle> representing the list of vehicles.
+   */
+  public Map<Integer,Vehicle> getVehiclesAsMap() {
+    return vehicles;
+  }
+  
+  /**
+   * Get the list of vehicles.
+   * 
+   * @return  A List<Vehicle> representing the list of vehicles.
+   */
+  public List<Vehicle> getVehiclesAsList() {
+    return new ArrayList<>(vehicles.values());
+  }
+  
+  /**
    * Handle check out
    * 
    * @return  true if member had enough credits, false otherwise.
@@ -270,6 +320,24 @@ public class Manager {
    */
   public boolean spotsAvailable() {
     return parkingMap.spotsAvailable();
+  }
+  
+  /**
+   * Return a String representation of the vehicles
+   */
+  public String vehiclesToString() {
+    StringBuilder s = new StringBuilder();
+    for (Vehicle v : vehicles.values()) {
+      s.append(v.toString() + "\n");
+    }
+    return s.toString();
+  }
+  
+  public Integer getVehicleID() {
+    if (vehicle != null) {
+      return vehicle.getID();
+    }
+    return null;
   }
   
 	private static Manager instance;
