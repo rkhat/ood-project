@@ -18,21 +18,7 @@ public class ParkingMap {
     private int freeSpots, reservedSpots;
     
     /**
-     * Creates a ParkingMap object with no spots.
-     */
-    public ParkingMap() {
-    	spots = new HashMap<Integer,Spot>();
-    	minY = Integer.MAX_VALUE;
-    	minX = Integer.MAX_VALUE;
-    	maxY = 0;
-    	maxX = 0;
-    	nextID = 0;
-    	freeSpots = 0;
-    	reservedSpots = 0;
-    }
-    
-    /**
-     * Creates a ParkingMap object with the given spots.
+     * Creates a ParkingMap object with the given spots and minimum width and height.
      * 
      * @param spots	The list of spots in the parking map.
      */

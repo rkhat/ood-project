@@ -204,8 +204,12 @@ public class ParkingSystem {
   /**
    * Reset the parking system.
    */
-  public static void reset() {
-    instance = new ParkingSystem();
+  public void reset() {
+    reservations = new HashMap<String, Reservation>();
+    vehicles = new HashMap<String, Vehicle>();
+    members = new HashMap<String, Member>();
+    map = null;
+    nextVehicleID = 0;
   }
   
   private static ParkingSystem instance = new ParkingSystem();
