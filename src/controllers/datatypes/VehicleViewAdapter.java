@@ -1,4 +1,4 @@
-package vc.datatypes;
+package controllers.datatypes;
 
 import model.*;
 

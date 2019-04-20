@@ -1,4 +1,4 @@
-package vc;
+package controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.*;
@@ -7,16 +7,17 @@ import javafx.scene.layout.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import controllers.Pages;
+import controllers.Controller;
 import javafx.beans.property.*;
 import javafx.fxml.FXMLLoader;
-import vc.Pages;
-import vc.ViewController;
 
 /**
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class TopViewController {
+public class TopController {
   @FXML ToolBar toolbar;
   @FXML Pane content;
   
@@ -41,7 +42,7 @@ public class TopViewController {
       System.out.println("Loader:" + loader);
       Parent root = loader.load();
       System.out.println("PageRoot:" + root);
-      ViewController controller = loader.getController();
+      Controller controller = loader.getController();
       controller.setMainViewController(this);
       
       content.getChildren().clear();

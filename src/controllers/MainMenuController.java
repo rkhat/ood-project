@@ -1,7 +1,10 @@
-package vc;
+package controllers;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
+
+import controllers.datatypes.VehicleView;
+import controllers.datatypes.VehicleViewAdapter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -18,14 +21,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 import model.Vehicle;
-import vc.datatypes.VehicleView;
-import vc.datatypes.VehicleViewAdapter;
 
 /**
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class MainMenuViewController extends AbstractViewController{
+public class MainMenuController extends AbstractController{
   @FXML ListView<VehicleView> listView;
   
   @FXML

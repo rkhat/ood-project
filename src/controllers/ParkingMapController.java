@@ -1,6 +1,9 @@
-package vc;
+package controllers;
 
 import com.jfoenix.controls.JFXButton;
+
+import controllers.datatypes.VehicleView;
+
 import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,13 +11,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import model.*;
-import vc.datatypes.VehicleView;
 
 /**
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class ParkingMapViewController extends AbstractViewController{
+public class ParkingMapController extends AbstractController{
   @FXML GridPane parkingGrid;
   
   @FXML
@@ -35,7 +37,7 @@ public class ParkingMapViewController extends AbstractViewController{
     
     for (Spot spot : spots) {
       Button car = new JFXButton("car");
-      if(spot.isLocked() || spot.isReserved()) {
+      if(spot.isReserved()) {
         car.setDisable(true);
       } else {
         
