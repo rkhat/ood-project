@@ -1,9 +1,9 @@
-package vc;
+package controllers;
 
 /**
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class CreditsViewController {
+public class PasswordController {
   
 }

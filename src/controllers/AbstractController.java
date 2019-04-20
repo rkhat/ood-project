@@ -1,18 +1,18 @@
-package vc;
+package controllers;
 
+import controllers.datatypes.VehicleView;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import vc.datatypes.VehicleView;
 
 /**
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public abstract class AbstractViewController implements ViewController{
-  private TopViewController mainVC;
+public abstract class AbstractController implements Controller{
+  private TopController mainVC;
   
   @Override
-  public void setMainViewController(TopViewController mainVC) {
+  public void setMainViewController(TopController mainVC) {
     this.mainVC = mainVC;
     updateMainViewController();
   }

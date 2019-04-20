@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import controllers.Pages;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.stage.Stage;
@@ -13,7 +14,6 @@ import model.ParkingSystem;
 import model.Spot;
 import model.Vehicle;
 import util.StringHelper;
-import vc.Pages;
 import javafx.fxml.FXMLLoader;
 
 /**
