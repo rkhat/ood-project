@@ -78,13 +78,22 @@ public class ParkingMap {
     }
     
     /**
-     * Accessor for the list of spots.
+     * Get the list of spots as a List.
      * 
-     * @return	The list of spots.
+     * @return	The list of spots as a List.
      */
-    public List<Spot> getSpots() {
+    public List<Spot> getSpotsAsList() {
     	List<Spot> spotList = new ArrayList<Spot>(spots.values());
     	return spotList;
+    }
+    
+    /**
+     * Get the list of spots as a Map.
+     * 
+     * @return  The list of spots as a Map.
+     */
+    public Map<Integer,Spot> getSpotsAsMap() {
+      return spots;
     }
     
     /**

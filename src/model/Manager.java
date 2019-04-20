@@ -1,7 +1,11 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javafx.util.Pair;
+import model.enums.STATUS;
 
 /**
  *
@@ -13,7 +17,7 @@ public class Manager {
 	private ParkingMap parkingMap;
 	private Member member;
 	private Reservation reservation;
-	private List<Spot> spots;
+	private Map<Integer,Spot> spots;
 	private Spot spot;
 	private Map<Integer,Vehicle> vehicles;
 	private Vehicle vehicle;
@@ -26,7 +30,7 @@ public class Manager {
 	private Manager(ParkingSystem ps) {
 		parkingSystem = ps;
 		parkingMap = ps.getMap();
-		spots = parkingMap.getSpots();
+		spots = parkingMap.getSpotsAsMap();
 	}
 	
 	/**
@@ -53,15 +57,19 @@ public class Manager {
 	 * @param psw	The password entered.
 	 * @return		true if info was correct, false otherwise.
 	 */
-	public boolean doEnterLoginInfo(String un, String psw) {
-		member = parkingSystem.verifyLoginInfo(un, psw);
-		// if verification fails, return false.
-		if (member == null) {
-			return false;
+	public STATUS doLogIn(String un, String psw) {
+	  Pair<STATUS,Member> p = parkingSystem.verifyLoginInfo(un, psw);
+	  STATUS status = p.getKey();
+		if (status == STATUS.SUCCESS) {
+      // success, log the member in
+	    member = p.getValue();
+		  reservation = member.getReservation();
+		  vehicles = member.getVehicles();
+		  return STATUS.SUCCESS;
 		}
-		// if verification succeeds, get the reservation (if any) and return true.
-		reservation = member.getReservation();
-		return true;
+		// failed, return status
+		member = null;
+		return status;
 	}
 	
 	/**
@@ -69,89 +77,64 @@ public class Manager {
 	 * 
 	 * @param un   The username entered.
 	 * @param psw  The password entered.
-	 * @return     true if successful, false otherwise.
+	 * @return     SUCCESS, USERNAME_INVALID, USERNAME_IN_USE, PASSWORD_INVALID
 	 */
-	public boolean doCreateAccount(String un, String psw) {
-	  member = parkingSystem.createAccount(un, psw);
-	  // if account creation fails, return false.
-	  if (member == null) {
-	    return false;
+	public STATUS doCreateAccount(String un, String psw) {
+	  Pair<STATUS,Member> p = parkingSystem.createAccount(un, psw);
+	  STATUS status = p.getKey();
+	  if (status == STATUS.SUCCESS) {
+	    // creation successful, log the member in
+	    member = p.getValue();
+	    vehicles = member.getVehicles();
+	    return STATUS.SUCCESS;
 	  }
-	  // if account creation succeeds, return true.
-	  return true;
-	}
-	
-	/**
-	 * Take care of logging in.
-	 * 
-	 * @param un   The username entered
-	 * @param psw  The password entered
-	 * @return     True if log in succeeded, false otherwise.
-	 */
-	public boolean doLogIn(String un, String psw) {
-	  member = parkingSystem.verifyLoginInfo(un, psw);
-	  // if login fails, return false
-	  if (member == null) {
-	    return false;
-	  }
-	  // if login succeeds, get the members vehicles, reservation, etc.
-	  reservation = member.getReservation();
-	  vehicles = member.getVehicles();
-	  return true;
+	  // if account creation fails, return status
+	  member = null;
+	  return status;
 	}
 	
 	/**
 	 * Attempt to create a reservation with the vehicle corresponding to the given ID.
 	 * 
 	 * @param vehicleID  The ID of the vehicle.
-	 * @return           true if successful, false otherwise.
+	 * @return           SUCCESS, NO_SPOTS_AVAILABLE, MEMBER_HAS_RESERVATION, 
+	 *                   INVALID_ID, or NOT_LOGGED_IN
 	 */
-	public boolean doSelectVehicle(int vehicleID) {
-	  // if there is no member signed in, return false.
-	  if (member == null) return false;
-	  // if there is already a reservation, return false.
-	  if (reservation != null) return false;
-	  // if there are no spots, return false.
-	  if (!parkingSystem.spotsAvailable()) return false;
-	  // attempt to set the vehicle.
-	  vehicle = member.getVehicles().get(vehicleID);
-	  // if the vehicle ID is valid, attempt to create the reservation.
-	  if (vehicle != null) {
-	    // if a vehicle with the same plate is already parked, return false.
-	    if (parkingSystem.plateIsParked(vehicle.getPlate())) return false;
-	    // create the reservation and return true.
-	    reservation = new Reservation();
-	    reservation.setVehicle(vehicle);
-	    reservation.setCode(member.getCode());
-	    return true;
-	  }
-	  // vehicle ID was invalid, return false.
-	  return false;
+	public STATUS doSelectVehicle(int vehicleID) {
+	  // no member logged in
+	  if (member == null) return STATUS.NOT_LOGGED_IN;
+	  // member already has a reservation
+	  if (reservation != null) return STATUS.MEMBER_HAS_RESERVATION;
+	  // no spots available
+	  if (!parkingSystem.spotsAvailable()) return STATUS.NO_SPOTS_AVAILABLE;
+    vehicle = vehicles.get(vehicleID);
+    // invalid ID
+    if (vehicle == null) return STATUS.INVALID_ID;
+    
+    // vehicle is valid, create the reservation
+    reservation = new Reservation();
+    reservation.setVehicle(vehicle);
+    reservation.setCode(member.getCode());
+    return STATUS.SUCCESS;
 	}
 	
 	/**
 	 * Take care of selecting a spot.
 	 * 
 	 * @param spotID   The ID of the spot to select.
-	 * @return         true if successful, false otherwise.
-	 * @precondition   spotID must be a valid spot ID.
+	 * @return         SUCCESS, SPOT_NOT_FOUND, SPOT_RESERVED, or FAILED
 	 */
-	public boolean doSelectSpot(int spotID) {
-	  try {
+	public STATUS doSelectSpot(int spotID) {
 	    // try to select the spot and add it to the reservation.
 	    spot = spots.get(spotID);
-	    // make sure the spot is not reserved, and add it to the reservation.
-	    if (!spot.isReserved()) {
-	      reservation.setSpot(spot);
-	      member.setReservation(reservation);
-	      return parkingSystem.addReservation(reservation);
-	    }
-	    return false;
-	  } catch(IndexOutOfBoundsException e) {
-	    // if there was an error selecting the spot, set spot null and return false.
-	    spot = null;
-	    return false;
-	  }
+	    // spot not found
+	    if (spot == null) return STATUS.SPOT_NOT_FOUND;
+	    // spot reserved
+	    if (spot.isReserved()) return STATUS.SPOT_RESERVED;
+	    // spot available, add to reservation.
+      reservation.setSpot(spot);
+      member.setReservation(reservation);
+      return parkingSystem.addReservation(reservation);
 	}
 	
 	/**
@@ -160,14 +143,12 @@ public class Manager {
 	 * @param amt  The amount of credits to add.
 	 * @return     true if successful, false otherwise.
 	 */
-	public boolean doAddCredits(double amt) {
+	public STATUS doAddCredits(double amt) {
 	  if (amt < 0) {
-	    System.err.println("Amount must be positive");
-	    System.out.println();
-	    return false;
+	    return STATUS.FAILED;
 	  }
 	  member.addCredits(amt);
-	  return true;
+	  return STATUS.SUCCESS;
 	}
 	
 	/**
@@ -190,15 +171,25 @@ public class Manager {
 	 * Take care of adding a vehicle.
 	 * 
 	 * @param plate  String representing the plate number.
-	 * @return       true if successful, false otherwise.
+	 * @return       SUCCESS if vehicle added, PLATE_INVALID if plate is invalid format,
+	 *               FAILED otherwise.
 	 */
-	public boolean doAddVehicle(String plate) {
-	  if (ParkingSystem.checkAlphaNumeric(plate, 6)) {
-	    Vehicle veh = new Vehicle(plate);
-	    return member.addVehicle(veh);
+	public STATUS doAddVehicle(String plate) {
+	  // must be alphanumeric with 6 characters
+	  if ( !(ParkingSystem.checkAlphaNumeric(plate, 6) && (plate.length() == 6)) ) {
+	    return STATUS.PLATE_INVALID;
 	  }
-	  // not alphanumeric
-	  return false;
+    // alphanumeric with 6 characters, try to add to system
+    Vehicle veh = new Vehicle(plate);
+    STATUS status = parkingSystem.addVehicle(veh);
+    if (status == STATUS.SUCCESS) {
+      // added to system, now add to member
+      member.addVehicle(veh);
+      return STATUS.SUCCESS;
+    }
+    // failed, return status.
+    return status;
+
 	}
 	
 	/**
@@ -220,11 +211,20 @@ public class Manager {
   }
 	
   /**
-   * Get the list of spots in the map.
+   * Get the list of spots as a List.
    * 
-   * @return  The list of spots.
+   * @return  The list of spots as a List.
    */
-  public List<Spot> getSpots() {
+  public List<Spot> getSpotsAsList() {
+    return new ArrayList<Spot>(spots.values());
+  }
+  
+  /**
+   * Get the list of spots as a Map.
+   * 
+   * @return  The list of spots as a Map.
+   */
+  public Map<Integer,Spot> getSpotsAsMap() {
     return spots;
   }
   
@@ -240,7 +240,7 @@ public class Manager {
   /**
    * Handle check out
    * 
-   * @return  true if checkout succeeded, false otherwise.
+   * @return  true if member had enough credits, false otherwise.
    */
   public boolean doCheckout() {
     double total = reservation.getTotal();
@@ -248,9 +248,7 @@ public class Manager {
       member.removeCredits(total);
       member.removeReservation();
       parkingSystem.removeReservation(reservation.getCode());
-      reservation = null;
-      vehicle = null;
-      spot = null;
+      resetReservation();
       return true;
     }
     return false;
@@ -263,6 +261,15 @@ public class Manager {
     reservation = null;
     vehicle = null;
     spot = null;
+  }
+  
+  /**
+   * Check whether the map has spots available.
+   * 
+   * @return  true if spots available, false otherwise.
+   */
+  public boolean spotsAvailable() {
+    return parkingMap.spotsAvailable();
   }
   
 	private static Manager instance;

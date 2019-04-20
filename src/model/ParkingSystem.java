@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.util.Pair;
+import model.enums.STATUS;
+
 /**
  * The Parking System class.
  * Manages reservations, members, and the parking map.
@@ -18,7 +21,7 @@ import java.util.regex.Pattern;
 public class ParkingSystem {
 	
     private Map<String, Reservation> reservations;
-    private List<String> parkedPlates;
+    private Map<String,Vehicle> vehicles;
     private Map<String, Member> members;
     private ParkingMap map;
     
@@ -29,7 +32,7 @@ public class ParkingSystem {
      */
     private ParkingSystem() {
     	reservations = new HashMap<String, Reservation>();
-    	parkedPlates = new ArrayList<String>();
+    	vehicles = new HashMap<String,Vehicle>();
     	members = new HashMap<String, Member>();
     }
     
@@ -74,20 +77,35 @@ public class ParkingSystem {
      * Adds a reservation to the system.
      * 
      * @param res	The reservation to add.
+     * @return    SUCCESS if successful, FAILED otherwise.
+     */
+    public STATUS addReservation(Reservation res) {
+      // set the start time of the reservation
+      res.setStartTime(new Date());
+      // make sure the spot is available
+      if (map.reserveSpot(res.getSpot().getID())) {
+        reservations.put(res.getCode(), res);
+        return STATUS.SUCCESS;
+      }
+      // failed to reserve spot
+      return STATUS.FAILED;
+    }
+    
+    /**
+     * Attempt to add a vehicle to the system.
+     * 
+     * @param veh The vehicle.
      * @return    true if successful, false otherwise.
      */
-    public boolean addReservation(Reservation res) {
-      String plate = res.getVehicle().getPlate();
-      // if the plate is already parked, return false.
-      if (plateIsParked(plate)) return false;
-      // otherwise, create the reservation and return true.
-      res.setStartTime(new Date());
-      if (map.reserveSpot(res.getSpot().getID())) {
-        parkedPlates.add(res.getVehicle().getPlate());
-        reservations.put(res.getCode(), res);
-        return true;
+    public STATUS addVehicle(Vehicle veh) {
+      // make sure the vehicle is not already in the system
+      if (!vehicles.containsKey(veh.getPlate())) {
+        // not in system, add
+        vehicles.put(veh.getPlate(),veh);
+        return STATUS.SUCCESS;
       }
-      return false;
+      // vehicle already in system
+      return STATUS.PLATE_DUPLICATE;
     }
     
     /**
@@ -100,7 +118,6 @@ public class ParkingSystem {
       // remove the reservation and free the spot
       Reservation res = reservations.remove(code);
       if (res != null) {
-        parkedPlates.remove(res.getVehicle().getPlate());
         map.freeSpot(res.getSpot().getID());
         return true;
       }
@@ -113,16 +130,19 @@ public class ParkingSystem {
      * 
      * @param un	The user name.
      * @param psw	The password.
-     * @return		The member object if credentials are correct, null otherwise.
+     * @return		A Pair containing the status of the login and the member object (or null if failed).
+     * 
+     *            Possible status enums:
+     *            FAILED, SUCCESS
      */
-    public Member verifyLoginInfo(String un, String psw) {
-    	Member mem = this.members.get(un);
+    public Pair<STATUS,Member> verifyLoginInfo(String un, String psw) {
+    	Member mem = members.get(un);
     	// if the username is not found, return null
-    	if (mem == null) return null;
+    	if (mem == null) return new Pair<>(STATUS.FAILED,mem);
     	// if the password is correct, return the member object.
-    	if (mem.getPassword().contentEquals(psw)) return mem;
+    	if (mem.getPassword().contentEquals(psw)) return new Pair<>(STATUS.SUCCESS, mem);
     	// password incorrect, return null.
-    	return null;
+    	return new Pair<>(STATUS.FAILED,null);
     }
     
     /**
@@ -130,21 +150,24 @@ public class ParkingSystem {
      * 
      * @param un	The user name.
      * @param psw	The Password.
-     * @return		true if successful, false otherwise.
-     * @throws 		IllegalArgumentException if username or password is incorrect format, or username exists.
+     * @return		Pair<STATUS,Member> containing the status of the account creation
+     *            and the member object (or null if failed).
+     *            
+     *            Possible status:
+     *            SUCCESS, USERNAME_INVALID, USERNAME_IN_USE, PASSWORD_INVALID
      */
-    public Member createAccount(String un, String psw) throws IllegalArgumentException {
+    public Pair<STATUS,Member> createAccount(String un, String psw) {
     	// user name must be alphanumeric with at least one character.
-    	if (!checkAlphaNumeric(un, 1)) return null; //throw new IllegalArgumentException("Username must be alphanumeric with at least one character");
-    	// if the username is already in use, return null to indicate failure.
-    	if (this.members.containsKey(un)) return null;
+    	if (!checkAlphaNumeric(un, 1)) return new Pair<>(STATUS.USERNAME_INVALID,null);
+    	// username already in use
+    	if (this.members.containsKey(un)) return new Pair<>(STATUS.USERNAME_IN_USE,null);
     	// password must be alphanumeric with at least six characters.
-    	if (!checkAlphaNumeric(psw, 6)) return null; //throw new IllegalArgumentException("Password must be alphanumeric with at least six characters");
+    	if (!checkAlphaNumeric(psw, 6)) return new Pair<>(STATUS.PASSWORD_INVALID,null);
     	// credentials accepted, create member
     	Member newMem = new Member(un, psw);
     	this.members.put(un, newMem);
     	
-    	return newMem;
+    	return new Pair<>(STATUS.SUCCESS,newMem);
     }
     
     /**
@@ -154,22 +177,6 @@ public class ParkingSystem {
      */
     public ParkingMap getMap() {
       return map;
-    }
-    
-    /**
-     * Check whether a vehicle with the given plate number is parked.
-     * 
-     * @param plate The plate number.
-     * @return      true if the plate number is in the list of parked plates,
-     *              false otherwise.
-     */
-    public boolean plateIsParked(String plate) {
-      for (String s : parkedPlates) {
-        if (s.contentEquals(plate)) {
-          return true;
-        }
-      }
-      return false;
     }
   
     /**

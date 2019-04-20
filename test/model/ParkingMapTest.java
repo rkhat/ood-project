@@ -26,9 +26,9 @@ class ParkingMapTest {
 		Assert.assertTrue(map.getWidth() == 3);
 		Assert.assertTrue(map.getHeight() == 3);
 		// check that spot ID's were set correctly
-		int numSpots = map.getSpots().size();
+		int numSpots = map.getSpotsAsList().size();
 		for (int i = 0; i < numSpots; i++) {
-		  Assert.assertTrue(map.getSpots().get(i).getID() == i);
+		  Assert.assertTrue(map.getSpotsAsList().get(i).getID() == i);
 		}
 	}
 	
@@ -48,9 +48,9 @@ class ParkingMapTest {
 		Assert.assertTrue(map.getWidth() == 3);
 		Assert.assertTrue(map.getHeight() == 3);
     // check that spot ID's were set correctly
-    int numSpots = map.getSpots().size();
+    int numSpots = map.getSpotsAsList().size();
     for (int i = 0; i < numSpots; i++) {
-      Assert.assertTrue(map.getSpots().get(i).getID() == i);
+      Assert.assertTrue(map.getSpotsAsList().get(i).getID() == i);
     }
 	}
 	
@@ -86,7 +86,7 @@ class ParkingMapTest {
 		spots.add(new Spot(2,2));
 		ParkingMap map = new ParkingMap(spots);
 		map.reserveSpot(spots.get(0).getID());
-		Assert.assertTrue(map.getSpots().get(0).isReserved());
+		Assert.assertTrue(map.getSpotsAsList().get(0).isReserved());
 	}
 	
 	// Testing freeSpot
@@ -100,7 +100,7 @@ class ParkingMapTest {
 		ParkingMap map = new ParkingMap(spots);
 		map.reserveSpot(spots.get(0).getID());
 		map.freeSpot(spots.get(0).getID());
-		Assert.assertTrue(!map.getSpots().get(0).isReserved());
+		Assert.assertTrue(!map.getSpotsAsList().get(0).isReserved());
 	}
 	
 	 // Testing getSpots
@@ -112,6 +112,6 @@ class ParkingMapTest {
     spots.add(new Spot(1,1));
     spots.add(new Spot(2,2));
     ParkingMap map = new ParkingMap(spots);
-    Assert.assertTrue(map.getSpots().equals(spots));
+    Assert.assertTrue(map.getSpotsAsList().equals(spots));
   }
 }
