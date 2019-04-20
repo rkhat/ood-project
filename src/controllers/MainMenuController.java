@@ -1,10 +1,13 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListCell;
 
-import controllers.datatypes.VehicleView;
-import controllers.datatypes.VehicleViewAdapter;
+import controllers.adapters.VehicleView;
+import controllers.adapters.VehicleViewAdapter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -20,117 +23,166 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
-import model.Vehicle;
+import model.*;
 
 /**
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class MainMenuController extends AbstractController{
+public class MainMenuController extends AbstractController {
+
   @FXML ListView<VehicleView> listView;
-  
+
   @FXML
   public void initialize() {
+    // Observable list of Vehicle for listView
     ObservableList<VehicleView> list = FXCollections.observableArrayList();
-    Vehicle vehicle1 = new Vehicle("X123456");
-    Vehicle vehicle2 = new Vehicle("X223456");
-    Vehicle vehicle3 = new Vehicle("X323456");
-    Vehicle vehicle4 = new Vehicle("X423456");
-    Vehicle vehicle5 = new Vehicle("X523456");
-    
-    VehicleView vehicleView1 = new VehicleViewAdapter(vehicle1, vehicle1);
-    VehicleView vehicleView2 = new VehicleViewAdapter(vehicle5, vehicle1);
-    VehicleView vehicleView3 = new VehicleViewAdapter(vehicle3, vehicle1);
-    VehicleView vehicleView4 = new VehicleViewAdapter(vehicle4, vehicle1);
-    
-    
-    list.add(vehicleView1);
-    list.add(vehicleView2);
-    list.add(vehicleView3);
-    list.add(vehicleView4);
-    
-    System.out.println(vehicleView2.getPlate());
-    System.out.println(listView);
-    
+    // get Manager
+    Manager manager = getManager();
+    // parked Vehicle ID
+    Integer parkedVehicleID = manager.getVehicleID();
+    // get logged in member
+    Member member = getManager().getMember();
+    // get vehicle list
+    List<Vehicle> vehicles = manager.getVehiclesAsList();
+
+    // add vehicles to Observable list
+    for (Vehicle vehicle : vehicles) {
+      // convert vehicle to appropriate adapter
+      VehicleView vehicleView = new VehicleViewAdapter(vehicle,
+          parkedVehicleID);
+      list.add(vehicleView);
+    }
+
+    // set list view items to observable list
     listView.setItems(list);
-    listView.setCellFactory((ListView<VehicleView> param) -> new XCell());
+
+    // use custom cell type for list view
+    listView.setCellFactory((ListView<VehicleView> param) -> new VehicleViewCell(memberParked));
   }
 
   @Override
   public void updateMainViewController() {
     showToolbar(true);
   }
-  
-  private class XCell extends JFXListCell<VehicleView>{
+
+  /**
+   * Custom cell for list view
+   *
+   */
+  private class VehicleViewCell extends JFXListCell<VehicleView> {
     final HBox hbox = new HBox();
-    final Label label = new Label();
-    final Button button1 = new JFXButton();
-    final Button button2 = new JFXButton();
-    private VehicleView vehicleView;
-    
-    public XCell() {
+    final Label plateLabel = new Label();
+    final Button removeButton = new JFXButton();
+    final Button parkButton = new JFXButton(); // this button is also checkout
+    private final boolean memberParked;
+
+    /**
+     * Constructor for a custom cell. The cell displays a remove button, Vehicle
+     * plate, and add/checkout button horizontally.
+     * 
+     * @param memberParked Pass true if member has a parked vehicle, else false
+     */
+    public VehicleViewCell(boolean memberParked) {
       super();
-      hbox.getChildren().addAll(label, button1, button2);
-      
+      this.memberParked = memberParked;
+
+      // add remove button then plateLabel then parkButton to hbox
+      hbox.getChildren().addAll(removeButton, plateLabel, parkButton);
+
       hbox.setPrefHeight(50.0);
-      
-      HBox.setHgrow(label, Priority.ALWAYS);
+
+      HBox.setHgrow(plateLabel, Priority.ALWAYS);
     }
-    
+
     @Override
     protected void updateItem(VehicleView item, boolean empty) {
       super.updateItem(item, empty);
-      setText(null);  // No text in label of super class
+
+      setText(null); // No text in label of super class
+      
+      //if item is empty
       if (empty) {
-        vehicleView = null;
         setGraphic(null);
       } else {
-        vehicleView = item;
-        label.setText(vehicleView.getPlate());
+        //set vehicle plate label
+        plateLabel.setText(item.getPlate());
+
+        //remove button
+        removeButton.setText("Remove");
+        removeButton.setOnAction(remove(item));
         
-        button2.setText("Remove");
-                 button2.setOnAction(remove(item));
+        //park button
+        parkButton.setText("Park");
+        
+        if(item.isVehicleParked()) {
           
-        if(vehicleView.isVehicleParked()){
-          button1.setText("Checkout");
+        } else {
+          
+        }
+        
+        if(memberParked) {
+          parkButton.setText("Park");
+          park
+        }
+        
+        
+        
+        if (item.isVehicleParked()) {
+          //park button
+          parkButton.setText("Checkout");
           button1.setOnAction(checkout(item));
           button2.setDisable(true);
         } else {
           button1.setText("Park");
           button1.setOnAction(park(item));
- 
-          if(vehicleView.isMemberParked()) {
+
+          if (vehicleView.isMemberParked()) {
             button1.setDisable(true);
           }
         }
-        
+
         setGraphic(hbox);
       }
     }
-    
+
   }
-  
+
+  /**
+   * 
+   * @param vehicleView
+   * @return
+   */
   private EventHandler<ActionEvent> park(final VehicleView vehicleView) {
     return (ActionEvent event) -> {
       System.out.println("parked");
       setPage(Pages.ParkingMapPage);
     };
-    
+
   }
-  
+
   private EventHandler<ActionEvent> remove(final VehicleView vehicleView) {
     return (ActionEvent event) -> {
       System.out.println("remove");
     };
-    
+
   }
-  
+
   private EventHandler<ActionEvent> checkout(final VehicleView vehicleView) {
+    return (ActionEvent event) -> {
+      System.out.println("checkout");
+    };
+
+  }
+
+  /**
+   * add Vehicle
+   */
+  public add() {
     return (ActionEvent event) -> {
       System.out.println("checkout");
     };
     
   }
-  
-  
+
 }

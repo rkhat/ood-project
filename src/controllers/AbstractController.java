@@ -1,14 +1,16 @@
 package controllers;
 
-import controllers.datatypes.VehicleView;
+import controllers.adapters.VehicleView;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import model.Manager;
 
 /**
  *
  * @author Alec Agnese, Rami El Khatib
  */
 public abstract class AbstractController implements Controller{
+  private Manager manager = Manager.getInstance();
   private TopController mainVC;
   
   @Override
@@ -25,5 +27,7 @@ public abstract class AbstractController implements Controller{
     mainVC.loadPage(page);
   }
   
-  
+  protected Manager getManager() {
+    return manager;
+  }
 }
