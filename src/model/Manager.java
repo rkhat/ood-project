@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< HEAD
 import javafx.util.Pair;
 import model.enums.STATUS;
-=======
 import util.StringHelper;
->>>>>>> 1d290bb6af736a3f3c32a60bdd8264614fc37597
 
 /**
  *
@@ -178,17 +175,10 @@ public class Manager {
 	 * @return       SUCCESS if vehicle added, PLATE_INVALID if plate is invalid format,
 	 *               FAILED otherwise.
 	 */
-<<<<<<< HEAD
 	public STATUS doAddVehicle(String plate) {
 	  // must be alphanumeric with 6 characters
-	  if ( !(ParkingSystem.checkAlphaNumeric(plate, 6) && (plate.length() == 6)) ) {
+	  if ( !(StringHelper.checkAlphaNumeric(plate, 6) && (plate.length() == 6)) ) {
 	    return STATUS.PLATE_INVALID;
-=======
-	public boolean doAddVehicle(String plate) {
-	  if (StringHelper.checkAlphaNumeric(plate, 6)) {
-	    Vehicle veh = new Vehicle(plate);
-	    return member.addVehicle(veh);
->>>>>>> 1d290bb6af736a3f3c32a60bdd8264614fc37597
 	  }
     // alphanumeric with 6 characters, try to add to system
     Vehicle veh = new Vehicle(plate);
@@ -200,7 +190,6 @@ public class Manager {
     }
     // failed, return status.
     return status;
-
 	}
 	
 	/**

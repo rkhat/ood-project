@@ -8,12 +8,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-<<<<<<< HEAD
 import javafx.util.Pair;
 import model.enums.STATUS;
-=======
 import util.StringHelper;
->>>>>>> 1d290bb6af736a3f3c32a60bdd8264614fc37597
 
 /**
  * The Parking System class.
@@ -162,19 +159,11 @@ public class ParkingSystem {
      */
     public Pair<STATUS,Member> createAccount(String un, String psw) {
     	// user name must be alphanumeric with at least one character.
-<<<<<<< HEAD
-    	if (!checkAlphaNumeric(un, 1)) return new Pair<>(STATUS.USERNAME_INVALID,null);
+    	if (!StringHelper.checkAlphaNumeric(un, 1)) return new Pair<>(STATUS.USERNAME_INVALID,null);
     	// username already in use
     	if (this.members.containsKey(un)) return new Pair<>(STATUS.USERNAME_IN_USE,null);
     	// password must be alphanumeric with at least six characters.
-    	if (!checkAlphaNumeric(psw, 6)) return new Pair<>(STATUS.PASSWORD_INVALID,null);
-=======
-    	if (!StringHelper.checkAlphaNumeric(un, 1)) return null; //throw new IllegalArgumentException("Username must be alphanumeric with at least one character");
-    	// if the username is already in use, return null to indicate failure.
-    	if (this.members.containsKey(un)) return null;
-    	// password must be alphanumeric with at least six characters.
-    	if (!StringHelper.checkAlphaNumeric(psw, 6)) return null; //throw new IllegalArgumentException("Password must be alphanumeric with at least six characters");
->>>>>>> 1d290bb6af736a3f3c32a60bdd8264614fc37597
+    	if (!StringHelper.checkAlphaNumeric(psw, 6)) return new Pair<>(STATUS.PASSWORD_INVALID,null);
     	// credentials accepted, create member
     	Member newMem = new Member(un, psw);
     	this.members.put(un, newMem);
@@ -189,42 +178,6 @@ public class ParkingSystem {
      */
     public ParkingMap getMap() {
       return map;
-    }
-<<<<<<< HEAD
-  
-    /**
-     * Checks if string is alphanumeric with minimum of minLength characters.
-     * 
-     * @param str		The string.
-     * @param minLength	The minimum length of the string.
-     * @return			true if valid, false otherwise.
-     */
-    public static boolean checkAlphaNumeric(String str, int minLength) {
-    	if (str.length() < minLength) return false;
-    	// check if alphanumeric
-    	String regex = "^[a-zA-Z0-9]+$";
-    	Pattern pattern = Pattern.compile(regex);
-    	Matcher strMatcher = pattern.matcher(str);
-    	if (!strMatcher.matches()) return false;
-    	
-    	return true;
-=======
-    
-    /**
-     * Check whether a vehicle with the given plate number is parked.
-     * 
-     * @param plate The plate number.
-     * @return      true if the plate number is in the list of parked plates,
-     *              false otherwise.
-     */
-    public boolean plateIsParked(String plate) {
-      for (String s : parkedPlates) {
-        if (s.contentEquals(plate)) {
-          return true;
-        }
-      }
-      return false;
->>>>>>> 1d290bb6af736a3f3c32a60bdd8264614fc37597
     }
     
     private static ParkingSystem instance = new ParkingSystem();
