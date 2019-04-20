@@ -35,10 +35,12 @@ public class TextTester {//extends Application {
  public static void printLoggedInMenu() {
    System.out.println("Menu:\n");
    System.out.println("1) Add Credits");
-   System.out.println("2) Add Vehicle");
-   System.out.println("3) Park Vehicle");
-   System.out.println("4) Check out");
-   System.out.println("5) Log out");
+   System.out.println("2) Remove Credits");
+   System.out.println("3) Add Vehicle");
+   System.out.println("4) Remove Vehicle");
+   System.out.println("5) Park Vehicle");
+   System.out.println("6) Check out");
+   System.out.println("7) Log out");
    System.out.println();
    System.out.println("Selection: ");
  }
@@ -52,7 +54,7 @@ public class TextTester {//extends Application {
        return input;
      } catch(Exception e) {
        scan.nextLine();
-       System.err.println(e.toString());
+       System.out.println(e.toString());
        System.out.println();
      }
    }
@@ -67,7 +69,7 @@ public class TextTester {//extends Application {
        return input;
      } catch(Exception e) {
        scan.nextLine();
-       System.err.println(e.toString());
+       System.out.println(e.toString());
        System.out.println();
      }
    }
@@ -88,7 +90,7 @@ public class TextTester {//extends Application {
        return str;
      } catch(Exception e) {
        scan.nextLine();
-       System.err.println(e.toString());
+       System.out.println(e.toString());
        System.out.println();
      }
    }
@@ -133,10 +135,7 @@ public class TextTester {//extends Application {
  }
  
  public static void printVehicles(Manager app) {
-   List<Vehicle> vehicles = new ArrayList<Vehicle>(app.getMember().getVehicles().values());
-   for (Vehicle v : vehicles) {
-     System.out.println(v.toString());
-   }
+   System.out.print(app.vehiclesToString());
  }
  
  public static void printSpots(Manager app) {
@@ -172,13 +171,38 @@ public class TextTester {//extends Application {
          System.out.println();
        }
        else {
-         System.err.println("Error: Amount cannot be negative");
-         System.err.println();
+         System.out.println("error: Amount cannot be negative");
+         System.out.println();
        }
        break;
        
+       // remove credits
+       case 2:
+         System.out.println("Enter credits amount: ");
+         doubleInput = getDouble(scan);
+         System.out.println();
+         status = app.doRemoveCredits(doubleInput);
+         if (status == STATUS.SUCCESS) {
+           System.out.println("Removed " + doubleInput + " credits");
+           System.out.println("Total credits: " + app.getMember().getCredits());
+           System.out.println();
+         }
+         else if (status == STATUS.INVALID_AMT) {
+           System.out.println("error: Amount cannot be negative");
+           System.out.println();
+         }
+         else if (status == STATUS.INSUFFICIENT_CREDITS) {
+           System.out.println("error: You only have " + app.getMember().getCredits() + " credits");
+           System.out.println();
+         }
+         else {
+           System.out.println("error: Failed to remove credits. Reason unknown");
+           System.out.println();
+         }
+         break;
+         
      // add vehicle
-     case 2:
+     case 3:
        System.out.println("Enter plate number: ");
        stringInput = getString(scan,true);
        System.out.println();
@@ -190,25 +214,60 @@ public class TextTester {//extends Application {
          System.out.println();
        }
        else if (status == STATUS.PLATE_INVALID) {
-         System.err.println("Error: Invalid plate, must be alphanumeric with 6 characters");
-         System.err.println();
+         System.out.println("error: Invalid plate, must be alphanumeric with 6 characters");
+         System.out.println();
        }
        else if (status == STATUS.PLATE_DUPLICATE) {
-         System.err.println("Error: Vehicle with same plate is already in system");
-         System.err.println();
+         System.out.println("error: Vehicle with same plate is already in system");
+         System.out.println();
        }
        else {
-         System.err.println("Error: Failed to add vehicle, reason unknown");
-         System.err.println();
+         System.out.println("error: Failed to add vehicle, reason unknown");
+         System.out.println();
+       }
+       break;
+       
+     // remove vehicle
+     case 4:
+       if (app.getVehicles().size() == 0) {
+         System.out.println("Error: You don't have any registered vehicles");
+         System.out.println();
+         break;
+       }
+       printVehicles(app);
+       System.out.println();
+       System.out.println("Enter ID of vehicle to remove:");
+       integerInput = getInt(scan);
+       System.out.println();
+       status = app.doRemoveVehicle(integerInput);
+       if (status == STATUS.SUCCESS) {
+         System.out.println("Vehicle removed");
+         System.out.println();
+         if (app.getVehicles().size() > 0) {
+           printVehicles(app);
+           System.out.println();
+         }
+       }
+       else if (status == STATUS.PLATE_NOT_FOUND) {
+         System.out.println("error: Plate removed from account but not found in system");
+         System.out.println();
+       }
+       else if (status == STATUS.INVALID_ID) {
+         System.out.println("error: Invalid ID");
+         System.out.println();
+       }
+       else {
+         System.out.println("error: Failed to remove vehicle, reason unknown");
+         System.out.println();
        }
        break;
        
      // park vehicle
-     case 3:
+     case 5:
        // make sure there are spots available
        if (!app.spotsAvailable()) {
-         System.err.println("No spots available");
-         System.err.println();
+         System.out.println("No spots available");
+         System.out.println();
          break;
        }
        // make sure member does not have a reservation
@@ -219,8 +278,8 @@ public class TextTester {//extends Application {
        }
        // make sure the member has vehicles on account
        if (app.getMember().getVehicles().size() == 0) {
-         System.err.println("Error: No vehicles to park");
-         System.err.println();
+         System.out.println("error: No vehicles to park");
+         System.out.println();
          break;
        }
        // select vehicle
@@ -253,39 +312,39 @@ public class TextTester {//extends Application {
          else {
            app.resetReservation();
            if (status == STATUS.SPOT_NOT_FOUND) {
-             System.err.println("Error: Spot not found");
+             System.out.println("error: Spot not found");
            }
            else if (status == STATUS.SPOT_RESERVED) {
-             System.err.println("Error: Spot is already reserved");
+             System.out.println("error: Spot is already reserved");
            }
            else {
-             System.err.println("Error: Failed to reserve selected spot");
+             System.out.println("error: Failed to reserve selected spot");
            }
-           System.err.println();
+           System.out.println();
          }
        }
        else {
          if (status == STATUS.NO_SPOTS_AVAILABLE) {
-           System.err.println("Error: No spots available");
+           System.out.println("error: No spots available");
          } 
          else if (status == STATUS.INVALID_ID) {
-           System.err.println("Error: Invalid ID");
+           System.out.println("error: Invalid ID");
          }
          else {
            System.out.println("Failed to create reservation with selected vehicle");
          }
          app.resetReservation();
-         System.err.println();
+         System.out.println();
          break;
        }
        break;
        
      // check out
-     case 4:
+     case 6:
        if (app.getReservation() == null) {
          // no reservation, error
-         System.err.println("Error: No reservations to check out");
-         System.err.println();
+         System.out.println("error: No reservations to check out");
+         System.out.println();
        }
        else {
          // print the total and ask for payment
@@ -317,7 +376,7 @@ public class TextTester {//extends Application {
        break;
      
      // log out
-     case 5:
+     case 7:
        app.doLogOut();
        loggedIn = false;
        break;
@@ -378,8 +437,8 @@ public class TextTester {//extends Application {
          runApp(app,scan);
        }
        else {
-         System.err.println("Invalid credentials");
-         System.err.println();
+         System.out.println("Invalid credentials");
+         System.out.println();
        }
        break;
       
@@ -402,18 +461,18 @@ public class TextTester {//extends Application {
       else {
         // failed, print error and return to main menu
         if (status == STATUS.USERNAME_INVALID) {
-          System.err.println("Error: Username must be alphanumeric");
+          System.out.println("error: Username must be alphanumeric");
         }
         else if (status == STATUS.USERNAME_IN_USE) {
-          System.err.println("Error: Username is already in use");
+          System.out.println("error: Username is already in use");
         }
         else if (status == STATUS.PASSWORD_INVALID) {
-          System.err.println("Error: Password must be alphanumeric with at least 6 characters");
+          System.out.println("error: Password must be alphanumeric with at least 6 characters");
         }
         else {
-          System.err.println("Error: Account creation failed, back to Main Menu:");
+          System.out.println("error: Account creation failed, back to Main Menu:");
         }
-        System.err.println();
+        System.out.println();
         break;
       }
       break;

@@ -26,6 +26,8 @@ public class ParkingSystem {
     private Map<String, Member> members;
     private ParkingMap map;
     
+    private static int nextVehicleID = 0;
+    
     /**
      * Creates a ParkingSystem object.
      * 
@@ -102,11 +104,28 @@ public class ParkingSystem {
       // make sure the vehicle is not already in the system
       if (!vehicles.containsKey(veh.getPlate())) {
         // not in system, add
+        veh.setID(nextVehicleID++);
         vehicles.put(veh.getPlate(),veh);
         return STATUS.SUCCESS;
       }
       // vehicle already in system
       return STATUS.PLATE_DUPLICATE;
+    }
+    
+    /**
+     * Remove a vehicle from the system.
+     * 
+     * @param plate Plate of the vehicle to remove.
+     * @return      SUCCESS or PLATE_NOT_FOUND
+     */
+    public STATUS removeVehicle(String plate) {
+      // try to remove the vehicle
+      Vehicle v = vehicles.remove(plate);
+      // vehicle was removed
+      if (v != null) return STATUS.SUCCESS;
+      // vehicle was not found
+      return STATUS.PLATE_NOT_FOUND;
+      
     }
     
     /**

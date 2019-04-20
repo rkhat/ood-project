@@ -20,7 +20,6 @@ public class Member {
 	private String userName;
 	private String password;
 	private double credits;
-	private static int nextVehicleID = 0;
 	
 	/**
 	 * Constructs a Member object with a unique user name and
@@ -175,9 +174,7 @@ public class Member {
 	 */
 	public boolean addVehicle(Vehicle vehicle) {
 		try {
-			vehicle.setID(nextVehicleID);
 	    vehicles.put(vehicle.getID(),vehicle);
-			nextVehicleID++;
 		} catch(Exception e) {
 		  System.err.println(e.toString());
 			return false;
@@ -192,10 +189,10 @@ public class Member {
 	 * @return			  true if successful, false otherwise.
 	 */
 	public boolean removeVehicle(int id) {
-		if (vehicles.remove(id) == null) {
-			return false;
+		if (vehicles.remove(id) != null) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	/**
