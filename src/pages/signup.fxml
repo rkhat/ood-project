@@ -12,11 +12,11 @@
   xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SignupController">
   <children>
     <JFXTextField fx:id="usernameField" promptText="Username" />
-    <JFXPasswordField fx:id="passwordField1"
+    <JFXPasswordField fx:id="passwordField"
       promptText="Password" />
     <JFXPasswordField fx:id="passwordField2"
       promptText="Confirm Password" />
-    <JFXButton fx:id="signupButton" onAction="#clickSignup"
+    <JFXButton fx:id="signupButton" onAction="#signupAction"
       text="Signup" />
   </children>
   <padding>

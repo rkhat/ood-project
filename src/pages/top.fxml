@@ -8,19 +8,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@stylesheet.css"
-  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="controllers.TopController">
-  <children>
-    <JFXToolbar>
-      <top>
-        <ToolBar fx:id="toolbar" prefHeight="30.0">
-          <JFXButton text="Back" />
-          <Pane HBox.hgrow="ALWAYS" />
-          <JFXButton text="Settings" />
-        </ToolBar>
-      </top>
-    </JFXToolbar>
-    <StackPane fx:id="content" VBox.vgrow="ALWAYS" />
-  </children>
-</VBox>
+<StackPane fx:id="topPane" prefHeight="600.0" prefWidth="900.0"
+  stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171"
+  xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.TopController">
+  <VBox>
+    <children>
+      <JFXToolbar>
+        <top>
+          <ToolBar fx:id="toolbar" prefHeight="30.0">
+            <JFXButton text="Back" onAction="#backAction" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <JFXButton text="Settings" />
+          </ToolBar>
+        </top>
+      </JFXToolbar>
+      <StackPane fx:id="content" VBox.vgrow="ALWAYS" />
+    </children>
+  </VBox>
+</StackPane>

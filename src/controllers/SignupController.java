@@ -2,6 +2,9 @@ package controllers;
 
 import java.util.List;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
@@ -9,6 +12,7 @@ import javafx.scene.control.*;
 import model.*;
 import model.enums.STATUS;
 import util.StringHelper;
+import views.ToolbarView;
 
 /**
  * FXML Controller class
@@ -17,9 +21,14 @@ import util.StringHelper;
  */
 public class SignupController extends AbstractController {
   @FXML TextField usernameField;
-  @FXML PasswordField passwordField1;
+  @FXML PasswordField passwordField;
   @FXML PasswordField passwordField2;
   @FXML Button signupButton;
+  
+  public SignupController() {
+    super();
+    setBackPage(Pages.InitialPage);
+  }
 
   @FXML
   public void initialize() {
@@ -29,53 +38,56 @@ public class SignupController extends AbstractController {
       return StringHelper.checkAlphaNumeric(usernameField.getText(), 1);
     }, usernameField.textProperty());
 
-    // password field 1 validation listener
+    // password fields validation listener
     BooleanBinding passwordFieldValid = Bindings.createBooleanBinding(() -> {
-      // password must be alphanumeric with at least six characters.
-      return StringHelper.checkAlphaNumeric(passwordField1.getText(), 6);
-    }, passwordField1.textProperty());
+      // password must be alphanumeric with at least six characters
+      // and both password fields are equal
+      return StringHelper.checkAlphaNumeric(passwordField.getText(), 6) &&
+          passwordField2.getText().contentEquals(passwordField.getText());
 
-    // password field validation listener
-    BooleanBinding passwordFieldValid2 = Bindings.createBooleanBinding(() -> {
-      // user name must be alphanumeric with at least six characters.
-      return passwordField2.getText().contentEquals(passwordField1.getText());
-    }, passwordField2.textProperty());
+    }, passwordField.textProperty(), passwordField2.textProperty());
 
     // enable login button when all fields are valid
-    BooleanBinding valid = usernameFieldValid.and(passwordFieldValid)
-        .and(passwordFieldValid2);
+    BooleanBinding valid = usernameFieldValid.and(passwordFieldValid);
     signupButton.disableProperty().bind(valid.not());
   }
 
   @Override
-  public void updateMainViewController() {
-    showToolbar(true);
+  public void updateParentController() {
+    ToolbarView toolbarView = new ToolbarView();
+    toolbarView.show = true;
+    toolbarView.showBackButton = true;
+    toolbarView.title = "Sign up";
+    toolbarView.showSettingsButton = false;
+    toolbar(toolbarView);
   }
 
   /**
-   * Click Signup button
+   * Signup button action
    */
-  public void clickSignup() {
+  public void signupAction() {
     String username = usernameField.getText();
-    String password1 = passwordField1.getText();
+    String password1 = passwordField.getText();
 
     // create account
     STATUS status = getManager().doCreateAccount(username, password1);
 
     switch (status) {
-
     case SUCCESS:
-      //on success go to main menu
-      setPage(Pages.MainMenuPage);
+      // on success go to main menu
+      loadPage(Pages.MainMenuPage);
       break;
 
     case FAILED:
-      // TODO: Pop-up dialog invalid username or password
-      System.out.println("Username taken");
+      // Pop-up dialog invalid username or password
+      String title = "Username taken";
+      Button button = new JFXButton("Okay");
+      JFXDialog dialog = showAlert(title, null, button);
+      button.setOnAction((event) -> dialog.close());
       break;
-      
+
     default:
-      throw new IllegalStateException("Impossible status");
+      throw new IllegalStateException("Impossible status: " + status);
     }
 
   }

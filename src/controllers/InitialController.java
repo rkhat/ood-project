@@ -7,6 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import model.Manager;
 import util.Debugger;
+import views.ToolbarView;
 import javafx.beans.value.ObservableValue;
 
 /**
@@ -20,26 +21,28 @@ public class InitialController extends AbstractController{
   }
 
   @Override
-  public void updateMainViewController() {
-    showToolbar(false);
+  public void updateParentController() {
+    ToolbarView toolbarView = new ToolbarView();
+    toolbarView.show = false;
+    toolbar(toolbarView);
   }
   
   public void guest() {
   }
   
   /**
-   * Click Member button
+   * Member button action
    */
-  public void clickMember() {
+  public void memberAction() {
     Manager.createInstance();
-    setPage(Pages.LoginPage);
+    loadPage(Pages.LoginPage);
   }
   
   /**
-   * Click Register button
+   * Register button action
    */
-  public void clickRegister() {
+  public void registerAction() {
     Manager.createInstance();
-    setPage(Pages.SignupPage);
+    loadPage(Pages.SignupPage);
   }
 }
