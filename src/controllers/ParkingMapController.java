@@ -1,65 +1,128 @@
 package controllers;
 
 import com.jfoenix.controls.JFXButton;
-
-import controllers.adapters.VehicleView;
+import com.jfoenix.controls.JFXDialog;
 
 import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import model.*;
+import model.enums.STATUS;
+import views.ToolbarView;
+import views.VehicleView;
 
 /**
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class ParkingMapController extends AbstractController{
+public class ParkingMapController extends AbstractController {
+  private static final int BORDER_SIZE = 1;
+  private final List<Spot> spots;
+  private final ParkingMap map;
+
   @FXML GridPane parkingGrid;
-  
+
+  public ParkingMapController() {
+    super();
+    setBackPage(Pages.MainMenuPage);
+    // get manager
+    Manager manager = getManager();
+    // get parking map
+    map = manager.getParkingMap();
+    // get list of spots
+    spots = manager.getSpotsAsList();
+  }
+
   @FXML
   public void initialize() {
-    List<Spot> spots = new ArrayList<>();
-    spots.add(new Spot(0,0));
-    spots.add(new Spot(0,5));
-    spots.add(new Spot(2,2));
-    spots.add(new Spot(5,0));
-    spots.add(new Spot(3,4));
-    spots.add(new Spot(2,6));
-    spots.add(new Spot(7,8));
-    ParkingMap parkingMap = new ParkingMap(spots);
-    spots = parkingMap.getSpotsAsList();
-    
-    List<Button> cars = new ArrayList<>(); 
-    
-    
-    for (Spot spot : spots) {
-      Button car = new JFXButton("car");
-      if(spot.isReserved()) {
-        car.setDisable(true);
-      } else {
-        
-      }
-      GridPane.setConstraints(car, spot.getX(), spot.getY());
-      car.setOnAction(selectSpot(spot.getID()));
-      
-      cars.add(car);
+
+    // set number of rows and columns for the grid pane
+    int numCols = map.getWidth() + BORDER_SIZE * 2;
+    int numRows = map.getHeight() + BORDER_SIZE * 2;
+
+    for (int i = 0; i < numCols; i++) {
+      ColumnConstraints colConst = new ColumnConstraints();
+      colConst.setPercentWidth(100.0 / numCols);
+      parkingGrid.getColumnConstraints().add(colConst);
     }
-    System.out.println(parkingGrid);
-    System.out.println(cars);
-    parkingGrid.getChildren().addAll(cars);
+
+    for (int i = 0; i < numRows; i++) {
+      RowConstraints rowConst = new RowConstraints();
+      rowConst.setPercentHeight(100.0 / numRows);
+      parkingGrid.getRowConstraints().add(rowConst);
+    }
+
+    List<Button> carButtonList = new ArrayList<>(spots.size());
+
+    for (Spot spot : spots) {
+      Button carButton = new JFXButton("car");
+      if (spot.isReserved()) {
+        carButton.setDisable(true);
+      } else {
+        carButton.setOnAction(getSpotAction(spot.getID()));
+      }
+      GridPane.setConstraints(carButton, spot.getX(), spot.getY());
+      carButtonList.add(carButton);
+    }
+    parkingGrid.getChildren().addAll(carButtonList);
   }
 
   @Override
-  public void updateMainViewController() {
-    showToolbar(true);
+  public void updateParentController() {
+    ToolbarView toolbarView = new ToolbarView();
+    toolbarView.show = true;
+    toolbarView.showBackButton = true;
+    toolbarView.title = "Parking Map";
+    toolbarView.showSettingsButton = false;
+    toolbar(toolbarView);
   }
-  
-  private EventHandler<ActionEvent> selectSpot(final int id) {
+
+  @Override
+  public void back() {
+    // Reset reservation
+    getManager().resetReservation();
+    // Then perform default button action
+    super.back();
+  }
+
+  /**
+   * Spot button action to select a spot.
+   * 
+   * @param id ID of spot
+   * @return EventHandler to be added to the spot button
+   */
+  private EventHandler<ActionEvent> getSpotAction(final int id) {
     return (ActionEvent event) -> {
-      System.out.println("car=" + id);
+      // Confirm spot pop-up dialog
+      String title = "Are you sure?";
+      Button yesButton = new JFXButton("Yes");
+      Button noButton = new JFXButton("No");
+      JFXDialog dialog = showAlert(title, null, yesButton, noButton);
+
+      noButton.setOnAction((eevent) -> dialog.close());
+
+      yesButton.setOnAction((eevent) -> {
+        // Select spot
+        STATUS status = getManager().doSelectSpot(id);
+
+        switch (status) {
+        case SUCCESS:
+          // on success go to main menu
+          loadPage(Pages.MainMenuPage);
+          break;
+
+        default:
+          throw new IllegalStateException("Impossible status: " + status);
+        }
+
+        dialog.close();
+      });
+
     };
   }
 }

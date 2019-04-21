@@ -16,9 +16,9 @@
     <HBox styleClass="initial-hbox">
       <children>
         <JFXButton styleClass="initial-button" text="Guest" />
-        <JFXButton onAction="#clickMember" styleClass="initial-button"
+        <JFXButton onAction="#memberAction" styleClass="initial-button"
           text="Member" />
-        <JFXButton onAction="#clickRegister"
+        <JFXButton onAction="#registerAction"
           styleClass="initial-button" text="Register" />
       </children>
     </HBox>

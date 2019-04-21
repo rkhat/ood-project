@@ -2,12 +2,16 @@ package controllers;
 
 import java.util.List;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+
 import javafx.beans.binding.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.*;
 import model.enums.STATUS;
 import util.StringHelper;
+import views.ToolbarView;
 
 /**
  * FXML Controller class
@@ -18,6 +22,10 @@ public class LoginController extends AbstractController {
   @FXML TextField usernameField;
   @FXML PasswordField passwordField;
   @FXML Button loginButton;
+  
+  public LoginController() {
+    setBackPage(Pages.InitialPage);
+  }
 
   @FXML
   public void initialize() {
@@ -39,14 +47,19 @@ public class LoginController extends AbstractController {
   }
 
   @Override
-  public void updateMainViewController() {
-    showToolbar(true);
+  public void updateParentController() {
+    ToolbarView toolbarView = new ToolbarView();
+    toolbarView.show = true;
+    toolbarView.showBackButton = true;
+    toolbarView.title = "Log in";
+    toolbarView.showSettingsButton = false;
+    toolbar(toolbarView);
   }
 
   /**
-   * Click login button
+   * Login button action
    */
-  public void clickLogin() {
+  public void loginAction() {
     String username = usernameField.getText();
     String password = passwordField.getText();
 
@@ -54,19 +67,21 @@ public class LoginController extends AbstractController {
     STATUS status = getManager().doLogIn(username, password);
 
     switch (status) {
-
     case SUCCESS:
       // on success go to main menu
-      setPage(Pages.MainMenuPage);
+      loadPage(Pages.MainMenuPage);
       break;
 
     case FAILED:
-      // TODO: Pop-up dialog invalid username or password
-      System.out.println("Invalid username or password");
+      //Pop-up dialog invalid username or password
+      String title = "Invalid username or Password";
+      Button button = new JFXButton("Okay");
+      JFXDialog dialog = showAlert(title, null, button);
+      button.setOnAction((event) -> dialog.close());
       break;
       
     default:
-      throw new IllegalStateException("Impossible status");
+      throw new IllegalStateException("Impossible status: " + status);
     }
   }
 

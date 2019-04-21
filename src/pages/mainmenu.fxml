@@ -16,8 +16,8 @@
       VBox.vgrow="ALWAYS" />
     <HBox alignment="TOP_RIGHT" maxHeight="-Infinity" prefHeight="100.0">
       <children>
-        <JFXTextField />
-        <JFXButton fx:id="addVehicleButton"
+        <JFXTextField fx:id="plateField" />
+        <JFXButton fx:id="addVehicleButton" onAction="#addAction"
           maxHeight="1.7976931348623157E308" prefWidth="150.0" text="ADD" />
       </children>
     </HBox>

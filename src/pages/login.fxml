@@ -15,7 +15,7 @@
     <JFXTextField fx:id="usernameField" promptText="Username" />
     <JFXPasswordField fx:id="passwordField"
       promptText="Password" />
-    <JFXButton fx:id="loginButton" onAction="#clickLogin" text="Login" />
+    <JFXButton fx:id="loginButton" onAction="#loginAction" text="Login" />
   </children>
   <padding>
     <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
