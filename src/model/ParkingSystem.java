@@ -198,12 +198,14 @@ public class ParkingSystem {
    * @param oldPsw The member's old password.
    * @param newPsw The member's new password.
    * @return SUCCESS if successful, PASSWORD_INVALID if new password is invalid
-   *         format, FAILED if verification of old login info failed.
+   *         format, FAILED if verification of old login info failed,
+   *         PASSWORD_REUSE if the new password matches the old password.
    */
   public STATUS changePassword(String un, String oldPsw, String newPsw) {
     Pair<STATUS, Member> p = verifyLoginInfo(un, oldPsw);
     switch (p.getKey()) {
     case SUCCESS:
+      if (oldPsw.contentEquals(newPsw)) return STATUS.PASSWORD_REUSE;
       Member mem = p.getValue();
       if (StringHelper.checkAlphaNumeric(newPsw, 6)) {
         mem.setPassword(newPsw);

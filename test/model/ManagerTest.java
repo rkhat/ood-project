@@ -19,8 +19,9 @@ public class ManagerTest {
   
   public void init() {
     ps = ParkingSystem.getInstance();
-    List<Spot> spots = new ArrayList<Spot>(2);
-    for (int i = 0; i < spots.size(); i++) {
+    int numSpots = 2;
+    List<Spot> spots = new ArrayList<Spot>(numSpots);
+    for (int i = 0; i < numSpots; i++) {
       spots.add(new Spot(1,i));
     }
     ParkingMap pm = new ParkingMap(spots);
@@ -37,8 +38,7 @@ public class ManagerTest {
     ps.createAccount(defaultUsername, defaultPassword);
     if (vehicle) {
       app.doLogIn(defaultUsername, defaultPassword);
-      a
-      pp.doAddVehicle(defaultPlate);
+      app.doAddVehicle(defaultPlate);
       if (reservation) {
         app.doSelectVehicle(0);
         app.doSelectSpot(0);
@@ -85,6 +85,16 @@ public class ManagerTest {
     System.out.println("Run test doSelectVehicle");
     status = app.doSelectVehicle(0);
     Assert.assertTrue(status == STATUS.SUCCESS);
+    reset();
+  }
+  
+  // Testing doChangePassword 
+  @Test
+  void testDoChangePassword() {
+    initWithMember(true, false, false);
+    System.out.println("Run test doChangePassword");
+    String newPassword = "
+    status = app.doChangePassword(defaultPassword, )
   }
 
 }

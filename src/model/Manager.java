@@ -107,7 +107,9 @@ public class Manager {
    * @param oldPsw  The old password, for verification.
    * @param newPsw  The new password.
    * @return SUCCESS if successful, PASSWORD_INVALID if new password is invalid
-   *         format, FAILED if verification of old login info failed.
+   *         format, FAILED if verification of old login info failed,
+   *         PASSWORD_REUSE if the new password matches the old password.
+   * @precondition  Member must be logged in prior to function call.
    */
   public STATUS doChangePassword(String oldPsw, String newPsw) {
     return parkingSystem.changePassword(member.getUserName(), oldPsw, newPsw);
@@ -394,7 +396,7 @@ public class Manager {
     member = null;
     vehicles = null;
   }
-
+  
   private static Manager instance = new Manager();
 
 }
