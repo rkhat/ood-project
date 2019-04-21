@@ -346,7 +346,7 @@ public class TextTester {// extends Application {
           System.out.println();
           switch (integerInput) {
           case 1:
-            if (app.doCheckout()) {
+            if (app.doCheckout() == STATUS.SUCCESS) {
               System.out.println("Check out succeeded!");
               System.out
                   .println("Remaining credits " + app.getMember().getCredits());

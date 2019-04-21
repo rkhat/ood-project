@@ -37,7 +37,8 @@ public class ManagerTest {
     ps.createAccount(defaultUsername, defaultPassword);
     if (vehicle) {
       app.doLogIn(defaultUsername, defaultPassword);
-      app.doAddVehicle(defaultPlate);
+      a
+      pp.doAddVehicle(defaultPlate);
       if (reservation) {
         app.doSelectVehicle(0);
         app.doSelectSpot(0);

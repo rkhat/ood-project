@@ -22,7 +22,7 @@ public class Manager {
   // reset after logout
   private Member member;
   private Map<Integer, Vehicle> vehicles;
-  
+
   // current reservation details
   private Reservation reservation;
   private Spot spot;
@@ -99,6 +99,18 @@ public class Manager {
     // if account creation fails, return status
     member = null;
     return status;
+  }
+  
+  /**
+   * Handle password change.
+   * 
+   * @param oldPsw  The old password, for verification.
+   * @param newPsw  The new password.
+   * @return SUCCESS if successful, PASSWORD_INVALID if new password is invalid
+   *         format, FAILED if verification of old login info failed.
+   */
+  public STATUS doChangePassword(String oldPsw, String newPsw) {
+    return parkingSystem.changePassword(member.getUserName(), oldPsw, newPsw);
   }
 
   /**
@@ -353,7 +365,7 @@ public class Manager {
   /**
    * Get the ID of the vehicle on the reservation.
    * 
-   * @return  The ID if there is a reservation, null otherwise.
+   * @return The ID if there is a reservation, null otherwise.
    */
   public Integer getVehicleID() {
     if (vehicle != null) {
@@ -365,12 +377,12 @@ public class Manager {
   /**
    * Get the parking map.
    * 
-   * @return  the parking map.
+   * @return the parking map.
    */
   public ParkingMap getParkingMap() {
     return parkingMap;
   }
-  
+
   /**
    * Reset the Manager instance.
    */
@@ -382,7 +394,7 @@ public class Manager {
     member = null;
     vehicles = null;
   }
-  
+
   private static Manager instance = new Manager();
 
 }

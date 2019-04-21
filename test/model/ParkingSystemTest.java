@@ -152,5 +152,24 @@ class ParkingSystemTest {
    Assert.assertTrue( ps.lookUp(res.getCode()) == null );
    Assert.assertTrue(!spots.get(0).isReserved());
  }
+ 
+ // Testing changePassword
+@Test
+void testChangePassword() {
+  System.out.println("Testing changePassword");
+  
+  ParkingSystem ps = ParkingSystem.getInstance();
+  
+  // add a new account to the system
+  String un = "Alec";
+  String psw = "123ABC";
+  Member mem1 = ps.createAccount(un, psw).getValue();
+
+  String newPsw = "Alec123";
+  // attempt psw change with correct login info
+  ps.changePassword(un, psw, newPsw);
+  Assert.assertTrue( ps.verifyLoginInfo(un, newPsw).getKey() == STATUS.SUCCESS );
+  Assert.assertTrue( ps.verifyLoginInfo(un, psw).getKey() == STATUS.FAILED);
+}
 	
 }

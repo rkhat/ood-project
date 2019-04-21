@@ -188,8 +188,32 @@ public class ParkingSystem {
     // credentials accepted, create member
     Member newMem = new Member(un, psw);
     this.members.put(un, newMem);
-
     return new Pair<>(STATUS.SUCCESS, newMem);
+  }
+
+  /**
+   * Change a member's password.
+   * 
+   * @param un     The member's username.
+   * @param oldPsw The member's old password.
+   * @param newPsw The member's new password.
+   * @return SUCCESS if successful, PASSWORD_INVALID if new password is invalid
+   *         format, FAILED if verification of old login info failed.
+   */
+  public STATUS changePassword(String un, String oldPsw, String newPsw) {
+    Pair<STATUS, Member> p = verifyLoginInfo(un, oldPsw);
+    switch (p.getKey()) {
+    case SUCCESS:
+      Member mem = p.getValue();
+      if (StringHelper.checkAlphaNumeric(newPsw, 6)) {
+        mem.setPassword(newPsw);
+        return STATUS.SUCCESS;
+      }
+      return STATUS.PASSWORD_INVALID;
+
+    default:
+      return p.getKey();
+    }
   }
 
   /**
@@ -211,7 +235,7 @@ public class ParkingSystem {
     map = null;
     nextVehicleID = 0;
   }
-  
+
   private static ParkingSystem instance = new ParkingSystem();
 
 }
