@@ -21,9 +21,11 @@ public class Manager {
 
   // reset after logout
   private Member member;
+  private Map<Integer, Vehicle> vehicles;
+  
+  // current reservation details
   private Reservation reservation;
   private Spot spot;
-  private Map<Integer, Vehicle> vehicles;
   private Vehicle vehicle;
 
   /**
@@ -189,6 +191,7 @@ public class Manager {
     if (member != null) {
       resetReservation();
       member = null;
+      vehicles = null;
       return STATUS.SUCCESS;
     }
     // no member logged in, return false.
@@ -323,7 +326,6 @@ public class Manager {
    */
   public void resetReservation() {
     reservation = null;
-    vehicles = null;
     vehicle = null;
     spot = null;
   }
@@ -378,6 +380,7 @@ public class Manager {
     spots = parkingMap.getSpotsAsMap();
     resetReservation();
     member = null;
+    vehicles = null;
   }
   
   private static Manager instance = new Manager();
