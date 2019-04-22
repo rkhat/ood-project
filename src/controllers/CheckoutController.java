@@ -1,18 +1,11 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import model.Spot;
 import model.enums.STATUS;
 import views.ToolbarView;
 
@@ -43,6 +36,7 @@ public class CheckoutController extends AbstractController {
   /**
    * Pay button action
    */
+  @FXML
   public void payAction() {
     // perform checkout
     STATUS status = getManager().doCheckout();

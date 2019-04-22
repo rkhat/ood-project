@@ -6,21 +6,18 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="900.0"
-  styleClass="initial" stylesheets="@stylesheet.css"
-  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="controllers.InitialController">
-  <children>
-    <Label styleClass="initial-title" text="Welcome" />
-    <Region styleClass="initial-spacing" />
-    <HBox styleClass="initial-hbox">
-      <children>
-        <JFXButton styleClass="initial-button" text="Guest" />
-        <JFXButton onAction="#memberAction" styleClass="initial-button"
-          text="Member" />
-        <JFXButton onAction="#registerAction"
-          styleClass="initial-button" text="Register" />
-      </children>
-    </HBox>
-  </children>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+ fx:controller="controllers.InitialController" styleClass="initial">
+ <children>
+  <Label styleClass="initial-title" text="Welcome" />
+  <Region styleClass="initial-spacing" />
+  <HBox styleClass="initial-hbox">
+   <children>
+    <JFXButton onAction="#memberAction" styleClass="initial-button"
+     text="Member" />
+    <JFXButton onAction="#registerAction" styleClass="initial-button"
+     text="Register" />
+   </children>
+  </HBox>
+ </children>
 </VBox>

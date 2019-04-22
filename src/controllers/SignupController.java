@@ -1,7 +1,5 @@
 package controllers;
 
-import java.util.List;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 
@@ -9,7 +7,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import model.*;
 import model.enums.STATUS;
 import util.StringHelper;
 import views.ToolbarView;

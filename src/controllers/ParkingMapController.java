@@ -14,7 +14,6 @@ import javafx.scene.layout.RowConstraints;
 import model.*;
 import model.enums.STATUS;
 import views.ToolbarView;
-import views.VehicleView;
 
 /**
  *
@@ -60,7 +59,8 @@ public class ParkingMapController extends AbstractController {
     List<Button> carButtonList = new ArrayList<>(spots.size());
 
     for (Spot spot : spots) {
-      Button carButton = new JFXButton("car");
+      Button carButton = new JFXButton();
+      carButton.getStyleClass().add("car");
       if (spot.isReserved()) {
         carButton.setDisable(true);
       } else {
@@ -104,10 +104,11 @@ public class ParkingMapController extends AbstractController {
       Button noButton = new JFXButton("No");
       JFXDialog dialog = showAlert(title, null, yesButton, noButton);
 
+      //For no do nothing and close dialog
       noButton.setOnAction((eevent) -> dialog.close());
 
       yesButton.setOnAction((eevent) -> {
-        // Select spot
+        // Perform select spot
         STATUS status = getManager().doSelectSpot(id);
 
         switch (status) {
@@ -119,7 +120,8 @@ public class ParkingMapController extends AbstractController {
         default:
           throw new IllegalStateException("Impossible status: " + status);
         }
-
+        
+        //close dialog
         dialog.close();
       });
 

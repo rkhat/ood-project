@@ -3,14 +3,13 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import views.ToolbarView;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 
@@ -25,12 +24,16 @@ import javafx.fxml.FXMLLoader;
  * @author Alec Agnese, Rami El Khatib
  */
 public class TopController {
-  private Pages backPage;
-  Controller controller;
+  @FXML StackPane rootPane;
 
-  @FXML StackPane topPane;
   @FXML ToolBar toolbar;
+  @FXML Button backButton;
+  @FXML Label titleToolbar;
+  @FXML Button settingsButton;
+
   @FXML Pane content;
+
+  Controller controller; // child controller
 
   @FXML
   public void initialize() {
@@ -48,10 +51,8 @@ public class TopController {
     try {
       // get the FXMLLoader of the page
       FXMLLoader loader = page.getLoader();
-      System.out.println("Loader:" + loader);
       // load the FXMLLoader
       Parent root = loader.load();
-      System.out.println("PageRoot:" + root);
       // get the loader's controller
       controller = loader.getController();
       // set this controller as main controller for the child
@@ -73,24 +74,33 @@ public class TopController {
    * @param toolbarView The toolbar view
    */
   public void showToolbar(ToolbarView toolbarView) {
+    // show toolbar
     toolbar.setVisible(toolbarView.show);
+    // show back button
+    backButton.setVisible(toolbarView.showBackButton);
+    backButton.setManaged(toolbarView.showBackButton);
+    // show title label
+    titleToolbar.setText(toolbarView.title);
+    // show settings button
+    settingsButton.setVisible(toolbarView.showSettingsButton);
   }
 
   /**
    * Back button action
    * 
    */
+  @FXML
   public void backAction() {
     controller.back();
   }
 
   /**
-   * Set back page
+   * Settings button action
    * 
-   * @param backPage Back page to set
    */
-  public void setBackPageAction(Pages backPage) {
-    this.backPage = backPage;
+  @FXML
+  public void settingsAction() {
+    loadPage(Pages.SettingsPage);
   }
 
   /**
@@ -108,9 +118,9 @@ public class TopController {
     }
     dialogLayout.setActions(actions);
 
-    JFXDialog dialog = new JFXDialog(topPane, dialogLayout,
+    JFXDialog dialog = new JFXDialog(rootPane, dialogLayout,
         JFXDialog.DialogTransition.CENTER);
-
+    dialog.setOverlayClose(false);
     dialog.show();
     return dialog;
   }

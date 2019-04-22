@@ -2,9 +2,7 @@ package controllers;
 
 import com.jfoenix.controls.JFXDialog;
 
-import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
 import model.Manager;
 import views.ToolbarView;
 

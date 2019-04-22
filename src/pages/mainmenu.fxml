@@ -2,24 +2,23 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
-<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import views.LimitedTextField?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-  minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" spacing="10.0"
-  stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171"
-  xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainMenuController">
-  <children>
-    <JFXListView fx:id="listView" maxHeight="1.7976931348623157E308"
-      maxWidth="-Infinity" prefWidth="400.0" verticalGap="10.0"
-      VBox.vgrow="ALWAYS" />
-    <HBox alignment="TOP_RIGHT" maxHeight="-Infinity" prefHeight="100.0">
-      <children>
-        <JFXTextField fx:id="plateField" />
-        <JFXButton fx:id="addVehicleButton" onAction="#addAction"
-          maxHeight="1.7976931348623157E308" prefWidth="150.0" text="ADD" />
-      </children>
-    </HBox>
-  </children>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+ fx:controller="controllers.MainMenuController" styleClass="main-menu">
+ <children>
+ <HBox styleClass="vehicle-add-form">
+   <children>
+    <Pane HBox.hgrow="ALWAYS" />
+    <LimitedTextField fx:id="plateField" maxLength="6" styleClass="vehicle-add-plate"
+     promptText="Enter Plate Number" />
+    <JFXButton fx:id="addVehicleButton" styleClass="vehicle-add"
+     onAction="#addAction" text="ADD" />
+   </children>
+  </HBox>
+  <JFXListView fx:id="vehicleListView" VBox.vgrow="ALWAYS"/>
+ </children>
 </VBox>

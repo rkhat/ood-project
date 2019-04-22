@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import model.*;
 import model.enums.STATUS;
@@ -35,7 +36,7 @@ public class MainMenuController extends AbstractController {
   private ObservableList<VehicleView> list = FXCollections
       .observableArrayList();
 
-  @FXML ListView<VehicleView> listView;
+  @FXML ListView<VehicleView> vehicleListView;
   @FXML TextField plateField;
   @FXML Button addVehicleButton;
 
@@ -70,10 +71,12 @@ public class MainMenuController extends AbstractController {
     addVehicleButton.disableProperty().bind(plateFieldValid.not());
 
     // set list view items to observable list
-    listView.setItems(list);
+    vehicleListView.setItems(list);
 
     // use custom cell type for list view
-    listView.setCellFactory((param) -> new VehicleViewCell());
+    vehicleListView.setCellFactory((param) -> new VehicleViewCell());
+    
+    vehicleListView.setPlaceholder(new Label("Add vehicles to park"));
   }
 
   @Override
@@ -81,14 +84,15 @@ public class MainMenuController extends AbstractController {
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = false;
-    toolbarView.title = "Main menu";
-    toolbarView.showSettingsButton = false;
+    toolbarView.title = "Dashboard";
+    toolbarView.showSettingsButton = true;
     toolbar(toolbarView);
   }
 
   /**
    * Add button action to add a vehicle
    */
+  @FXML
   public void addAction() {
     String plate = plateField.getText();
 
@@ -169,7 +173,7 @@ public class MainMenuController extends AbstractController {
         break;
 
       default:
-        throw new IllegalStateException("Impossible STATUS");
+        throw new IllegalStateException("Impossible status: " + status);
       }
     };
 
@@ -182,22 +186,36 @@ public class MainMenuController extends AbstractController {
    */
   private EventHandler<ActionEvent> getCheckoutAction() {
     return (event) -> {
+
       // checkout vehicle
       STATUS status = getManager().doCheckout();
 
+      String title;
+      String body;
+      Button button;
+      JFXDialog dialog;
+
       switch (status) {
       case SUCCESS:
-        // on success go to checkout page
-        loadPage(Pages.CheckoutPage);
+        // Pop-up dialog insufficient credits
+        title = "Checkout Successfull!";
+        button = new JFXButton("Okay");
+        dialog = showAlert(title, null, button);
+        button.setOnAction((eevent) -> dialog.close());
+        loadPage(Pages.MainMenuPage);
         break;
-        
+
       case FAILED:
-        // FAILLLLEEDDD!!!!
-        System.out.println("FAILED!!!!");
+        // Pop-up dialog insufficient credits
+        title = "Insufficient Credits!";
+        body = "Please add credits before checking out.";
+        button = new JFXButton("Okay");
+        dialog = showAlert(title, body, button);
+        button.setOnAction((eevent) -> dialog.close());
         break;
 
       default:
-        throw new IllegalStateException("Impossible STATUS");
+        throw new IllegalStateException("Impossible status: " + status);
       }
     };
 
@@ -209,6 +227,8 @@ public class MainMenuController extends AbstractController {
    */
   private class VehicleViewCell extends JFXListCell<VehicleView> {
     final HBox hbox = new HBox();
+    final Pane space = new Pane();
+    final Pane space2 = new Pane();
     final Label plateLabel = new Label();
     final Button removeButton = new JFXButton();
     final Button actionButton = new JFXButton(); // park or checkout
@@ -223,11 +243,18 @@ public class MainMenuController extends AbstractController {
       super();
 
       // add remove button then plateLabel then parkButton to hbox
-      hbox.getChildren().addAll(removeButton, plateLabel, actionButton);
+      hbox.getChildren().addAll(removeButton, space, plateLabel, space2, actionButton);
 
-      hbox.setPrefHeight(50.0);
+      // Dummy horizontal space to make hbox align right
+      HBox.setHgrow(space, Priority.ALWAYS);
+      HBox.setHgrow(space2, Priority.ALWAYS);
 
-      HBox.setHgrow(plateLabel, Priority.ALWAYS);
+      // add style classes
+      hbox.getStyleClass().add("vehicle-row");
+
+      removeButton.getStyleClass().add("vehicle-remove");
+      plateLabel.getStyleClass().add("vehicle-plate");
+      actionButton.getStyleClass().add("vehicle-action");
     }
 
     @Override
@@ -244,20 +271,19 @@ public class MainMenuController extends AbstractController {
         plateLabel.setText(item.getPlate());
 
         // remove button
-        removeButton.setText("Remove");
         removeButton.setOnAction(getRemoveAction(item.getID()));
 
         if (item.isVehicleParked()) {
           // if current vehicle is parked
           // action button becomes checkout button
-          actionButton.setText("Checkout");
+          actionButton.setText("CHECKOUT");
           actionButton.setOnAction(getCheckoutAction());
           // disable remove button
           removeButton.setDisable(true);
         } else {
           // if current vehicle is not the parked vehicle
           // action button is a park button
-          actionButton.setText("Park");
+          actionButton.setText("PARK");
           actionButton.setOnAction(getParkAction(item.getID()));
 
           if (item.isMemberParked()) {
@@ -266,7 +292,7 @@ public class MainMenuController extends AbstractController {
             actionButton.setDisable(true);
           }
         }
-
+        
         setGraphic(hbox);
       }
     }

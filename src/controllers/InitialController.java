@@ -1,14 +1,8 @@
 package controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import model.Manager;
-import util.Debugger;
 import views.ToolbarView;
-import javafx.beans.value.ObservableValue;
 
 /**
  *

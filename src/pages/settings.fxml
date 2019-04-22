@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    
-</AnchorPane>
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+  prefHeight="200.0" prefWidth="300.0" spacing="30.0"
+  stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171"
+  xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="controllers.SettingsController">
+  <children>
+    <JFXButton onAction="#addCreditsAction" text="Add Credits" />
+    <JFXButton onAction="#changePasswordAction" text="Change Password" />
+    <JFXButton onAction="#logoutAction" text="Logout" />
+  </children>
+  <padding>
+    <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
+  </padding>
+</VBox>
+

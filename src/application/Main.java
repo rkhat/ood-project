@@ -40,19 +40,12 @@ public class Main extends Application {
     ParkingSystem ps = ParkingSystem.getInstance();
     ps.setMap(map);
     
-    //create members
-    Pair<STATUS, Member> p1 = ps.createAccount("test1", "123456");
-    Pair<STATUS, Member> p2 = ps.createAccount("test2", "123456");
-    Pair<STATUS, Member> p3 = ps.createAccount("test3", "123456");
-    Pair<STATUS, Member> p4 = ps.createAccount("test4", "123456");
-    Pair<STATUS, Member> p5 = ps.createAccount("test5", "123456");
-    Pair<STATUS, Member> p6 = ps.createAccount("test6", "123456");
-    Member m1 = p1.getValue();
-    Member m2 = p2.getValue();
-    Member m3 = p3.getValue();
-    Member m4 = p4.getValue();
-    Member m5 = p5.getValue();
-    Member m6 = p6.getValue();
+    Member m1 = ps.createAccount("test1", "123456").getValue();
+    Member m2 = ps.createAccount("test2", "123456").getValue();
+    Member m3 = ps.createAccount("test3", "123456").getValue();
+    Member m4 = ps.createAccount("test4", "123456").getValue();
+    Member m5 = ps.createAccount("test5", "123456").getValue();
+    Member m6 = ps.createAccount("test6", "123456").getValue();
     
     //create vehicles
     Vehicle v1 = new Vehicle("AAAAAA");

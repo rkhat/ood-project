@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddCreditsController">
+   <children>
+      <Label text="Credits" />
+      <Label fx:id="creditsAmountLabel" GridPane.columnIndex="1" />
+      <JFXButton onAction="#addCreditsAction5" text="Add $5" GridPane.rowIndex="1" />
+      <JFXButton onAction="#addCreditsAction10" text="Add $10" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <JFXButton onAction="#addCreditsAction15" text="Add $15" GridPane.rowIndex="2" />
+      <JFXButton onAction="#addCreditsAction20" text="Add $20" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+   </children>
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

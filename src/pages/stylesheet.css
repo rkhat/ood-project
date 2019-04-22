@@ -1,47 +1,205 @@
-/* 
-    Created on : Apr 10, 2019, 6:51:16 PM
+/*
     Author     : Alec Agnese, Rami El Khatib
 */
-@font-face
-{
-    font-family: Roboto;
-    src: url("../resources/fonts/Roboto-Regular.ttf");
+
+@font-face {
+  font-family: Roboto;
+  src: url("/resources/fonts/Roboto-Regular.ttf");
 }
 
+@font-face {
+  font-family: Roboto Mono;
+  src: url("/resources/fonts/RobotoMono-Regular.ttf");
+}
+
+@font-face {
+  font-family: Roboto;
+  font-weight: bold;
+  src: url("/resources/fonts/Roboto-Bold.ttf");
+}
+
+
+
 JFXButton {
+  -fx-background-color: rgb(245.0, 0.0, 87.0);
+  -fx-text-fill: #FFFFFF;
+  -fx-font-weight: bold;
+}
+
+JFXButton:hover {
+  -fx-background-color: rgba(245.0, 0.0, 87.0, 0.7);
+}
+
+/* top page */
+
+.root {
+  -fx-font-family: "Roboto";
+  -fx-font-size: 18.0px;
+  -fx-pref-width: 600.0px;
+  -fx-pref-height: 800.0px;
+  -fx-background-color: #FFFFFF;
+}
+
+/* toolbar */
+
+#toolbar {
   -fx-background-color: #F50057;
+  -fx-pref-height: 30.0px
+}
+
+#toolbar JFXButton {
+  -fx-background-color: transparent;
+}
+
+#toolbar JFXButton .jfx-rippler {
+  -jfx-rippler-fill: #F50057;
+}
+
+#toolbar JFXButton:hover {
+  -fx-background-color: rgba(0.0, 0.0, 0.0, 0.3);
+}
+
+#backButton {
+  -fx-graphic: url("/resources/icons/arrow_back.png");
+}
+
+#titleToolbar {
+  -fx-font-weight: bold;
+  -fx-font-size: 30.0px;
   -fx-text-fill: #FFFFFF;
 }
 
-.root {
-    -fx-background-color: #FFFFFF;
-    -fx-font-family: "Roboto";
-    -fx-font-size: 16px;
-  /*-fx-font: 12px Roboto;*/
+#settingsButton {
+  -fx-graphic: url("/resources/icons/settings.png");
 }
 
+/*initial page */
+
 .initial {
-  
+  -fx-alignment: top-center;
 }
 
 .initial-spacing {
-  -fx-pref-height: 150px;
+  -fx-pref-height: 150.0px;
 }
 
 .initial-title {
-  -fx-font-size: 10em;
+  -fx-font-weight: bold;
+  -fx-font-size: 130.0px;
 }
 
 .initial-hbox {
-  -fx-spacing: 1em;
+  -fx-spacing: 1.0em;
   -fx-alignment: center;
 }
 
 .initial-button {
-  -fx-font-size: 2em;
-  -fx-pref-width: 200px;
-  -fx-pref-height: 80px;
+  -fx-font-size: 2.0em;
+  -fx-pref-width: 200.0px;
+  -fx-pref-height: 80.0px;
+}
+
+/* forms */
+
+.form {
+  -fx-alignment: top-center;
+  -fx-padding: 80.0px 80.0px;
+  -fx-spacing: 60.0px;
+}
+
+.form-field {
+  -jfx-label-float: true;
+  -fx-font-size: 1.4em;
+}
+
+.form-button {
+  -fx-font-size: 1.9em;
+  -fx-pref-width: 200.0px;
+  -fx-pref-height: 70.0px;
+}
+
+/* mainmenu page */
+.main-menu {
+	-fx-spacing: 50.0px;
+	-fx-padding: 20.0px;
 }
 
 
+#vehicleListView {
+  -fx-selection-bar: transparent;
+}
 
+#vehicleListView .list-cell {
+  -fx-pref-height: 90.0px;
+  -fx-padding: 10.0px;
+  -fx-border-color: #EEEEEE;
+  -fx-border-insets: 0.0 0.0 5.0px 0.0;
+  -fx-border-width: 0.0 0.0 3.0px 0.0;
+}
+
+#vehicleListView .list-cell:empty {
+  -fx-border-width: 0.0;
+}
+
+#vehicleListView .list-cell:even {
+  -fx-background-color: #FFFFFF;
+}
+
+#vehicleListView .list-cell:odd {
+  -fx-background-color: #FFFFFF;
+}
+
+.vehicle-row {
+}
+
+.vehicle-remove {
+  -fx-graphic: url("/resources/icons/close.png");
+  -fx-background-radius: 7.0em;
+  -fx-max-height: Infinity;
+}
+
+.vehicle-plate {
+  -fx-font-family: "Roboto Mono";
+  -fx-pref-width: 160.0px;
+  -fx-padding: 10.0px;
+  -fx-max-height: Infinity;
+  -fx-text-fill: #000000;
+  -fx-font-size: 2.0em;
+}
+
+.vehicle-action {
+  -fx-pref-width: 150.0px;
+  -fx-max-height: Infinity;
+}
+
+.vehicle-add-form {
+  -fx-pref-height: 80.0px;
+}
+
+.vehicle-add-plate {
+  -fx-pref-width: 300.0px;
+  -fx-font-size: 1.8em;
+  -fx-max-height: Infinity;
+}
+
+.vehicle-add {
+  -fx-pref-width: 150.0px;
+  -fx-max-height: Infinity;
+}
+
+/* parking map page */
+.asphalt {
+	-fx-background-color: rgb(102.0, 102.0, 102.0);
+	-fx-padding: 10.0px;
+	-fx-border-width: 3px;
+	-fx-border-color: #EEEE02;
+}
+
+.car {
+	-fx-graphic: url("/resources/icons/car_white.png");
+	-fx-background-color: transparent;
+}
+
+.car:disabled {
+	-fx-graphic: url("/resources/icons/car_black.png");
+}

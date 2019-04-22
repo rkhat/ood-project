@@ -1,13 +1,7 @@
 package controllers;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 
 /**
  *
@@ -22,8 +16,8 @@ public enum Pages {
   ParkingMapPage("parking_map"),
   CheckoutPage("checkout"),
   SettingsPage("settings"),
-  PasswordPage("password"),
-  CreditsPage("credits");
+  ChangePasswordPage("change_password"),
+  AddCreditsPage("add_credits");
   
   private Pages(String filename) {
     this.url = getClass().getResource("/pages/" + filename + ".fxml");
