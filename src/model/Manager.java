@@ -100,16 +100,16 @@ public class Manager {
     member = null;
     return status;
   }
-  
+
   /**
    * Handle password change.
    * 
-   * @param oldPsw  The old password, for verification.
-   * @param newPsw  The new password.
+   * @param oldPsw The old password, for verification.
+   * @param newPsw The new password.
    * @return SUCCESS if successful, PASSWORD_INVALID if new password is invalid
    *         format, FAILED if verification of old login info failed,
    *         PASSWORD_REUSE if the new password matches the old password.
-   * @precondition  Member must be logged in prior to function call.
+   * @precondition Member must be logged in prior to function call.
    */
   public STATUS doChangePassword(String oldPsw, String newPsw) {
     return parkingSystem.changePassword(member.getUserName(), oldPsw, newPsw);
@@ -150,6 +150,8 @@ public class Manager {
    * 
    * @param spotID The ID of the spot to select.
    * @return SUCCESS, SPOT_NOT_FOUND, SPOT_RESERVED, or FAILED
+   * @precondition vehicle must be selected using doSetVehicle prior to calling
+   *               this function.
    */
   public STATUS doSelectSpot(int spotID) {
     // try to select the spot and add it to the reservation.
@@ -315,6 +317,7 @@ public class Manager {
    * @return A List<Vehicle> representing the list of vehicles.
    */
   public List<Vehicle> getVehiclesAsList() {
+    if (vehicles == null) return null;
     return new ArrayList<>(vehicles.values());
   }
 
@@ -386,6 +389,16 @@ public class Manager {
   }
 
   /**
+   * Get the logged in member's credits.
+   * 
+   * @return The number of credits.
+   * @precondition Member must be logged in.
+   */
+  public double getCredits() {
+    return member.getCredits();
+  }
+
+  /**
    * Reset the Manager instance.
    */
   public void reset() {
@@ -396,7 +409,7 @@ public class Manager {
     member = null;
     vehicles = null;
   }
-  
+
   private static Manager instance = new Manager();
 
 }
