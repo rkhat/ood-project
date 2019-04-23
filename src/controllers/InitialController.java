@@ -17,12 +17,13 @@ public class InitialController extends AbstractController {
    */
   @FXML
   public void initialize() {
-    //Set default node
+    // Set default node
     setDefaultNode(memberButton);
   }
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = false;
     toolbar(toolbarView);

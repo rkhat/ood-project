@@ -97,6 +97,7 @@ public class MainMenuController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = false;
@@ -137,8 +138,6 @@ public class MainMenuController extends AbstractController {
     default:
       throw new IllegalStateException("Impossible STATUS");
     }
-
-    loadPage(Pages.MainMenuPage);
   }
 
   /**
@@ -208,7 +207,7 @@ public class MainMenuController extends AbstractController {
 
       // get balance
       double oldBalance = getManager().getCredits();
-      double deduct = getManager().getTotal(); //get rate
+      double deduct = getManager().getTotal(); // get rate
       double newBalance = oldBalance - deduct;
       String oldBalanceStr = "$" + String.format("%.2f", oldBalance);
       String deductStr = "$" + String.format("%.2f", deduct);

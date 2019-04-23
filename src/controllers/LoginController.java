@@ -54,6 +54,7 @@ public class LoginController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;

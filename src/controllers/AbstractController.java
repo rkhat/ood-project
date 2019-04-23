@@ -19,9 +19,9 @@ public abstract class AbstractController implements Controller {
 
   @Override
   public void setParentController(TopController parentController) {
-    //set Parent controller
+    // set Parent controller
     this.parentController = parentController;
-    //Use template pattern to update the parent controller
+    // Use template pattern to update the parent controller
     updateParentController();
   }
 
@@ -82,18 +82,19 @@ public abstract class AbstractController implements Controller {
   protected Manager getManager() {
     return manager;
   }
-  
+
   /**
    * Set default node
+   * 
    * @param node node to set as default
    */
   protected void setDefaultNode(Node node) {
     defaultNode = node;
   }
-  
+
   @Override
   public void focus() {
-    //request focus on default node;
+    // request focus on default node;
     defaultNode.requestFocus();
   }
 }

@@ -27,6 +27,7 @@ public class SignupController extends AbstractController {
    */
   public SignupController() {
     super();
+    // set back page
     setBackPage(Pages.InitialPage);
   }
 
@@ -55,6 +56,7 @@ public class SignupController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;

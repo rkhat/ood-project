@@ -36,6 +36,7 @@ public class ParkingMapController extends AbstractController {
    */
   public ParkingMapController() {
     super();
+    // set back page
     setBackPage(Pages.MainMenuPage);
   }
 
@@ -104,6 +105,7 @@ public class ParkingMapController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;
@@ -146,10 +148,10 @@ public class ParkingMapController extends AbstractController {
         case SUCCESS:
           // on success go to main menu
           loadPage(Pages.MainMenuPage);
-          //close old dialog
+          // close old dialog
           dialog.close();
-          
-          //new dialog to show success
+
+          // new dialog to show success
           String ttitle = "Parked successfully!";
           String bbody = "Please head to your parking spot. Thank you!";
           Button bbutton = new JFXButton("OKAY");

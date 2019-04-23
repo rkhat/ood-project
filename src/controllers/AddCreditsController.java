@@ -29,6 +29,8 @@ public class AddCreditsController extends AbstractController {
    * Constructor
    */
   public AddCreditsController() {
+    super();
+    // set back page
     setBackPage(Pages.SettingsPage);
   }
 
@@ -64,6 +66,7 @@ public class AddCreditsController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;
@@ -78,13 +81,13 @@ public class AddCreditsController extends AbstractController {
    * @param amount amount to add
    */
   private void addCredits(final double amount) {
-    //get balance
+    // get balance
     double oldBalance = getManager().getCredits();
     String oldBalanceStr = "$" + String.format("%.2f", oldBalance);
     String amountStr = "$" + String.format("%.2f", amount);
     String newBalanceStr = "$" + String.format("%.2f", oldBalance + amount);
 
-    //confirm adding credits
+    // confirm adding credits
     String title = "Confirm adding credits: ";
     String body = "Buying:\t\t\t" + amountStr + "\n"
         + "Current Balance:\t" + oldBalanceStr + "\n"
@@ -105,11 +108,11 @@ public class AddCreditsController extends AbstractController {
       case SUCCESS:
         // Go to mainmenu
         loadPage(Pages.MainMenuPage);
-        
-        //close old dialog
+
+        // close old dialog
         dialog.close();
-        
-        //new dialog to show success
+
+        // new dialog to show success
         String ttitle = "Credits added successfully!";
         Button bbutton = new JFXButton("OKAY");
         JFXDialog ddialog = showAlert(ttitle, null, bbutton);
@@ -119,7 +122,7 @@ public class AddCreditsController extends AbstractController {
       default:
         throw new IllegalStateException("Impossible status: " + status);
       }
-      
+
     });
   }
 

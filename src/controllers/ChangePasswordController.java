@@ -27,7 +27,9 @@ public class ChangePasswordController extends AbstractController {
    * Constructor
    */
   public ChangePasswordController() {
-    setBackPage(Pages.InitialPage);
+    super();
+    // set back page
+    setBackPage(Pages.SettingsPage);
   }
 
   /**
@@ -54,6 +56,7 @@ public class ChangePasswordController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;
@@ -69,7 +72,7 @@ public class ChangePasswordController extends AbstractController {
   public void changePasswordAction() {
     // Do nothing if fields invalid
     if (!verifyOldPassword() || !verifyNewPassword()) return;
-    
+
     String oldPassword = oldPasswordField.getText();
     String newPassword = newPasswordField.getText();
 

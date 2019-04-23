@@ -21,11 +21,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import model.Manager;
-import model.Member;
 import model.ParkingMap;
 import model.ParkingSystem;
 import model.Spot;
-import model.Vehicle;
 import javafx.fxml.FXMLLoader;
 
 /**
