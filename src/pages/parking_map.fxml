@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ScrollPane?>
 
-<Pane styleClass="asphalt" xmlns="http://javafx.com/javafx/8"
- fx:controller="controllers.ParkingMapController"
- xmlns:fx="http://javafx.com/fxml">
- <GridPane fx:id="parkingGrid" maxHeight="-Infinity"
-  maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
- </GridPane>
-</Pane>
+<StackPane xmlns="http://javafx.com/javafx/8"
+ xmlns:fx="http://javafx.com/fxml"
+ fx:controller="controllers.ParkingMapController" styleClass="asphalt">
+<children>
+ <ScrollPane maxWidth="-Infinity" maxHeight="-Infinity">
+  <content>
+   <GridPane fx:id="parkingGrid" minWidth="-Infinity" minHeight="-Infinity"/>
+  </content>
+ </ScrollPane>
+</children>
+</StackPane>

@@ -13,7 +13,7 @@
   <Region styleClass="initial-spacing" />
   <HBox styleClass="initial-hbox">
    <children>
-    <JFXButton onAction="#memberAction" styleClass="initial-button"
+    <JFXButton fx:id="memberButton" onAction="#memberAction" styleClass="initial-button"
      text="Member" />
     <JFXButton onAction="#registerAction" styleClass="initial-button"
      text="Register" />

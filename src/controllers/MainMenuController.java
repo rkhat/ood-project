@@ -17,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -28,22 +30,34 @@ import views.VehicleView;
 import views.VehicleViewAdapter;
 
 /**
- *
+ * Main menu page controller
+ * 
  * @author Alec Agnese, Rami El Khatib
  */
 public class MainMenuController extends AbstractController {
+  @FXML ListView<VehicleView> vehicleListView; // List view of vehicles
 
-  private ObservableList<VehicleView> list = FXCollections
-      .observableArrayList();
+  @FXML Label creditsAmountLabel; // credits amount label
 
-  @FXML ListView<VehicleView> vehicleListView;
-  @FXML TextField plateField;
-  @FXML Button addVehicleButton;
+  @FXML TextField plateField; // enter vehicle plate field
+  @FXML Button addVehicleButton; // add vehicle button
 
-  public MainMenuController() {
-    super();
+  /**
+   * Initialize the page
+   */
+  @FXML
+  public void initialize() {
+    // ObservableList
+    ObservableList<VehicleView> list = FXCollections.observableArrayList();
+
     // get manager
     Manager manager = getManager();
+
+    // Get credits from manager with $ sign and two decimal places
+    String amount = "$" + String.format("%.2f", getManager().getCredits());
+    // Set credits amount label
+    creditsAmountLabel.setText(amount);
+
     // get vehicle list
     List<Vehicle> vehicles = manager.getVehiclesAsList();
     // parked Vehicle ID
@@ -56,15 +70,10 @@ public class MainMenuController extends AbstractController {
           parkedVehicleID);
       list.add(vehicleView);
     }
-  }
-
-  @FXML
-  public void initialize() {
 
     // plate field validation
     BooleanBinding plateFieldValid = Bindings.createBooleanBinding(() -> {
-      // user name must be alphanumeric with at least one character.
-      return StringHelper.checkAlphaNumeric(plateField.getText(), 6, true);
+      return verifyPlate();
     }, plateField.textProperty());
 
     // enable add button when plate field is valid
@@ -75,8 +84,15 @@ public class MainMenuController extends AbstractController {
 
     // use custom cell type for list view
     vehicleListView.setCellFactory((param) -> new VehicleViewCell());
-    
+
     vehicleListView.setPlaceholder(new Label("Add vehicles to park"));
+
+    // Set default node
+    if (vehicles.size() > 0) {
+      setDefaultNode(vehicleListView);
+    } else {
+      setDefaultNode(plateField);
+    }
   }
 
   @Override
@@ -94,6 +110,9 @@ public class MainMenuController extends AbstractController {
    */
   @FXML
   public void addAction() {
+    // Do nothing if fields invalid
+    if (!verifyPlate()) return;
+
     String plate = plateField.getText();
 
     // Add vehicle
@@ -110,7 +129,7 @@ public class MainMenuController extends AbstractController {
       String title = "License plate taken!";
       String body = "Remove the vehicle before adding this license plate\n"
           + "or try a different license plate.";
-      Button button = new JFXButton("Okay");
+      Button button = new JFXButton("OKAY");
       JFXDialog dialog = showAlert(title, body, button);
       button.setOnAction((eevent) -> dialog.close());
       break;
@@ -143,7 +162,7 @@ public class MainMenuController extends AbstractController {
         // Pop-up dialog no spots available
         String title = "No Spots Available!";
         String body = "Please try again later.";
-        Button button = new JFXButton("Okay");
+        Button button = new JFXButton("OKAY");
         JFXDialog dialog = showAlert(title, body, button);
         button.setOnAction((eevent) -> dialog.close());
         break;
@@ -187,38 +206,75 @@ public class MainMenuController extends AbstractController {
   private EventHandler<ActionEvent> getCheckoutAction() {
     return (event) -> {
 
-      // checkout vehicle
-      STATUS status = getManager().doCheckout();
+      // get balance
+      double oldBalance = getManager().getCredits();
+      double deduct = Reservation.hourlyRate;
+      double newBalance = oldBalance - deduct;
+      String oldBalanceStr = "$" + String.format("%.2f", oldBalance);
+      String deductStr = "$" + String.format("%.2f", deduct);
+      String newBalanceStr = (newBalance < 0 ? "-" : "") + "$"
+          + String.format("%.2f", Math.abs(newBalance));
 
-      String title;
-      String body;
-      Button button;
-      JFXDialog dialog;
+      // confirm adding credits
+      String title = "Confirm adding credits: ";
+      String body = "Pay:\t\t\t\t" + deductStr + "\n"
+          + "Current Balance:\t" + oldBalanceStr + "\n"
+          + "New Balance:\t" + newBalanceStr;
+      Button yesButton = new JFXButton("YES");
+      Button noButton = new JFXButton("NO");
+      JFXDialog dialog = showAlert(title, body, yesButton, noButton);
 
-      switch (status) {
-      case SUCCESS:
-        // Pop-up dialog insufficient credits
-        title = "Checkout Successfull!";
-        button = new JFXButton("Okay");
-        dialog = showAlert(title, null, button);
-        button.setOnAction((eevent) -> dialog.close());
-        loadPage(Pages.MainMenuPage);
-        break;
+      // For no do nothing and close dialog
+      noButton.setOnAction((eevent) -> dialog.close());
 
-      case FAILED:
-        // Pop-up dialog insufficient credits
-        title = "Insufficient Credits!";
-        body = "Please add credits before checking out.";
-        button = new JFXButton("Okay");
-        dialog = showAlert(title, body, button);
-        button.setOnAction((eevent) -> dialog.close());
-        break;
+      // For yes,
+      yesButton.setOnAction((eevent) -> {
+        // close old dialog
+        dialog.close();
+        // checkout vehicle
+        STATUS status = getManager().doCheckout();
 
-      default:
-        throw new IllegalStateException("Impossible status: " + status);
-      }
+        String ttitle;
+        String bbody;
+        Button bbutton;
+        JFXDialog ddialog;
+
+        switch (status) {
+        case SUCCESS:
+          // reload page
+          loadPage(Pages.MainMenuPage);
+          // Pop-up success
+          ttitle = "Checkout Successfull!";
+          bbutton = new JFXButton("OKAY");
+          ddialog = showAlert(ttitle, null, bbutton);
+          bbutton.setOnAction((eeevent) -> ddialog.close());
+          break;
+
+        case FAILED:
+          // Pop-up dialog insufficient credits
+          ttitle = "Insufficient Credits!";
+          bbody = "Please add credits before checking out.";
+          bbutton = new JFXButton("OKAY");
+          ddialog = showAlert(ttitle, bbody, bbutton);
+          bbutton.setOnAction((eeevent) -> ddialog.close());
+          break;
+
+        default:
+          throw new IllegalStateException("Impossible status: " + status);
+        }
+
+      });
     };
+  }
 
+  /**
+   * Add plate field valid
+   * 
+   * @return true if valid, else false
+   */
+  private boolean verifyPlate() {
+    // Plate field must be alphanumeric with exactly six characters.
+    return StringHelper.checkAlphaNumeric(plateField.getText(), 6, true);
   }
 
   /**
@@ -243,18 +299,34 @@ public class MainMenuController extends AbstractController {
       super();
 
       // add remove button then plateLabel then parkButton to hbox
-      hbox.getChildren().addAll(removeButton, space, plateLabel, space2, actionButton);
+      hbox.getChildren().addAll(removeButton, space, plateLabel, space2,
+          actionButton);
 
-      // Dummy horizontal space to make hbox align right
+      // Dummy horizontal space to make cell align perfectly
       HBox.setHgrow(space, Priority.ALWAYS);
       HBox.setHgrow(space2, Priority.ALWAYS);
 
-      // add style classes
+      // add style classes to each node
       hbox.getStyleClass().add("vehicle-row");
-
       removeButton.getStyleClass().add("vehicle-remove");
       plateLabel.getStyleClass().add("vehicle-plate");
       actionButton.getStyleClass().add("vehicle-action");
+
+      // "Hackish" fix for enter key to work on remove, park, and checkout
+      // buttons. Global event handler doesn't work in cells.
+      removeButton.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+        if (ev.getCode() == KeyCode.ENTER) {
+          removeButton.fire();
+          ev.consume();
+        }
+      });
+
+      actionButton.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+        if (ev.getCode() == KeyCode.ENTER) {
+          actionButton.fire();
+          ev.consume();
+        }
+      });
     }
 
     @Override
@@ -272,12 +344,12 @@ public class MainMenuController extends AbstractController {
 
         // remove button
         removeButton.setOnAction(getRemoveAction(item.getID()));
-
         if (item.isVehicleParked()) {
           // if current vehicle is parked
           // action button becomes checkout button
           actionButton.setText("CHECKOUT");
           actionButton.setOnAction(getCheckoutAction());
+          actionButton.setDisable(false);
           // disable remove button
           removeButton.setDisable(true);
         } else {
@@ -286,13 +358,20 @@ public class MainMenuController extends AbstractController {
           actionButton.setText("PARK");
           actionButton.setOnAction(getParkAction(item.getID()));
 
+          // enable remove button
+          removeButton.setDisable(false);
+
           if (item.isMemberParked()) {
             // if member has a parked vehicle,
             // disable park button
             actionButton.setDisable(true);
+          } else {
+            // else enable park button
+            actionButton.setDisable(false);
           }
         }
-        
+
+        // Set the cell to display the hbox
         setGraphic(hbox);
       }
     }

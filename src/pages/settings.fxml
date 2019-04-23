@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-  prefHeight="200.0" prefWidth="300.0" spacing="30.0"
-  stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171"
-  xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="controllers.SettingsController">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+ fx:controller="controllers.SettingsController" styleClass="form">
   <children>
-    <JFXButton onAction="#addCreditsAction" text="Add Credits" />
-    <JFXButton onAction="#changePasswordAction" text="Change Password" />
-    <JFXButton onAction="#logoutAction" text="Logout" />
+    <JFXButton fx:id="addCreditsButton" onAction="#addCreditsAction" styleClass="settings-button" text="Add Credits" />
+    <JFXButton onAction="#changePasswordAction" styleClass="settings-button" text="Change Password" />
+    <JFXButton onAction="#logoutAction" styleClass="settings-button" text="Logout" />
   </children>
-  <padding>
-    <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
-  </padding>
 </VBox>
 

@@ -1,17 +1,24 @@
 package controllers;
 
+import javafx.scene.control.Button;
 import javafx.fxml.FXML;
-import model.Manager;
 import views.ToolbarView;
 
 /**
- *
+ * Initial page controller
+ * 
  * @author Alec Agnese, Rami El Khatib
  */
-public class InitialController extends AbstractController{
-  
+public class InitialController extends AbstractController {
+  @FXML Button memberButton;
+
+  /**
+   * Initialize the page
+   */
   @FXML
   public void initialize() {
+    //Set default node
+    setDefaultNode(memberButton);
   }
 
   @Override
@@ -20,23 +27,22 @@ public class InitialController extends AbstractController{
     toolbarView.show = false;
     toolbar(toolbarView);
   }
-  
-  public void guest() {
-  }
-  
+
   /**
    * Member button action
    */
+  @FXML
   public void memberAction() {
-    Manager.createInstance();
+    // goto login page
     loadPage(Pages.LoginPage);
   }
-  
+
   /**
    * Register button action
    */
+  @FXML
   public void registerAction() {
-    Manager.createInstance();
+    // goto signup page
     loadPage(Pages.SignupPage);
   }
 }
