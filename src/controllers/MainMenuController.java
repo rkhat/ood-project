@@ -208,7 +208,7 @@ public class MainMenuController extends AbstractController {
 
       // get balance
       double oldBalance = getManager().getCredits();
-      double deduct = Reservation.hourlyRate;
+      double deduct = getManager().getTotal(); //get rate
       double newBalance = oldBalance - deduct;
       String oldBalanceStr = "$" + String.format("%.2f", oldBalance);
       String deductStr = "$" + String.format("%.2f", deduct);

@@ -68,6 +68,8 @@ public class TopController {
       // add new page
       content.getChildren().add(root);
 
+      // focus on child page
+      controller.focus();
       Platform.runLater(new Runnable() {
         @Override
         public void run() {
@@ -162,15 +164,16 @@ public class TopController {
     });
 
     // Program escape button to click on second button if available (usually
-    // "NO" button)
-    if (actions.length > 1) {
-      dialog.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
-        if (ev.getCode() == KeyCode.ESCAPE) {
-          ((Button) actions[1]).fire();
-          ev.consume();
-        }
-      });
-    }
+    // "NO" button) or "OKAY" if only one button exist
+    final Button escapeButton = actions.length > 1 ? (Button) actions[1]
+        : (Button) actions[0];
+
+    dialog.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+      if (ev.getCode() == KeyCode.ESCAPE) {
+        escapeButton.fire();
+        ev.consume();
+      }
+    });
 
     // Show dialog
     dialog.show();
