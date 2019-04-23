@@ -42,3 +42,6 @@ local.properties
 
 #Visual Studio code
 .vscode/
+
+#Remove app generated saves
+app.ser

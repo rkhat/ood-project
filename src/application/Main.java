@@ -46,7 +46,7 @@ public class Main extends Application {
   /**
    * Entry Point for the application
    * 
-   * @param args not used
+   * @param args Optionally pass a filename to load a custom preset
    */
   public static void main(String args[]) {
 
