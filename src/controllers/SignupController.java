@@ -83,11 +83,12 @@ public class SignupController extends AbstractController {
       loadPage(Pages.MainMenuPage);
       break;
 
-    case FAILED:
+    case USERNAME_IN_USE:
       // Pop-up dialog invalid username or password
-      String title = "Username taken";
+      String title = "Username taken!";
+      String body = "Please try a different username";
       Button button = new JFXButton("OKAY");
-      JFXDialog dialog = showAlert(title, null, button);
+      JFXDialog dialog = showAlert(title, body, button);
       button.setOnAction((event) -> dialog.close());
       break;
 
