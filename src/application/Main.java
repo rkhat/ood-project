@@ -2,8 +2,10 @@ package application;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,9 @@ import javafx.fxml.FXMLLoader;
 public class Main extends Application {
 
   private static final String defaultFile = "app.ser";
+  private static String fileName;
+  private static boolean save;
+  private static ParkingSystem ps;
 
   private TopController topController;
   private Stage window;
@@ -44,8 +49,6 @@ public class Main extends Application {
    * @param args not used
    */
   public static void main(String args[]) {
-
-    String fileName = "";
 
     try {
       fileName = args[0];
@@ -58,13 +61,14 @@ public class Main extends Application {
     System.out.println("Loaded from file " + fileName + "\n");
 
     // only save if it is the actual app, not one of the presets.
-    boolean save = fileName.contentEquals(defaultFile) ? true : false;
-
-    Manager app = null;
-    ParkingSystem ps = null;
+    save = fileName.contentEquals(defaultFile) ? true : false;
 
     // Set up ParkingSystem
     ps = initParkingSystem(fileName);
+    
+    // Set up Manager
+    Manager.createInstance(ps);
+    Manager.getInstance();
 
     launch(args);
   }
@@ -227,6 +231,17 @@ public class Main extends Application {
     // For yes,
     yesButton.setOnAction((event) -> {
       // Save data
+      if (save) {
+        try {
+          FileOutputStream fos = new FileOutputStream(fileName);
+          ObjectOutputStream oos = new ObjectOutputStream(fos);
+          oos.writeObject(ps);
+          oos.close();
+          fos.close();
+        } catch (Exception e) {
+          System.err.println(e.toString());
+        }
+      }
 
       // close dialog
       window.close();
