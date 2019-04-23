@@ -6,20 +6,26 @@ import model.enums.STATUS;
 import views.ToolbarView;
 
 /**
- *
+ * Settings page controller
  * @author Alec Agnese, Rami El Khatib
  */
 public class SettingsController extends AbstractController {
   @FXML Button addCreditsButton;
-  @FXML Button changePasswordButton;
-  @FXML Button logoutButton;
   
+  /**
+   * Constructor
+   */
   public SettingsController() {
     setBackPage(Pages.MainMenuPage);
   }
 
+  /**
+   * Initialize the page
+   */
   @FXML
   public void initialize() {
+    //Set default node
+    setDefaultNode(addCreditsButton);
   }
 
   @Override
@@ -32,14 +38,26 @@ public class SettingsController extends AbstractController {
     toolbar(toolbarView);
   }
   
+  /**
+   * Add credits button action
+   */
+  @FXML
   public void addCreditsAction() {
     loadPage(Pages.AddCreditsPage);
   }
   
+  /**
+   * Change password button action
+   */
+  @FXML
   public void changePasswordAction() {
     loadPage(Pages.ChangePasswordPage);
   }
   
+  /**
+   * Logout button action
+   */
+  @FXML
   public void logoutAction() {
     //Perform logout
     STATUS status = getManager().doLogOut();

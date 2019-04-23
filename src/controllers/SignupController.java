@@ -12,7 +12,7 @@ import util.StringHelper;
 import views.ToolbarView;
 
 /**
- * FXML Controller class
+ * Sign up page controller
  *
  * @author Alec Agnese, Rami El Khatib
  */
@@ -21,32 +21,36 @@ public class SignupController extends AbstractController {
   @FXML PasswordField passwordField;
   @FXML PasswordField passwordField2;
   @FXML Button signupButton;
-  
+
+  /**
+   * Constructor
+   */
   public SignupController() {
     super();
     setBackPage(Pages.InitialPage);
   }
 
+  /**
+   * Initialize the page
+   */
   @FXML
   public void initialize() {
     // username field validation listener
     BooleanBinding usernameFieldValid = Bindings.createBooleanBinding(() -> {
-      // username must be alphanumeric with at least one character.
-      return StringHelper.checkAlphaNumeric(usernameField.getText(), 1);
+      return verifyUsername();
     }, usernameField.textProperty());
 
     // password fields validation listener
     BooleanBinding passwordFieldValid = Bindings.createBooleanBinding(() -> {
-      // password must be alphanumeric with at least six characters
-      // and both password fields are equal
-      return StringHelper.checkAlphaNumeric(passwordField.getText(), 6) &&
-          passwordField2.getText().contentEquals(passwordField.getText());
-
+      return verifyPassword();
     }, passwordField.textProperty(), passwordField2.textProperty());
 
     // enable login button when all fields are valid
     BooleanBinding valid = usernameFieldValid.and(passwordFieldValid);
     signupButton.disableProperty().bind(valid.not());
+
+    // Set default node
+    setDefaultNode(usernameField);
   }
 
   @Override
@@ -62,12 +66,16 @@ public class SignupController extends AbstractController {
   /**
    * Signup button action
    */
+  @FXML
   public void signupAction() {
+    // Do nothing if fields invalid
+    if (!verifyUsername() || !verifyPassword()) return;
+
     String username = usernameField.getText();
-    String password1 = passwordField.getText();
+    String password = passwordField.getText();
 
     // create account
-    STATUS status = getManager().doCreateAccount(username, password1);
+    STATUS status = getManager().doCreateAccount(username, password);
 
     switch (status) {
     case SUCCESS:
@@ -78,7 +86,7 @@ public class SignupController extends AbstractController {
     case FAILED:
       // Pop-up dialog invalid username or password
       String title = "Username taken";
-      Button button = new JFXButton("Okay");
+      Button button = new JFXButton("OKAY");
       JFXDialog dialog = showAlert(title, null, button);
       button.setOnAction((event) -> dialog.close());
       break;
@@ -87,6 +95,28 @@ public class SignupController extends AbstractController {
       throw new IllegalStateException("Impossible status: " + status);
     }
 
+  }
+
+  /**
+   * Username field valid
+   * 
+   * @return true if valid, else false
+   */
+  private boolean verifyUsername() {
+    // user name must be alphanumeric with at least one character.
+    return StringHelper.checkAlphaNumeric(usernameField.getText(), 1);
+  }
+
+  /**
+   * Password fields valid
+   * 
+   * @return true if valid, else false
+   */
+  private boolean verifyPassword() {
+    // password must be alphanumeric with at least six characters
+    // and both password fields are equal
+    return StringHelper.checkAlphaNumeric(passwordField.getText(), 6) &&
+        passwordField2.getText().contentEquals(passwordField.getText());
   }
 
 }

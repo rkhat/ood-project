@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -10,15 +11,23 @@
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
  fx:controller="controllers.MainMenuController" styleClass="main-menu">
  <children>
- <HBox styleClass="vehicle-add-form">
+  <HBox styleClass="vehicle-add-form">
    <children>
+    <VBox>
+     <children>
+      <Label text="Balance" />
+      <Label fx:id="creditsAmountLabel"
+       styleClass="mainmenu-credits-amount" />
+     </children>
+    </VBox>
     <Pane HBox.hgrow="ALWAYS" />
-    <LimitedTextField fx:id="plateField" maxLength="6" styleClass="vehicle-add-plate"
-     promptText="Enter Plate Number" />
+    <LimitedTextField maxLength="6" fx:id="plateField"
+     onAction="#addAction" styleClass="vehicle-add-plate"
+     promptText="Enter Plate #" />
     <JFXButton fx:id="addVehicleButton" styleClass="vehicle-add"
      onAction="#addAction" text="ADD" />
    </children>
   </HBox>
-  <JFXListView fx:id="vehicleListView" VBox.vgrow="ALWAYS"/>
+  <JFXListView fx:id="vehicleListView" VBox.vgrow="ALWAYS" />
  </children>
 </VBox>

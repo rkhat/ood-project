@@ -17,9 +17,9 @@ public class VehicleViewAdapter implements VehicleView {
    * This constructor stores the vehicle information and whether or not it is
    * parked. It also stores whether or not the member has a parked vehicle.
    * 
-   * @param vehicle A vehicle
-   * @param parkedVehicleID ID of member's parked Vehicle. Null if no member
-   *                        has no parked vehicles
+   * @param vehicle         A vehicle
+   * @param parkedVehicleID ID of member's parked Vehicle. Null if no member has
+   *                        no parked vehicles
    */
   public VehicleViewAdapter(Vehicle vehicle, Integer parkedVehicleID) {
     this.id = vehicle.getID();

@@ -18,7 +18,7 @@
   src: url("/resources/fonts/Roboto-Bold.ttf");
 }
 
-
+/* General */
 
 JFXButton {
   -fx-background-color: rgb(245.0, 0.0, 87.0);
@@ -26,8 +26,16 @@ JFXButton {
   -fx-font-weight: bold;
 }
 
-JFXButton:hover {
-  -fx-background-color: rgba(245.0, 0.0, 87.0, 0.7);
+JFXButton:hover, JFXButton:focused {
+  -fx-effect: dropshadow(three-pass-box, rgba(0.0, 0.0, 0.0, 0.8), 10.0, 0.0, 0.0, 0.0);
+}
+
+.scroll-pane {
+  -fx-background-color: transparent;
+}
+
+.scroll-pane>.viewport {
+  -fx-background-color: transparent;
 }
 
 /* top page */
@@ -55,7 +63,7 @@ JFXButton:hover {
   -jfx-rippler-fill: #F50057;
 }
 
-#toolbar JFXButton:hover {
+#toolbar JFXButton:hover, #toolbar JFXButton:focused {
   -fx-background-color: rgba(0.0, 0.0, 0.0, 0.3);
 }
 
@@ -103,7 +111,7 @@ JFXButton:hover {
 
 .form {
   -fx-alignment: top-center;
-  -fx-padding: 80.0px 80.0px;
+  -fx-padding: 80.0px;
   -fx-spacing: 60.0px;
 }
 
@@ -119,11 +127,11 @@ JFXButton:hover {
 }
 
 /* mainmenu page */
-.main-menu {
-	-fx-spacing: 50.0px;
-	-fx-padding: 20.0px;
-}
 
+.main-menu {
+  -fx-spacing: 50.0px;
+  -fx-padding: 20.0px;
+}
 
 #vehicleListView {
   -fx-selection-bar: transparent;
@@ -149,8 +157,7 @@ JFXButton:hover {
   -fx-background-color: #FFFFFF;
 }
 
-.vehicle-row {
-}
+.vehicle-row {}
 
 .vehicle-remove {
   -fx-graphic: url("/resources/icons/close.png");
@@ -173,33 +180,86 @@ JFXButton:hover {
 }
 
 .vehicle-add-form {
-  -fx-pref-height: 80.0px;
+  -fx-pref-height: 40.0px;
 }
 
 .vehicle-add-plate {
-  -fx-pref-width: 300.0px;
+  -fx-pref-width: 200.0px;
   -fx-font-size: 1.8em;
-  -fx-max-height: Infinity;
 }
 
 .vehicle-add {
-  -fx-pref-width: 150.0px;
+  -fx-pref-width: 90.0px;
   -fx-max-height: Infinity;
 }
 
+.mainmenu-credits-amount {
+  -fx-font-family: "Roboto Mono";
+}
+
 /* parking map page */
+
 .asphalt {
-	-fx-background-color: rgb(102.0, 102.0, 102.0);
-	-fx-padding: 10.0px;
-	-fx-border-width: 3px;
-	-fx-border-color: #EEEE02;
+  -fx-background-color: rgb(160.0, 160.0, 160.0);
+}
+
+#parkingGrid {
+  -fx-background-color: rgb(102.0, 102.0, 102.0);
+  /*bugged padding(add 5px to right padding) */
+  -fx-padding: 20.0px 25.0px 20.0px 20.0px;
+  -fx-border-width: 10.0px;
+  -fx-border-color: #EEEE02;
 }
 
 .car {
-	-fx-graphic: url("/resources/icons/car_white.png");
-	-fx-background-color: transparent;
+  -fx-graphic: url("/resources/icons/car_white.png");
+  -fx-background-color: transparent;
+  -fx-pref-width: 23.0px;
+  -fx-pref-height: 47.0px;
+  -fx-background-size: 23.0px;
 }
 
 .car:disabled {
-	-fx-graphic: url("/resources/icons/car_black.png");
+  -fx-graphic: url("/resources/icons/car_black.png");
+}
+
+/* Settings page */
+
+.settings-button {
+  -fx-font-size: 1.9em;
+  -fx-pref-width: 340.0px;
+  -fx-pref-height: 70.0px;
+}
+
+/* Add credits page */
+
+.add-credits {
+  -fx-alignment: top-center;
+  -fx-padding: 30.0px;
+  -fx-vgap: 20.0px;
+  -fx-hgap: 20.0px;
+}
+
+.add-credits-label {
+  -fx-font-size: 1.9em;
+  -fx-max-width: Infinity;
+  -fx-max-height: Infinity;
+}
+
+.add-credits-amount {
+  -fx-font-family: "Roboto Mono";
+  -fx-font-size: 1.9em;
+  -fx-max-width: Infinity;
+  -fx-max-height: Infinity;
+}
+
+#addCreditsField {
+  -jfx-label-float: true;
+  -fx-max-width: Infinity;
+}
+
+.add-credits-button {
+  -fx-font-size: 1.9em;
+  -fx-max-width: Infinity;
+  -fx-max-height: Infinity;
 }

@@ -1,10 +1,11 @@
 package controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import views.ToolbarView;
@@ -24,17 +25,21 @@ import javafx.fxml.FXMLLoader;
  * @author Alec Agnese, Rami El Khatib
  */
 public class TopController {
-  @FXML StackPane rootPane;
+  @FXML StackPane rootPane; // root pane
+  @FXML Pane mainPane; // pane contains content+toolbar but not dialog
 
-  @FXML ToolBar toolbar;
-  @FXML Button backButton;
-  @FXML Label titleToolbar;
-  @FXML Button settingsButton;
+  @FXML ToolBar toolbar; // toolbar
+  @FXML Button backButton; // back button
+  @FXML Label titleToolbar; // title in toolbar
+  @FXML Button settingsButton; // settings button
 
-  @FXML Pane content;
+  @FXML Pane content; // child content
 
   Controller controller; // child controller
 
+  /**
+   * Initialize the page
+   */
   @FXML
   public void initialize() {
     // load initial page
@@ -43,7 +48,7 @@ public class TopController {
   }
 
   /**
-   * Load a new page
+   * Load a new page. This uses the strategy pattern.
    * 
    * @param page new page to load
    */
@@ -62,6 +67,14 @@ public class TopController {
       content.getChildren().clear();
       // add new page
       content.getChildren().add(root);
+
+      Platform.runLater(new Runnable() {
+        @Override
+        public void run() {
+          controller.focus();
+        }
+      });
+
     } catch (IOException ex) {
       System.err.println("Page " + page + " does not exist!");
       System.exit(1);
@@ -91,6 +104,7 @@ public class TopController {
    */
   @FXML
   public void backAction() {
+    // call child controller's back button
     controller.back();
   }
 
@@ -100,6 +114,7 @@ public class TopController {
    */
   @FXML
   public void settingsAction() {
+    // load settings page
     loadPage(Pages.SettingsPage);
   }
 
@@ -109,18 +124,55 @@ public class TopController {
    * @param title   title of dialog
    * @param body    body of dialog
    * @param actions buttons of dialog
+   * @return dialog
    */
   public JFXDialog showPopupDialog(String title, String body, Node... actions) {
+    // Create dialog layout
     JFXDialogLayout dialogLayout = new JFXDialogLayout();
+    // Add title
     dialogLayout.setHeading(new Text(title));
+    // Add body if not null
     if (body != null) {
       dialogLayout.setBody(new Text(body));
     }
+    // Add buttons
     dialogLayout.setActions(actions);
 
+    // Create dialog from dialog layout and attach it to the
+    // root Pane
     JFXDialog dialog = new JFXDialog(rootPane, dialogLayout,
         JFXDialog.DialogTransition.CENTER);
+
+    // Prevent closing dialog anywhere
     dialog.setOverlayClose(false);
+
+    // disable main pane to prevent tabbing to buttons in it
+    mainPane.setDisable(true);
+
+    dialog.setOnDialogOpened((event) -> {
+      // Put focus on first button (usually "YES" or "OKAY" button)
+      actions[0].requestFocus();
+    });
+
+    dialog.setOnDialogClosed((event) -> {
+      // re-enable main pane to when dialog closed
+      mainPane.setDisable(false);
+      // re-focus on the default node of child
+      controller.focus();
+    });
+
+    // Program escape button to click on second button if available (usually
+    // "NO" button)
+    if (actions.length > 1) {
+      dialog.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+        if (ev.getCode() == KeyCode.ESCAPE) {
+          ((Button) actions[1]).fire();
+          ev.consume();
+        }
+      });
+    }
+
+    // Show dialog
     dialog.show();
     return dialog;
   }

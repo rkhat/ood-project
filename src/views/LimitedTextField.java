@@ -7,23 +7,47 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
+/**
+ * Text field with limited number of characters that can be inserted into it.
+ * 
+ * @author Alec Agnese, Rami El Khatib
+ *
+ */
 public class LimitedTextField extends JFXTextField {
 
   private final IntegerProperty maxLength;
 
+  /**
+   * Initialize LimitedTextField with default value
+   */
   public LimitedTextField() {
     super();
     this.maxLength = new SimpleIntegerProperty(-1);
   }
 
+  /**
+   * Get max length property
+   * 
+   * @return max length property
+   */
   public IntegerProperty maxLengthProperty() {
     return this.maxLength;
   }
 
+  /**
+   * Get max length of text field
+   * 
+   * @return max length of text field
+   */
   public final Integer getMaxLength() {
     return this.maxLength.getValue();
   }
 
+  /**
+   * Set max length of text field
+   * 
+   * @param maxLength max length to set
+   */
   public final void setMaxLength(Integer maxLength) {
     Objects.requireNonNull(maxLength,
         "Max length cannot be null, -1 for no limit");
