@@ -52,7 +52,7 @@ public class PresetCreator {
     addMember(app, "John", "John123", 12.5, "AK3LF8", 24);
     addMember(app, "Rami", "Rami123", 13.7, "104KD7", 26);
     addMember(app, "Rafa", "Rafa123", 5.1, "573KD7", 28);
-    addMember(app, "Carolona", "Carolina123", 6.3, "LSKD73", 30);
+    addMember(app, "Carolina", "Carolina123", 6.3, "LSKD73", 30);
 
     try {
       FileOutputStream fos = new FileOutputStream(fileName);

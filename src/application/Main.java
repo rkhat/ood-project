@@ -1,5 +1,9 @@
 package application;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import model.Manager;
 import model.Member;
 import model.ParkingMap;
 import model.ParkingSystem;
@@ -23,95 +28,158 @@ import javafx.fxml.FXMLLoader;
 
 /**
  * Main GUI application
+ * 
  * @author Alec Agnese, Rami El Khatib
  */
 public class Main extends Application {
+
+  private static final String defaultFile = "app.ser";
 
   private TopController topController;
   private Stage window;
 
   /**
    * Entry Point for the application
+   * 
    * @param args not used
    */
   public static void main(String args[]) {
 
-    // create list of spots
-    List<Spot> spotList = new ArrayList<Spot>(10);
-    for (int j = 0; j <= 8; j++) {
-      if (j == 1 || j == 4 || j == 7) continue;
-      for (int i = 0; i <= 11; i++) {
-        if (j == 8 && (i == 5 || i == 6)) continue;
-        spotList.add(new Spot(i, j));
-      }
+    String fileName = "";
+
+    try {
+      fileName = args[0];
+    } catch (IndexOutOfBoundsException e) {
+      System.out.println("No file specified to load from, default "
+          + defaultFile + " selected\n");
+      fileName = defaultFile;
     }
 
-    // create map
-    ParkingMap map = new ParkingMap(spotList);
+    System.out.println("Loaded from file " + fileName + "\n");
 
-    // Set up parking system
-    ParkingSystem ps = ParkingSystem.getInstance();
-    ps.setMap(map);
+    // only save if it is the actual app, not one of the presets.
+    boolean save = fileName.contentEquals(defaultFile) ? true : false;
 
-    Member m1 = ps.createAccount("test1", "123456").getValue();
-    Member m2 = ps.createAccount("test2", "123456").getValue();
-    Member m3 = ps.createAccount("test3", "123456").getValue();
-    Member m4 = ps.createAccount("test4", "123456").getValue();
-    Member m5 = ps.createAccount("test5", "123456").getValue();
-    Member m6 = ps.createAccount("test6", "123456").getValue();
+    Manager app = null;
+    ParkingSystem ps = null;
 
-    // create vehicles
-    Vehicle v1 = new Vehicle("AAAAAA");
-    Vehicle v2 = new Vehicle("BBBBBB");
-    Vehicle v3 = new Vehicle("CCCCCC");
-    Vehicle v4 = new Vehicle("DDDDDD");
-    Vehicle v5 = new Vehicle("EEEEEE");
-    Vehicle v6 = new Vehicle("FFFFFF");
-    Vehicle v7 = new Vehicle("GGGGGG");
-    Vehicle v8 = new Vehicle("HHHHHH");
-    Vehicle v9 = new Vehicle("IIIIII");
-    Vehicle v10 = new Vehicle("JJJJJJ");
-    Vehicle v11 = new Vehicle("KKKKKK");
-
-    // add vehicles to members
-    ps.addVehicle(v1);
-    ps.addVehicle(v2);
-    ps.addVehicle(v3);
-    ps.addVehicle(v4);
-    ps.addVehicle(v5);
-    ps.addVehicle(v6);
-    ps.addVehicle(v7);
-    ps.addVehicle(v8);
-    ps.addVehicle(v9);
-    ps.addVehicle(v10);
-    ps.addVehicle(v11);
-
-    m1.addVehicle(v1);
-    m1.addVehicle(v2);
-    m1.addVehicle(v3);
-    m1.addVehicle(v4);
-    m1.addVehicle(v5);
-    m1.addVehicle(v6);
-    m2.addVehicle(v7);
-    m3.addVehicle(v8);
-    m4.addVehicle(v9);
-    m5.addVehicle(v10);
-    m5.addVehicle(v11);
+    // Set up ParkingSystem
+    ps = initParkingSystem(fileName);
 
     launch(args);
+  }
+
+  public static ParkingSystem initParkingSystem(String fileName) {
+    ParkingMap map = null;
+    ParkingSystem ps = null;
+
+    // read parking system from file
+    try {
+      FileInputStream fis = new FileInputStream(fileName);
+      ObjectInputStream ois = new ObjectInputStream(fis);
+      ps = (ParkingSystem) ois.readObject();
+      ois.close();
+      fis.close();
+      return ps;
+    } catch (FileNotFoundException e) {
+      System.out.println("Setting up app...\n");
+      // create list of spots
+      List<Spot> spotList = new ArrayList<Spot>(1);
+      // spotList.add(new Spot(0, 0));
+      for (int i = 1; i <= 5; i++) {
+        for (int j = 1; j <= 2; j++) {
+          spotList.add(new Spot(i, j));
+        }
+      }
+
+      // create map
+      map = new ParkingMap(spotList);
+
+      // Set up parking system
+      ps = ParkingSystem.getInstance();
+      ps.setMap(map);
+      return ps;
+
+    } catch (IOException e) {
+      System.err.println(e.toString());
+    } catch (ClassNotFoundException e) {
+      System.err.println(e.toString());
+    }
+    return null;
+  }
+
+  // create member with credits and parked vehicle.
+  public static void addMember(Manager m, String un, String psw, double credits,
+      String plate, int spotID) {
+    m.doCreateAccount(un, psw);
+    m.doAddCredits(credits);
+    m.doAddVehicle(plate);
+    m.doSelectVehicle(m.getVehiclesAsList().get(0).getID());
+    m.doSelectSpot(spotID);
+    m.doLogOut();
+  }
+
+  // create member with credits and unparked vehicle.
+  public static void addMember(Manager m, String un, String psw, double credits,
+      String plate) {
+    m.doCreateAccount(un, psw);
+    m.doAddCredits(credits);
+    m.doAddVehicle(plate);
+    m.doLogOut();
+  }
+
+  // create member with credits and no vehicles.
+  public static void addMember(Manager m, String un, String psw,
+      double credits) {
+    m.doCreateAccount(un, psw);
+    m.doAddCredits(credits);
+    m.doLogOut();
+  }
+
+  /**
+   * Add spots in a vertical line starting at position x, yBegin and ending at
+   * position x, yBegin+amt-1
+   * 
+   * @param spotList The list to add spots to.
+   * @param x        The X value of the column to add the spots in.
+   * @param yBegin   The beginning Y value.
+   * @param amt      The number of spots to add.
+   */
+  public static void addSpotsVertical(List<Spot> spotList, int x, int yBegin,
+      int amt) {
+    for (int i = 0; i < amt; i++) {
+      spotList.add(new Spot(x, yBegin + i));
+    }
+  }
+
+  /**
+   * Add spots in a horizontal line starting at position xBegin, y and ending at
+   * position xBegin+amt-1, y
+   * 
+   * @param spotList The list to add spots to.
+   * @param xBegin   The beginning X value.
+   * @param y        The Y value of the row to add the spots in.
+   * @param amt      The number of spots to add.
+   */
+  public static void addSpotsHorizontal(List<Spot> spotList, int xBegin, int y,
+      int amt) {
+    for (int i = 0; i < amt; i++) {
+      spotList.add(new Spot(xBegin + i, y));
+    }
   }
 
   @Override
   public void start(Stage primaryStage) throws Exception {
     window = primaryStage;
-    
-    //Get the FXML loader of the top page
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/top.fxml"));
+
+    // Get the FXML loader of the top page
+    FXMLLoader loader = new FXMLLoader(
+        getClass().getResource("/pages/top.fxml"));
     // Load top page as root
     Parent root = loader.load();
-    //Get controller
+    // Get controller
     topController = loader.getController();
-    
+
     // Create main scene from root
     Scene mainScene = new Scene(root);
 
@@ -125,9 +193,9 @@ public class Main extends Application {
         }
       }
     });
-    
+
     // Change default exit button
-    window.setOnCloseRequest(e ->{
+    window.setOnCloseRequest(e -> {
       e.consume();
       closeProgram();
     });
