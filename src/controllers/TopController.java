@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.*;
@@ -8,13 +9,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 import java.io.IOException;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 
-import controllers.Pages;
 import controllers.Controller;
 import javafx.fxml.FXMLLoader;
 
@@ -35,7 +38,9 @@ public class TopController {
 
   @FXML Pane content; // child content
 
-  Controller controller; // child controller
+  private Controller controller; // child controller
+
+  private Parent currentRoot; // current child root
 
   /**
    * Initialize the page
@@ -44,29 +49,68 @@ public class TopController {
   public void initialize() {
     // load initial page
     Pages page = Pages.InitialPage;
-    loadPage(page);
+    loadPage(page, Transition.NONE);
   }
 
   /**
    * Load a new page. This uses the strategy pattern.
    * 
-   * @param page new page to load
+   * @param page       new page to load
+   * @param transition direction the page should show from (None, LTR or RTL)
    */
-  public void loadPage(Pages page) {
+  public void loadPage(Pages page, Transition transition) {
     try {
+      // Old Root
+      final Parent oldRoot = currentRoot;
+
       // get the FXMLLoader of the page
       FXMLLoader loader = page.getLoader();
       // load the FXMLLoader
-      Parent root = loader.load();
+      currentRoot = loader.load();
       // get the loader's controller
       controller = loader.getController();
       // set this controller as main controller for the child
       controller.setParentController(this);
 
-      // clear old page
-      content.getChildren().clear();
       // add new page
-      content.getChildren().add(root);
+      content.getChildren().add(currentRoot);
+
+      // new page animation
+      TranslateTransition newNav = new TranslateTransition(new Duration(350),
+          currentRoot);
+      // old page animation
+      TranslateTransition oldNav = new TranslateTransition(new Duration(150),
+          oldRoot);
+
+      oldNav.setOnFinished(event -> content.getChildren().remove(oldRoot));
+
+      if (oldRoot != null) {
+        // transition animation
+        switch (transition) {
+        case NONE:
+          // just remove current root
+          content.getChildren().remove(oldRoot);
+          break;
+        case RTL:
+          // right to left animation
+          newNav.setFromX(400.0);
+          newNav.setToX(0.0);
+          oldNav.setFromX(0.0);
+          oldNav.setToX(-400.0);
+          newNav.play();
+          oldNav.play();
+          break;
+        case LTR:
+          // right to left animation
+          newNav.setFromX(-400.0);
+          newNav.setToX(0.0);
+          oldNav.setFromX(0.0);
+          oldNav.setToX(400.0);
+          newNav.play();
+          oldNav.play();
+          break;
+        }
+      }
 
       // focus on child page
       controller.focus();
@@ -76,7 +120,6 @@ public class TopController {
           controller.focus();
         }
       });
-
     } catch (IOException ex) {
       System.err.println("Page " + page + " does not exist!");
       System.exit(1);
@@ -117,7 +160,7 @@ public class TopController {
   @FXML
   public void settingsAction() {
     // load settings page
-    loadPage(Pages.SettingsPage);
+    loadPage(Pages.SettingsPage, Transition.RTL);
   }
 
   /**

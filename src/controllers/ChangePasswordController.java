@@ -10,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import model.enums.STATUS;
 import util.StringHelper;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Change password page
@@ -91,7 +93,7 @@ public class ChangePasswordController extends AbstractController {
       button = new JFXButton("OKAY");
       dialog = showAlert(title, null, button);
       button.setOnAction((event) -> dialog.close());
-      loadPage(Pages.MainMenuPage);
+      loadPage(Pages.MainMenuPage, Transition.LTR);
       break;
 
     case FAILED:

@@ -10,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import model.enums.STATUS;
 import views.CurrencyTextField;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Add credits page
@@ -107,7 +109,7 @@ public class AddCreditsController extends AbstractController {
       switch (status) {
       case SUCCESS:
         // Go to mainmenu
-        loadPage(Pages.MainMenuPage);
+        loadPage(Pages.MainMenuPage, Transition.LTR);
 
         // close old dialog
         dialog.close();

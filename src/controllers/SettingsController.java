@@ -3,7 +3,9 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import model.enums.STATUS;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Settings page controller
@@ -47,7 +49,8 @@ public class SettingsController extends AbstractController {
    */
   @FXML
   public void addCreditsAction() {
-    loadPage(Pages.AddCreditsPage);
+    //go to add credits page
+    loadPage(Pages.AddCreditsPage, Transition.RTL);
   }
 
   /**
@@ -55,7 +58,8 @@ public class SettingsController extends AbstractController {
    */
   @FXML
   public void changePasswordAction() {
-    loadPage(Pages.ChangePasswordPage);
+    //go to change password page
+    loadPage(Pages.ChangePasswordPage, Transition.RTL);
   }
 
   /**
@@ -69,7 +73,7 @@ public class SettingsController extends AbstractController {
     switch (status) {
     case SUCCESS:
       // on success go to initial page
-      loadPage(Pages.InitialPage);
+      loadPage(Pages.InitialPage, Transition.LTR);
       break;
 
     default:

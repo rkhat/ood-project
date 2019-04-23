@@ -4,7 +4,9 @@ import com.jfoenix.controls.JFXDialog;
 
 import javafx.scene.Node;
 import model.Manager;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Abstract controller for all the child pages.
@@ -30,7 +32,8 @@ public abstract class AbstractController implements Controller {
    */
   @Override
   public void back() {
-    parentController.loadPage(backPage);
+    //back page loads from left to right
+    loadPage(backPage, Transition.LTR);
   }
 
   /**
@@ -68,10 +71,11 @@ public abstract class AbstractController implements Controller {
    * Load a new page
    * 
    * @param page to load
+   * @param transition direction the page should show from (None, LTR or RTL)
    */
-  protected void loadPage(Pages page) {
+  protected void loadPage(Pages page, Transition transition) {
     // Call parent controller's load new page
-    parentController.loadPage(page);
+    parentController.loadPage(page, transition);
   }
 
   /**

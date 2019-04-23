@@ -1,4 +1,4 @@
-package controllers;
+package views;
 
 import java.net.URL;
 import javafx.fxml.FXMLLoader;

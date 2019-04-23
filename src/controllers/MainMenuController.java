@@ -25,7 +25,9 @@ import javafx.scene.layout.Priority;
 import model.*;
 import model.enums.STATUS;
 import util.StringHelper;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 import views.VehicleView;
 import views.VehicleViewAdapter;
 
@@ -122,7 +124,7 @@ public class MainMenuController extends AbstractController {
     switch (status) {
     case SUCCESS:
       // on success go to main menu
-      loadPage(Pages.MainMenuPage);
+      loadPage(Pages.MainMenuPage, Transition.NONE);
       break;
 
     case PLATE_DUPLICATE:
@@ -154,7 +156,7 @@ public class MainMenuController extends AbstractController {
       switch (status) {
       case SUCCESS:
         // on success go to parking map page
-        loadPage(Pages.ParkingMapPage);
+        loadPage(Pages.ParkingMapPage, Transition.RTL);
         break;
 
       case NO_SPOTS_AVAILABLE:
@@ -187,7 +189,7 @@ public class MainMenuController extends AbstractController {
       switch (status) {
       case SUCCESS:
         // on success reload main menu page
-        loadPage(Pages.MainMenuPage);
+        loadPage(Pages.MainMenuPage, Transition.NONE);
         break;
 
       default:
@@ -241,7 +243,7 @@ public class MainMenuController extends AbstractController {
         switch (status) {
         case SUCCESS:
           // reload page
-          loadPage(Pages.MainMenuPage);
+          loadPage(Pages.MainMenuPage, Transition.NONE);
           // Pop-up success
           ttitle = "Checkout Successfull!";
           bbutton = new JFXButton("OKAY");

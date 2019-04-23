@@ -14,7 +14,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import model.*;
 import model.enums.STATUS;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Parking map page controller
@@ -147,7 +149,7 @@ public class ParkingMapController extends AbstractController {
         switch (status) {
         case SUCCESS:
           // on success go to main menu
-          loadPage(Pages.MainMenuPage);
+          loadPage(Pages.MainMenuPage, Transition.LTR);
           // close old dialog
           dialog.close();
 
