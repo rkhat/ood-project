@@ -10,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import model.enums.STATUS;
 import util.StringHelper;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Change password page
@@ -27,7 +29,9 @@ public class ChangePasswordController extends AbstractController {
    * Constructor
    */
   public ChangePasswordController() {
-    setBackPage(Pages.InitialPage);
+    super();
+    // set back page
+    setBackPage(Pages.SettingsPage);
   }
 
   /**
@@ -54,6 +58,7 @@ public class ChangePasswordController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;
@@ -69,7 +74,7 @@ public class ChangePasswordController extends AbstractController {
   public void changePasswordAction() {
     // Do nothing if fields invalid
     if (!verifyOldPassword() || !verifyNewPassword()) return;
-    
+
     String oldPassword = oldPasswordField.getText();
     String newPassword = newPasswordField.getText();
 
@@ -88,7 +93,7 @@ public class ChangePasswordController extends AbstractController {
       button = new JFXButton("OKAY");
       dialog = showAlert(title, null, button);
       button.setOnAction((event) -> dialog.close());
-      loadPage(Pages.MainMenuPage);
+      loadPage(Pages.MainMenuPage, Transition.LTR);
       break;
 
     case FAILED:

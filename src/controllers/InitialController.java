@@ -2,7 +2,9 @@ package controllers;
 
 import javafx.scene.control.Button;
 import javafx.fxml.FXML;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Initial page controller
@@ -17,12 +19,13 @@ public class InitialController extends AbstractController {
    */
   @FXML
   public void initialize() {
-    //Set default node
+    // Set default node
     setDefaultNode(memberButton);
   }
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = false;
     toolbar(toolbarView);
@@ -34,7 +37,7 @@ public class InitialController extends AbstractController {
   @FXML
   public void memberAction() {
     // goto login page
-    loadPage(Pages.LoginPage);
+    loadPage(Pages.LoginPage, Transition.RTL);
   }
 
   /**
@@ -43,6 +46,6 @@ public class InitialController extends AbstractController {
   @FXML
   public void registerAction() {
     // goto signup page
-    loadPage(Pages.SignupPage);
+    loadPage(Pages.SignupPage, Transition.RTL);
   }
 }

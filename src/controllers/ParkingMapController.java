@@ -14,7 +14,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import model.*;
 import model.enums.STATUS;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Parking map page controller
@@ -36,6 +38,7 @@ public class ParkingMapController extends AbstractController {
    */
   public ParkingMapController() {
     super();
+    // set back page
     setBackPage(Pages.MainMenuPage);
   }
 
@@ -104,6 +107,7 @@ public class ParkingMapController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;
@@ -145,11 +149,11 @@ public class ParkingMapController extends AbstractController {
         switch (status) {
         case SUCCESS:
           // on success go to main menu
-          loadPage(Pages.MainMenuPage);
-          //close old dialog
+          loadPage(Pages.MainMenuPage, Transition.LTR);
+          // close old dialog
           dialog.close();
-          
-          //new dialog to show success
+
+          // new dialog to show success
           String ttitle = "Parked successfully!";
           String bbody = "Please head to your parking spot. Thank you!";
           Button bbutton = new JFXButton("OKAY");

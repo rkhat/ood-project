@@ -21,8 +21,8 @@ public class Reservation implements Serializable {
   private String timeType;
   private Date startTime;
   private String code;
-  public static final double hourlyRate = 2.50;
-  public static final double dailyRate = 20;
+  private static final double hourlyRate = 2.50;
+  private static final double dailyRate = 20;
 
   /**
    * Create a Reservation object.

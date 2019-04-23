@@ -21,11 +21,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import model.Manager;
-import model.Member;
 import model.ParkingMap;
 import model.ParkingSystem;
 import model.Spot;
-import model.Vehicle;
 import javafx.fxml.FXMLLoader;
 
 /**
@@ -46,7 +44,7 @@ public class Main extends Application {
   /**
    * Entry Point for the application
    * 
-   * @param args not used
+   * @param args Optionally pass a filename to load a custom preset
    */
   public static void main(String args[]) {
 

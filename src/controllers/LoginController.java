@@ -8,7 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.enums.STATUS;
 import util.StringHelper;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Login page controller
@@ -54,6 +56,7 @@ public class LoginController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;
@@ -79,7 +82,7 @@ public class LoginController extends AbstractController {
     switch (status) {
     case SUCCESS:
       // on success go to main menu
-      loadPage(Pages.MainMenuPage);
+      loadPage(Pages.MainMenuPage, Transition.RTL);
       break;
 
     case FAILED:

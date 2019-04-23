@@ -25,7 +25,9 @@ import javafx.scene.layout.Priority;
 import model.*;
 import model.enums.STATUS;
 import util.StringHelper;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 import views.VehicleView;
 import views.VehicleViewAdapter;
 
@@ -97,6 +99,7 @@ public class MainMenuController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = false;
@@ -121,7 +124,7 @@ public class MainMenuController extends AbstractController {
     switch (status) {
     case SUCCESS:
       // on success go to main menu
-      loadPage(Pages.MainMenuPage);
+      loadPage(Pages.MainMenuPage, Transition.NONE);
       break;
 
     case PLATE_DUPLICATE:
@@ -137,8 +140,6 @@ public class MainMenuController extends AbstractController {
     default:
       throw new IllegalStateException("Impossible STATUS");
     }
-
-    loadPage(Pages.MainMenuPage);
   }
 
   /**
@@ -155,7 +156,7 @@ public class MainMenuController extends AbstractController {
       switch (status) {
       case SUCCESS:
         // on success go to parking map page
-        loadPage(Pages.ParkingMapPage);
+        loadPage(Pages.ParkingMapPage, Transition.RTL);
         break;
 
       case NO_SPOTS_AVAILABLE:
@@ -188,7 +189,7 @@ public class MainMenuController extends AbstractController {
       switch (status) {
       case SUCCESS:
         // on success reload main menu page
-        loadPage(Pages.MainMenuPage);
+        loadPage(Pages.MainMenuPage, Transition.NONE);
         break;
 
       default:
@@ -208,7 +209,7 @@ public class MainMenuController extends AbstractController {
 
       // get balance
       double oldBalance = getManager().getCredits();
-      double deduct = Reservation.hourlyRate;
+      double deduct = getManager().getTotal(); // get rate
       double newBalance = oldBalance - deduct;
       String oldBalanceStr = "$" + String.format("%.2f", oldBalance);
       String deductStr = "$" + String.format("%.2f", deduct);
@@ -242,7 +243,7 @@ public class MainMenuController extends AbstractController {
         switch (status) {
         case SUCCESS:
           // reload page
-          loadPage(Pages.MainMenuPage);
+          loadPage(Pages.MainMenuPage, Transition.NONE);
           // Pop-up success
           ttitle = "Checkout Successfull!";
           bbutton = new JFXButton("OKAY");

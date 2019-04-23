@@ -9,7 +9,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.enums.STATUS;
 import util.StringHelper;
+import views.Pages;
 import views.ToolbarView;
+import views.Transition;
 
 /**
  * Sign up page controller
@@ -27,6 +29,7 @@ public class SignupController extends AbstractController {
    */
   public SignupController() {
     super();
+    // set back page
     setBackPage(Pages.InitialPage);
   }
 
@@ -55,6 +58,7 @@ public class SignupController extends AbstractController {
 
   @Override
   public void updateParentController() {
+    // Set toolbar
     ToolbarView toolbarView = new ToolbarView();
     toolbarView.show = true;
     toolbarView.showBackButton = true;
@@ -80,14 +84,15 @@ public class SignupController extends AbstractController {
     switch (status) {
     case SUCCESS:
       // on success go to main menu
-      loadPage(Pages.MainMenuPage);
+      loadPage(Pages.MainMenuPage, Transition.RTL);
       break;
 
-    case FAILED:
+    case USERNAME_IN_USE:
       // Pop-up dialog invalid username or password
-      String title = "Username taken";
+      String title = "Username taken!";
+      String body = "Please try a different username";
       Button button = new JFXButton("OKAY");
-      JFXDialog dialog = showAlert(title, null, button);
+      JFXDialog dialog = showAlert(title, body, button);
       button.setOnAction((event) -> dialog.close());
       break;
 
