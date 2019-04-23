@@ -12,7 +12,8 @@ import model.Spot;
 
 public class PresetCreator {
   public static void main(String[] args) {
-    createOodpPreset();
+    //createOodpPreset();
+    createIbmPreset();
   }
 
   public static void createIbmPreset() {

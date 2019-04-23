@@ -418,6 +418,15 @@ public class Manager implements Serializable {
   public double getCredits() {
     return member.getCredits();
   }
+  
+  /**
+   * Get the current cost of the reservation.
+   * 
+   * @return  The current total cost of the reservation.
+   */
+  public double getTotal() {
+    return reservation.getTotal();
+  }
 
   /**
    * Reset the Manager instance.
