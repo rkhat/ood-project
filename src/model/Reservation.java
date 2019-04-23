@@ -10,6 +10,10 @@ import java.util.Date;
  */
 public class Reservation implements Serializable {
 
+  public static final int speedMultiplier = 180; // calculated by : SM =
+                                                  // 3600/(desired seconds per
+                                                  // hr)
+
   private static final long serialVersionUID = -5166839476521673026L;
 
   private Spot spot;
@@ -101,9 +105,9 @@ public class Reservation implements Serializable {
 
     // get the hours elapsed since the reservation was created.
     long millis = endTime.getTime() - startTime.getTime();
-    int hours = (int) Math.ceil((double) millis / 3600000 * 60 * 3); // every 20
-                                                                     // seconds
-                                                                     // is an hr
+    int hours = (int) Math
+        .ceil(((double) millis / (3600000)) * speedMultiplier);
+
     // once reservation is made, member must pay minimum 1 hour
     if (hours == 0) hours = 1;
 

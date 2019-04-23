@@ -16,10 +16,11 @@ class ReservationTest {
 		res.setStartTime(startTime);
 		// 35 hours, hourly = 35*2.50
 		res.setTimeType("HOURLY");
-		Assert.assertTrue(res.getTotal() == 35*2.50);
-		// 35 hours, daily = 2*20
+		Assert.assertTrue(res.getTotal() == Reservation.speedMultiplier*35*2.50);
+		// 35*speedMultipler hrs = 35*speedMultiplier/24 days
 		res.setTimeType("DAILY");
-		Assert.assertTrue(res.getTotal() == 2*20);
+		double t = Math.ceil((double)35*Reservation.speedMultiplier/24) * 20;
+		Assert.assertTrue(res.getTotal() == t);
 	}
 	
 }
