@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,10 @@ import java.util.Date;
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class Reservation {
+public class Reservation implements Serializable {
+
+  private static final long serialVersionUID = -5166839476521673026L;
+
   private Spot spot;
   private Vehicle vehicle;
   private String timeType;
@@ -97,9 +101,11 @@ public class Reservation {
 
     // get the hours elapsed since the reservation was created.
     long millis = endTime.getTime() - startTime.getTime();
-    int hours = (int) Math.ceil((double) millis / 3600000);
+    int hours = (int) Math.ceil((double) millis / 3600000 * 60 * 3); // every 20
+                                                                     // seconds
+                                                                     // is an hr
     // once reservation is made, member must pay minimum 1 hour
-    if (hours == 0) hours = 1; 
+    if (hours == 0) hours = 1;
 
     switch (timeType) {
     case "HOURLY":

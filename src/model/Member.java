@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,10 @@ import util.RandomGenerator;
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class Member {
+public class Member implements Serializable {
+
+  private static final long serialVersionUID = 4513445765193189811L;
+  
   private Reservation reservation;
   private Map<Integer, Vehicle> vehicles;
   private String code;

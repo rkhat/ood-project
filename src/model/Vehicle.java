@@ -1,11 +1,16 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * The Vehicle class. Represents a vehicle with given license plate.
  * 
  * @author Alec Agnese, Rami El Khatib
  */
-public class Vehicle {
+public class Vehicle implements Serializable {
+
+  private static final long serialVersionUID = 598065493691836636L;
+  
   private String plate;
   private int id;
 

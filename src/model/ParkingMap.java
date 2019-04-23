@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,10 @@ import java.util.Map;
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class ParkingMap {
+public class ParkingMap implements Serializable {
+  
+  private static final long serialVersionUID = 196133205870294459L;
+  
   private Map<Integer, Spot> spots;
   private int nextID;
   private int minX, minY, maxX, maxY;

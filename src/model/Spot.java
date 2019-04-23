@@ -1,14 +1,18 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * The Spot class.
  * Represents a parking spot on a parking map.
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class Spot {
+public class Spot implements Serializable {
 	
-	private boolean reserved;
+  private static final long serialVersionUID = 4491149541555501627L;
+  
+  private boolean reserved;
 	private int x;
 	private int y;
 	private int id;

@@ -1,5 +1,11 @@
 package application;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -17,6 +23,168 @@ import util.StringHelper;
  */
 public class TextTester {// extends Application {
 
+  private static final String defaultFile = "app.ser";
+  
+  public static void main(String[] args) {
+    
+    String fileName = "";
+    
+    try {
+      fileName = args[0];
+    } catch (IndexOutOfBoundsException e) {
+      System.out.println("No file specified to load from, default " + defaultFile + " selected\n");
+      fileName = defaultFile;
+    }
+    
+    System.out.println("Loaded from file " + fileName + "\n");
+    
+    // only save if it is the actual app, not one of the presets.
+    boolean save = fileName.contentEquals(defaultFile) ? true : false;
+    
+    Manager app = null;
+    ParkingSystem ps = null;
+    
+    // Set up ParkingSystem
+    ps = initParkingSystem(fileName);
+ 
+    // Set up Manager
+    Manager.createInstance(ps);
+    app = Manager.getInstance();
+
+    // Set up scanner and input buffers
+    Scanner scan = new Scanner(System.in);
+    int integerInput;
+    STATUS status;
+
+    String un, psw;
+    boolean exit = false;
+
+    while (true) {
+
+      printMainMenu();
+
+      integerInput = getInt(scan);
+      System.out.println();
+
+      switch (integerInput) {
+      // log in
+      case 1:
+        // enter user name
+        un = getUserName(scan);
+
+        // enter password
+        psw = getPassword(scan, false);
+
+        // try to log in
+        if (app.doLogIn(un, psw) == STATUS.SUCCESS) {
+          // success, logged in
+          System.out.println("Logged in!");
+          System.out.println();
+          runApp(app, scan);
+        } else {
+          System.out.println("Invalid credentials");
+          System.out.println();
+        }
+        break;
+
+      // sign up
+      case 2:
+        // enter user name
+        un = getUserName(scan);
+
+        // enter password
+        psw = getPassword(scan, true);
+
+        // try to create the account
+        status = app.doCreateAccount(un, psw);
+        if (status == STATUS.SUCCESS) {
+          // success, logged in
+          System.out.println("Account created!");
+          System.out.println();
+          runApp(app, scan);
+        } else {
+          // failed, print error and return to main menu
+          if (status == STATUS.USERNAME_INVALID) {
+            System.out.println("error: Username must be alphanumeric");
+          } else if (status == STATUS.USERNAME_IN_USE) {
+            System.out.println("error: Username is already in use");
+          } else if (status == STATUS.PASSWORD_INVALID) {
+            System.out.println(
+                "error: Password must be alphanumeric with at least 6 characters");
+          } else {
+            System.out
+                .println("error: Account creation failed, back to Main Menu:");
+          }
+          System.out.println();
+          break;
+        }
+        break;
+
+      // exit
+      case 3:
+        exit = true;
+        break;
+
+      // invalid number
+      default:
+        break;
+      }
+      if (exit) {
+        if (save) {
+          try {
+            FileOutputStream fos = new FileOutputStream(fileName);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(ps);
+            oos.close();
+            fos.close();
+          } catch (Exception e) {
+            System.err.println(e.toString());
+          }
+        }
+        break;
+      }
+    }
+  }
+  
+  public static ParkingSystem initParkingSystem(String fileName) {
+    ParkingMap map = null;
+    ParkingSystem ps = null;
+    
+    // read parking system from file
+    try {
+      FileInputStream fis = new FileInputStream(fileName);
+      ObjectInputStream ois = new ObjectInputStream(fis);
+      ps = (ParkingSystem)ois.readObject();
+      ois.close();
+      fis.close();
+      return ps;
+    } catch (FileNotFoundException e) {
+      System.out.println("Setting up app...\n");
+      // create list of spots
+      List<Spot> spotList = new ArrayList<Spot>(1);
+      //spotList.add(new Spot(0, 0));
+      for (int i = 1; i <= 5; i++) {
+        for (int j = 1; j <= 2; j++) {
+          spotList.add(new Spot(i, j));
+        }
+      }
+
+      // create map
+      map = new ParkingMap(spotList);
+
+      // Set up parking system
+      ps = ParkingSystem.getInstance();
+      ps.setMap(map);
+      return ps;
+      
+    } catch (IOException e) {
+      System.err.println(e.toString());
+    } catch (ClassNotFoundException e) {
+      System.err.println(e.toString());
+    }
+    return null;
+  }
+  
   public static void printMainMenu() {
     System.out.println("Menu:\n");
     System.out.println("1) Log in");
@@ -369,109 +537,6 @@ public class TextTester {// extends Application {
         loggedIn = false;
         break;
       }
-    }
-  }
-
-  public static void main(String[] args) {
-    // create list of spots
-    List<Spot> spotList = new ArrayList<Spot>(1);
-    spotList.add(new Spot(0, 0));
-//   for (int i = 1; i <= 5; i++) {
-//     for (int j = 1; j <= 2; j++) {
-//       spotList.add(new Spot(i,j));
-//     }
-//   }
-
-    // create map
-    ParkingMap map = new ParkingMap(spotList);
-
-    // Set up parking system
-    ParkingSystem ps = ParkingSystem.getInstance();
-    ps.setMap(map);
-
-    // Set up app manager
-    Manager app = Manager.getInstance();
-
-    // Set up scanner and input buffers
-    Scanner scan = new Scanner(System.in);
-    int integerInput;
-    STATUS status;
-
-    String un, psw;
-    boolean exit = false;
-
-    while (true) {
-
-      printMainMenu();
-
-      integerInput = getInt(scan);
-      System.out.println();
-
-      switch (integerInput) {
-      // log in
-      case 1:
-        // enter user name
-        un = getUserName(scan);
-
-        // enter password
-        psw = getPassword(scan, false);
-
-        // try to log in
-        if (app.doLogIn(un, psw) == STATUS.SUCCESS) {
-          // success, logged in
-          System.out.println("Logged in!");
-          System.out.println();
-          runApp(app, scan);
-        } else {
-          System.out.println("Invalid credentials");
-          System.out.println();
-        }
-        break;
-
-      // sign up
-      case 2:
-        // enter user name
-        un = getUserName(scan);
-
-        // enter password
-        psw = getPassword(scan, true);
-
-        // try to create the account
-        status = app.doCreateAccount(un, psw);
-        if (status == STATUS.SUCCESS) {
-          // success, logged in
-          System.out.println("Account created!");
-          System.out.println();
-          runApp(app, scan);
-        } else {
-          // failed, print error and return to main menu
-          if (status == STATUS.USERNAME_INVALID) {
-            System.out.println("error: Username must be alphanumeric");
-          } else if (status == STATUS.USERNAME_IN_USE) {
-            System.out.println("error: Username is already in use");
-          } else if (status == STATUS.PASSWORD_INVALID) {
-            System.out.println(
-                "error: Password must be alphanumeric with at least 6 characters");
-          } else {
-            System.out
-                .println("error: Account creation failed, back to Main Menu:");
-          }
-          System.out.println();
-          break;
-        }
-        break;
-
-      // exit
-      case 3:
-        exit = true;
-        break;
-
-      // invalid number
-      default:
-        break;
-      }
-      if (exit)
-        break;
     }
   }
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,10 @@ import util.StringHelper;
  *
  * @author Alec Agnese, Rami El Khatib
  */
-public class Manager {
+public class Manager implements Serializable {
 
+  private static final long serialVersionUID = 3231326285507144700L;
+  
   // non-changing fields
   private ParkingSystem parkingSystem;
   private ParkingMap parkingMap;
@@ -36,6 +39,20 @@ public class Manager {
   private Manager() {
     parkingSystem = ParkingSystem.getInstance();
     parkingMap = parkingSystem.getMap();
+    if (parkingMap == null) {
+      parkingMap = new ParkingMap(new ArrayList<Spot>());
+    }
+    spots = parkingMap.getSpotsAsMap();
+  }
+  
+  /**
+   * Manager constructor with specified ParkingSystem object.
+   * 
+   * @param ps  The ParkingSystem object.
+   */
+  private Manager(ParkingSystem ps) {
+    parkingSystem = ps;
+    parkingMap = parkingSystem.getMap();
     spots = parkingMap.getSpotsAsMap();
   }
 
@@ -45,6 +62,10 @@ public class Manager {
    */
   public static void createInstance() {
     instance = new Manager();
+  }
+  
+  public static void createInstance(ParkingSystem ps) {
+    instance = new Manager(ps);
   }
 
   /**

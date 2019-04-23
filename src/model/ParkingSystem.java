@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,14 +14,16 @@ import util.StringHelper;
  * 
  * @author Alec Agnese, Rami El Khatib
  */
-public class ParkingSystem {
+public class ParkingSystem implements Serializable {
 
+  private static final long serialVersionUID = 9020736226548610599L;
+  
   private Map<String, Reservation> reservations;
   private Map<String, Vehicle> vehicles;
   private Map<String, Member> members;
   private ParkingMap map;
 
-  private static int nextVehicleID = 0;
+  private int nextVehicleID = 0;
 
   /**
    * Creates a ParkingSystem object.
@@ -44,6 +47,8 @@ public class ParkingSystem {
     this.map = map;
   }
 
+  //public void setMembers()
+  
   /**
    * Access the singleton ParkingSystem instance.
    * 
