@@ -48,3 +48,7 @@ app.ser
 
 #Include app
 !bin/*.jar
+
+#puml
+puml/
+/observer_and_strategy.puml
