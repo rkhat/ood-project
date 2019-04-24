@@ -163,7 +163,7 @@ void testChangePassword() {
   // add a new account to the system
   String un = "Alec";
   String psw = "123ABC";
-  Member mem1 = ps.createAccount(un, psw).getValue();
+  ps.createAccount(un, psw).getValue();
 
   String newPsw = "Alec123";
   // attempt psw change with correct login info

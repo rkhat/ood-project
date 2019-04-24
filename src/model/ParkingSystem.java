@@ -174,7 +174,7 @@ public class ParkingSystem implements Serializable {
    * 
    * @param un  The user name.
    * @param psw The Password.
-   * @return Pair<STATUS,Member> containing the status of the account creation
+   * @return Pair containing the status of the account creation
    *         and the member object (or null if failed).
    * 
    *         Possible status: SUCCESS, USERNAME_INVALID, USERNAME_IN_USE,

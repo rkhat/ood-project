@@ -174,7 +174,7 @@ public class ParkingMap implements Serializable {
   /**
    * Free the given spot.
    * 
-   * @param spot The spot to be freed.
+   * @param spotID The ID of the spot to be freed.
    * @return true if spot was reserved, false if spotID was invalid or spot was
    *         not reserved.
    */

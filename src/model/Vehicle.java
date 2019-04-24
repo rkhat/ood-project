@@ -28,7 +28,7 @@ public class Vehicle implements Serializable {
    * Create a Vehicle object with given plat and ID.
    * 
    * @param plate The plate.
-   * @param id
+   * @param id		The ID of the vehicle.
    */
   public Vehicle(String plate, int id) {
     this.plate = plate;

@@ -1,6 +1,7 @@
 package application;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,8 @@ import model.Spot;
 
 public class PresetCreator {
   public static void main(String[] args) {
-    //createOodpPreset();
-    createIbmPreset();
+    createOodpPreset();
+    //createIbmPreset();
   }
 
   public static void createIbmPreset() {
@@ -49,8 +50,8 @@ public class PresetCreator {
     addMember(app, "Larry", "Larry123", 15, "GHJ253", 17);
     addMember(app, "Sara", "Sara123", 21, "193KFH", 18);
     addMember(app, "Allie", "Allie123", 39, "194LDR", 20);
-    addMember(app, "Will", "Will123", 53, "046DK3", 22);
-    addMember(app, "John", "John123", 12.5, "AK3LF8", 24);
+    addMember(app, "Will", "Will123", 53, "FERREL", 22);
+    addMember(app, "John", "John123", 12.5, "CENA12", 24);
     addMember(app, "Rami", "Rami123", 13.7, "104KD7", 26);
     addMember(app, "Rafa", "Rafa123", 5.1, "573KD7", 28);
     addMember(app, "Carolina", "Carolina123", 6.3, "LSKD73", 30);
@@ -100,16 +101,6 @@ public class PresetCreator {
     Manager.createInstance(ps);
     Manager app = Manager.getInstance();
 
-    addMember(app, "Alec", "Alec123", 25, "ABC123", 2);
-    addMember(app, "Mac", "Mac123", 5, "123ABC", 9);
-    addMember(app, "Matias", "Matias123", 22, "HPKM16", 14);
-    addMember(app, "Jorge", "Jorge123", 17.4, "M16HPK", 21);
-    addMember(app, "Larry", "Larry123", 15, "GHJ253", 26);
-    addMember(app, "Sara", "Sara123", 21, "193KFH", 32);
-    addMember(app, "Allie", "Allie123", 39, "194LDR", 36);
-    addMember(app, "Will", "Will123", 53, "046DK3", 40);
-    addMember(app, "John", "John123", 12.5, "AK3LF8", 43);
-
     try {
       FileOutputStream fos = new FileOutputStream(fileName);
       ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -122,6 +113,26 @@ public class PresetCreator {
     
   }
 
+  public static ParkingSystem createAppSystem() {
+      // create list of spots
+      List<Spot> spotList = new ArrayList<Spot>(10);
+      addSpotsHorizontal(spotList,0,0,10);
+      addSpotsHorizontal(spotList,0,2,10);
+      addSpotsHorizontal(spotList,0,3,10);
+      addSpotsHorizontal(spotList,0,5,10);
+      addSpotsHorizontal(spotList,0,6,10);
+      addSpotsHorizontal(spotList,0,8,4);
+      addSpotsHorizontal(spotList,6,8,4);
+
+      // create map
+      ParkingMap map = new ParkingMap(spotList);
+
+      // Set up parking system
+      ParkingSystem ps = ParkingSystem.getInstance();
+      ps.setMap(map);
+      return ps;
+  }
+  
   // create member with credits and parked vehicle.
   public static void addMember(Manager m, String un, String psw, double credits,
       String plate, int spotID) {
