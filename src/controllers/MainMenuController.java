@@ -206,30 +206,41 @@ public class MainMenuController extends AbstractController {
    */
   private EventHandler<ActionEvent> getCheckoutAction() {
     return (event) -> {
-
       // get balance
       double oldBalance = getManager().getCredits();
       double deduct = getManager().getTotal(); // get rate
       double newBalance = oldBalance - deduct;
-      String oldBalanceStr = "$" + String.format("%.2f", oldBalance);
-      String deductStr = "$" + String.format("%.2f", deduct);
-      String newBalanceStr = (newBalance < 0 ? "-" : "") + "$"
-          + String.format("%.2f", Math.abs(newBalance));
+
+      // Create string to show details of the checkout
+      StringBuilder builder = new StringBuilder();
+      builder.append("Pay:\t\t\t\t$" + String.format("%.2f", deduct) + "\n");
+      builder.append(
+          "Current Balance:\t$" + String.format("%.2f", oldBalance) + "\n");
+      builder.append("New Balance:\t");
+      if (newBalance < 0) {
+        // if new balance < 0 show new balance
+        builder.append("Insufficient funds");
+      } else {
+        // else show insufficient funds
+        builder.append("$" + String.format("%.2f", Math.abs(newBalance)));
+      }
 
       // confirm adding credits
       String title = "Confirm adding credits: ";
-      String body = "Pay:\t\t\t\t" + deductStr + "\n"
-          + "Current Balance:\t" + oldBalanceStr + "\n"
-          + "New Balance:\t" + newBalanceStr;
-      Button yesButton = new JFXButton("YES");
-      Button noButton = new JFXButton("NO");
-      JFXDialog dialog = showAlert(title, body, yesButton, noButton);
+      String body = builder.toString();
+      Button payButton = new JFXButton("PAY");
+      Button cancelButton = new JFXButton("CANCEL");
+      JFXDialog dialog = showAlert(title, body, payButton, cancelButton);
+
+      if (newBalance < 0) {
+        payButton.setDisable(true);
+      }
 
       // For no do nothing and close dialog
-      noButton.setOnAction((eevent) -> dialog.close());
+      cancelButton.setOnAction((eevent) -> dialog.close());
 
       // For yes,
-      yesButton.setOnAction((eevent) -> {
+      payButton.setOnAction((eevent) -> {
         // close old dialog
         dialog.close();
         // checkout vehicle
@@ -279,6 +290,14 @@ public class MainMenuController extends AbstractController {
   }
 
   /**
+   * Back action does nothing
+   */
+  @Override
+  public void back() {
+    //Do nothing
+  }
+
+  /**
    * Custom cell for list view
    *
    */
@@ -313,6 +332,7 @@ public class MainMenuController extends AbstractController {
       plateLabel.getStyleClass().add("vehicle-plate");
       actionButton.getStyleClass().add("vehicle-action");
 
+      // JavaFX bug:
       // "Hackish" fix for enter key to work on remove, park, and checkout
       // buttons. Global event handler doesn't work in cells.
       removeButton.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {

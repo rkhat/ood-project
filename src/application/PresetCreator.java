@@ -1,7 +1,6 @@
 package application;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +98,7 @@ public class PresetCreator {
     ps.setMap(pm);
 
     Manager.createInstance(ps);
-    Manager app = Manager.getInstance();
+    Manager.getInstance();
 
     try {
       FileOutputStream fos = new FileOutputStream(fileName);

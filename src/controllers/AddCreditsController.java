@@ -85,24 +85,25 @@ public class AddCreditsController extends AbstractController {
   private void addCredits(final double amount) {
     // get balance
     double oldBalance = getManager().getCredits();
-    String oldBalanceStr = "$" + String.format("%.2f", oldBalance);
-    String amountStr = "$" + String.format("%.2f", amount);
-    String newBalanceStr = "$" + String.format("%.2f", oldBalance + amount);
+    
+    // Create string to show details of adding credits
+    StringBuilder builder = new StringBuilder();
+    builder.append("Buying:\t\t\t$" + String.format("%.2f", amount) + "\n");
+    builder.append("Current Balance:\t$" + String.format("%.2f", oldBalance) + "\n");
+    builder.append("New Balance:\t$" + String.format("%.2f", oldBalance + amount));
 
     // confirm adding credits
     String title = "Confirm adding credits: ";
-    String body = "Buying:\t\t\t" + amountStr + "\n"
-        + "Current Balance:\t" + oldBalanceStr + "\n"
-        + "New Balance:\t" + newBalanceStr;
-    Button yesButton = new JFXButton("YES");
-    Button noButton = new JFXButton("NO");
-    JFXDialog dialog = showAlert(title, body, yesButton, noButton);
+    String body = builder.toString();
+    Button confirmButton = new JFXButton("CONFIRM");
+    Button cancelButton = new JFXButton("CANCEL");
+    JFXDialog dialog = showAlert(title, body, confirmButton, cancelButton);
 
     // For no do nothing and close dialog
-    noButton.setOnAction((eevent) -> dialog.close());
+    cancelButton.setOnAction((eevent) -> dialog.close());
 
     // For yes,
-    yesButton.setOnAction((eevent) -> {
+    confirmButton.setOnAction((eevent) -> {
       // Perform add Credits
       STATUS status = getManager().doAddCredits(amount);
 
