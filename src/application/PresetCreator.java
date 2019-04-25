@@ -98,7 +98,17 @@ public class PresetCreator {
     ps.setMap(pm);
 
     Manager.createInstance(ps);
-    Manager.getInstance();
+    Manager app = Manager.getInstance();
+    
+    addMember(app, "Alec", "Alec123", 25, "ABC123", 2);
+    addMember(app, "Mac", "Mac123", 5, "123ABC", 9);
+    addMember(app, "Matias", "Matias123", 22, "HPKM16", 14);
+    addMember(app, "Jorge", "Jorge123", 17.4, "M16HPK", 21);
+    addMember(app, "Larry", "Larry123", 15, "GHJ253", 26);
+    addMember(app, "Sara", "Sara123", 21, "193KFH", 32);
+    addMember(app, "Allie", "Allie123", 39, "194LDR", 36);
+    addMember(app, "Will", "Will123", 53, "046DK3", 40);
+    addMember(app, "John", "John123", 12.5, "AK3LF8", 43);
 
     try {
       FileOutputStream fos = new FileOutputStream(fileName);
