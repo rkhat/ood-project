@@ -11,7 +11,7 @@ nbproject/
 
 #Eclipse
 .metadata
-bin/
+bin/*
 tmp/
 *.tmp
 *.bak
@@ -45,3 +45,10 @@ local.properties
 
 #Remove app generated saves
 app.ser
+
+#Include app
+!bin/*.jar
+
+#puml
+puml/
+/observer_and_strategy.puml

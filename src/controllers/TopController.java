@@ -50,6 +50,14 @@ public class TopController {
     // load initial page
     Pages page = Pages.InitialPage;
     loadPage(page, Transition.NONE);
+    
+    // Escape button goes to the previous page
+    mainPane.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+      if (ev.getCode() == KeyCode.ESCAPE) {
+        backAction();
+        ev.consume();
+      }
+    });
   }
 
   /**
@@ -120,6 +128,7 @@ public class TopController {
           controller.focus();
         }
       });
+
     } catch (IOException ex) {
       System.err.println("Page " + page + " does not exist!");
       System.exit(1);

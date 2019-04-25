@@ -48,4 +48,13 @@ public class InitialController extends AbstractController {
     // goto signup page
     loadPage(Pages.SignupPage, Transition.RTL);
   }
+  
+  /**
+   * Back action does nothing
+   */
+  @Override
+  public void back() {
+    //Do nothing
+  }
+  
 }

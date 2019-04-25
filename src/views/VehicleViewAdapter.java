@@ -8,8 +8,7 @@ import model.*;
  * @author Alec Agnese, Rami El Khatib
  */
 public class VehicleViewAdapter implements VehicleView {
-  private final int id;
-  private final String plate;
+  private final Vehicle vehicle;
   private final boolean vehicleParked;
   private final boolean memberParked;
 
@@ -22,8 +21,7 @@ public class VehicleViewAdapter implements VehicleView {
    *                        no parked vehicles
    */
   public VehicleViewAdapter(Vehicle vehicle, Integer parkedVehicleID) {
-    this.id = vehicle.getID();
-    this.plate = vehicle.getPlate();
+    this.vehicle = vehicle;
 
     if (parkedVehicleID == null) {
       memberParked = false;
@@ -32,18 +30,18 @@ public class VehicleViewAdapter implements VehicleView {
       // true if parked vehicle id exists
       memberParked = true;
       // true if vehicle id and parked vehicle id are equal
-      vehicleParked = (this.id == parkedVehicleID);
+      vehicleParked = (vehicle.getID() == parkedVehicleID);
     }
   }
 
   @Override
   public int getID() {
-    return id;
+    return vehicle.getID();
   }
 
   @Override
   public String getPlate() {
-    return plate;
+    return vehicle.getPlate();
   }
 
   @Override
